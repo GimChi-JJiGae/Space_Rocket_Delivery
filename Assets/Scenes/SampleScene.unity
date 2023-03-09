@@ -170,10 +170,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f08f9ab0edd4f4a8568d6656dc8095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveAxisName: Vertical
-  moveAxis2Name: Horizontal
-  pickButtonName: Pick
-  dropButtonName: Drop
+  move1AxisName: Vertical
+  move2AxisName: Horizontal
+  interactionButtonName: Interaction
+  repairButtonName: Repair
+  destroyButtonName: Destroy
+--- !u!114 &557755715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557755707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b37b3e8872c8e294da8393892857c546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  rotateSpeed: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +388,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 27cffb63192132948a26148cc0efe47d, type: 2}
     - target: {fileID: 2036333592185343249, guid: d997b76448c686149a63d4ffb7ca7ec1, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4749466803676810705, guid: d997b76448c686149a63d4ffb7ca7ec1, type: 3}
       propertyPath: m_Name
