@@ -13,7 +13,7 @@ public class Spaceship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GenerateDefaultModule();
+        SettingModule();
     }
 
     // Update is called once per frame
@@ -22,22 +22,13 @@ public class Spaceship : MonoBehaviour
 
     }
 
-    void GenerateDefaultModule()
+    void SettingModule()
     {
+        // 청사진 모듈 생성
         for (int z = 0; z < cols; z++)
-        {
             for (int x = 0; x < rows; x++)
-            {
-                if (x >= 9 && x <= 11 && z >= 9 && z <= 11)
-                {
-
-                }
-                else
-                {
+                if (x < 9 || x > 11 || z < 9 || z > 11)
                     CreateDefaultModule(x, z, Module.ModuleType.Blueprint);
-                }
-            }
-        }
         // 화물
         CreateDefaultModule(9, 9, Module.ModuleType.Cargo);
         CreateDefaultModule(11, 11, Module.ModuleType.Cargo);
@@ -62,36 +53,26 @@ public class Spaceship : MonoBehaviour
 
     void CreateDefaultModule(int x, int z, Module.ModuleType moduleType)
     {
-        // 모듈에 모듈이라는 프리펩을 붙인다. 그 안에 module컴포넌트도 존재한다.
+        // 위치 지정 및 기본 모듈 세팅
         GameObject modulePrefab;
         modulePrefab = Resources.Load<GameObject>("Spaceship/Module/Module");
-
-        float positionX = -(size * rows) / 2 + (x * size) + (size) / 2; // -전체크기 +놓을위치 +중앙정렬용 size/2
+        // 위치지정
+        float positionX = -(size * rows) / 2 + (x * size) + (size) / 2;     // -전체크기 +놓을위치 +중앙정렬용 size/2
         float positionZ = -(size * cols) / 2 + (z * size) + (size) / 2;
         float positionY = 0;
-        Vector3 position = new Vector3(positionX, positionY, positionZ); // 바닥 타일의 위치
-        Quaternion rotation = Quaternion.identity; // 바닥 타일의 회전
-        GameObject module = Instantiate(modulePrefab, position, rotation); // 모듈 생성시키기
-        module.transform.parent = transform; // 모듈 위치를 Spaceship아래로 내려주기
-        module.name = modulePrefab.name; // 모듈 이름 변경
+        Vector3 position = new Vector3(positionX, positionY, positionZ);    // 바닥 타일의 위치
+        Quaternion rotation = Quaternion.identity;                           // 바닥 타일의 회전
+
+        // 모듈 생성하고 space의 배열에 할당시키기
+        GameObject module = Instantiate(modulePrefab, position, rotation);  
+        module.transform.parent = transform;            // 모듈 위치를 Spaceship아래로 내려주기
+        module.name = modulePrefab.name;                // 모듈 이름 변경
+        modules[z, x] = module;                         // 모듈 넣기
+
+        // 모듈의 속성을 변경시키기
         Module moduleStatus = module.GetComponent<Module>();
-        moduleStatus.CreateModule(x, z);
-        modules[z, x] = module; // 모듈 넣기
-
-        // 모듈 아래에 바닥 프리펩을 적용시킨다.
-        GameObject floorPrefab;
-        if (moduleType != Module.ModuleType.Blueprint)
-        {
-            floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
-        }
-        else
-        {
-            floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BlueprintFloor");
-        }
-
-        Vector3 floorPosition = new Vector3(positionX, positionY, positionZ); // 바닥 타일의 위치
-        Quaternion floorRotation = Quaternion.identity; // 바닥 타일의 회전
-        GameObject floorModule = Instantiate(floorPrefab, floorPosition, floorRotation); // 모듈 생성시키기
-        floorModule.transform.parent = module.transform; // 모듈 위치를 Spaceship아래로 내려주기
+        moduleStatus.idxX = x;
+        moduleStatus.idxZ = z;
+        moduleStatus.CreateFloor(moduleType);
     }
 }
