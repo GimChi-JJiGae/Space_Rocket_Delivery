@@ -22,7 +22,7 @@ public class Background_Move : MonoBehaviour
 
         if (transform.position.z > -30)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * -speed);
+            transform.Translate(-Vector3.forward * Time.deltaTime * speed, SpaceShipObj);
 
             if (transform.position.z < -20)
             {
@@ -39,7 +39,7 @@ public class Background_Move : MonoBehaviour
         {
 
 
-            transform.Translate(-Vector3.forward * speed * Time.deltaTime, Space.World);
+            transform.Translate(-Vector3.forward * speed * Time.deltaTime, SpaceShipObj);
             //transform.Translate(Vector3.forward * Time.deltaTime * -speed);
             //Debug.Log(Vector3.forward);
             //Debug.Log(transform.position);
