@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Module;
@@ -20,12 +21,31 @@ public class Module : MonoBehaviour
         DefaultTurret,  // 기본터렛
         LaserTurret,    // 레이저터렛
     }
-    public ModuleType moduleType;
+    public ModuleType moduleType;   // 모듈타입
+    //private Spaceship spaceship;    // 우주선 역참조
+
+    public GameObject wallTop;
+    public GameObject wallLeft;
+    public GameObject wallBottom;
+    public GameObject wallRight;
+
+    public GameObject floorModule;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //spaceship = FindAnyObjectByType<Spaceship>();
+        // 벽 찾기
+        Transform wallTransform = transform.Find("Wall");
+
+        wallTop = wallTransform.Find("WallTop").gameObject;
+        wallLeft = wallTransform.Find("WallLeft").gameObject;
+        wallBottom = wallTransform.Find("WallBottom").gameObject;
+        wallRight = wallTransform.Find("WallRight").gameObject;
+        wallTop.SetActive(false);
+        wallLeft.SetActive(false);
+        wallBottom.SetActive(false);
+        wallRight.SetActive(false);
     }
 
     // Update is called once per frame
@@ -70,17 +90,23 @@ public class Module : MonoBehaviour
                 break;
         }
         float positionX = gameObject.transform.position.x;     // 지금 오브젝트의 위치를 가져옴
-        float positionZ = gameObject.transform.position.z;
+        float positionZ = gameObject.transform.position.z;      
         float positionY = gameObject.transform.position.y;
-        Vector3 position2 = new Vector3(positionX, positionY, positionZ);       // 바닥 타일의 위치
-        Quaternion rotation2 = Quaternion.identity;                             // 바닥 타일의 회전
+        Vector3 position = new Vector3(positionX, positionY, positionZ);       // 바닥 타일의 위치
+        Quaternion rotation = Quaternion.identity;                             // 바닥 타일의 회전
 
-        GameObject floorModule = Instantiate(floorPrefab, position2, rotation2);    // 바닥 생성시키기
-        floorModule.transform.parent = transform;                                   // 바닥 위치를 Spaceship아래로 내려주기
-        if (t == Module.ModuleType.Blueprint)
+        floorModule = Instantiate(floorPrefab, position, rotation);    // 바닥 생성시키기
+        floorModule.name = "Floor";                                               // 모듈 이름 변경
+        floorModule.transform.parent = transform;                                 // 바닥 위치를 Spaceship아래로 내려주기
+        
+        if (t == ModuleType.Blueprint)
         {
-            // gameObject.SetActive(false);
+            floorModule.SetActive(false);
         }
+    }
+
+    public void WallUpdate(int n)
+    {
     }
 
     void UpgradeModule()

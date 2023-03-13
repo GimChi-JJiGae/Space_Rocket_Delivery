@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Spaceship : MonoBehaviour
 {
-    static int rows = 21; // 바닥의 행 개수
-    static int cols = 21; // 바닥의 열 개수
-    static int size = 5; // 바닥의 크기
+    public static int rows = 21; // 바닥의 행 개수
+    public static int cols = 21; // 바닥의 열 개수
+    public static int size = 5; // 바닥의 크기
 
-    private GameObject[,] modules = new GameObject[cols, rows];
+    public GameObject[,] modules = new GameObject[cols, rows];
 
     // Start is called before the first frame update
     void Start()
@@ -75,4 +75,58 @@ public class Spaceship : MonoBehaviour
         moduleStatus.idxZ = z;
         moduleStatus.CreateFloor(moduleType);
     }
+
+    // Gets
+    public int GetRows() { return rows; }
+    public int GetCols() { return cols; }
+    public int GetSize() { return size; }
+
+
+    public void MakeWall(GameObject targetObject)
+    {
+        Module targetModule = targetObject.GetComponent<Module>();
+        Module topModule = modules[targetModule.idxZ + 1, targetModule.idxX].GetComponent<Module>();
+        Module bottomModule = modules[targetModule.idxZ - 1, targetModule.idxX].GetComponent<Module>();
+        Module leftModule = modules[targetModule.idxZ, targetModule.idxX - 1].GetComponent<Module>();
+        Module rightModule = modules[targetModule.idxZ, targetModule.idxX + 1].GetComponent<Module>();
+
+        if (topModule.moduleType == Module.ModuleType.Blueprint)
+        {
+            targetModule.wallTop.SetActive(true);
+        }
+        else
+        {
+            targetModule.wallTop.SetActive(false);
+            topModule.wallBottom.SetActive(false);
+        }
+        if (bottomModule.moduleType == Module.ModuleType.Blueprint)
+        {
+            targetModule.wallBottom.SetActive(true);
+        }
+        else
+        {
+            targetModule.wallBottom.SetActive(false);
+            bottomModule.wallTop.SetActive(false);
+        }
+        if (leftModule.moduleType == Module.ModuleType.Blueprint)
+        {
+            targetModule.wallLeft.SetActive(true);
+        }
+        else
+        {
+            targetModule.wallLeft.SetActive(false);
+            leftModule.wallRight.SetActive(false);
+        }
+        if (rightModule.moduleType == Module.ModuleType.Blueprint)
+        {
+            targetModule.wallRight.SetActive(true);
+        }
+        else
+        {
+            targetModule.wallRight.SetActive(false);
+            rightModule.wallLeft.SetActive(false);
+        }
+    }
 }
+
+
