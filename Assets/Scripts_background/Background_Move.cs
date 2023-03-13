@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class Background_Move : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed = 30f;
 
     public Transform SpaceShipObj;
-    
 
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        transform.Translate(-Vector3.forward * Time.deltaTime * speed, SpaceShipObj);
+        /*
         if (transform.position.z > -30)
         {
             transform.Translate(-Vector3.forward * Time.deltaTime * speed, SpaceShipObj);
@@ -49,6 +50,8 @@ public class Background_Move : MonoBehaviour
         }
     
     }
+        */
 
 
+    }
 }
