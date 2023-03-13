@@ -105,10 +105,6 @@ public class Module : MonoBehaviour
         }
     }
 
-    public void WallUpdate(int n)
-    {
-    }
-
     void UpgradeModule()
     {
 

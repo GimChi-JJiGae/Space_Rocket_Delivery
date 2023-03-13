@@ -10,8 +10,15 @@ public class PlayerModule : MonoBehaviour
     private Rigidbody playerRigidbody;
 
     private Spaceship spaceship;
+
+    // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
+
+    // Building 체크를 위한 오브젝트
+    private GameObject buildingObject;
+    private bool isOnBuildingStay = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,14 +43,21 @@ public class PlayerModule : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         OnEdgeEnter(other);
+        OnBuildingEnter(other);
     }
     private void OnTriggerStay(Collider other)
     {
         OnEdgeStay(other);
+        if (!isOnBuildingStay)
+        {
+            StartCoroutine(OnBuildingStay(other));
+        }
+        
     }
     private void OnTriggerExit(Collider other)
     {
         OnEdgeExit(other);
+        OnBuildingExit(other);
     }
 
     // 모서리에 들어가서 청사진을 보여줌
@@ -85,10 +99,8 @@ public class PlayerModule : MonoBehaviour
         {
             Debug.Log("생성되어라 얍");
             matchObject = other.gameObject;
-            // 바닥생성
-            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
-            // 벽생성 (연계되어있는 모듈이 많아 우주선에서 관리)
-            spaceship.MakeWall(targetObject);
+            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+            spaceship.MakeWall(targetObject);                                           // 벽생성 (연계되어있는 모듈이 많아 우주선에서 관리)
         }
     }
 
@@ -97,14 +109,55 @@ public class PlayerModule : MonoBehaviour
     {
         if (other.gameObject.tag == "Edge")
         {
-            Module module = targetObject.GetComponentInParent<Module>();
-            if (module.moduleType == ModuleType.Blueprint)
+            Module module = targetObject.GetComponentInParent<Module>();            
+            if (module.moduleType == ModuleType.Blueprint)                          // 블루프린터인 상황이면
             {
-                targetObject.GetComponent<Module>().floorModule.SetActive(false);
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);   // 바닥을 비활성화시킨다
             }
             matchObject = null;
             targetObject = null;
             
+        }
+    }
+
+    // 오브젝트 선택
+    private void OnBuildingEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Building")
+        {
+            buildingObject = other.gameObject;
+        }
+    }
+
+    // 1초에 한번만 선택할 수 있게
+    private IEnumerator OnBuildingStay(Collider other)
+    {
+        if (playerInput.Interact && other.gameObject.tag == "Building" && buildingObject)
+        {
+            isOnBuildingStay = true;
+            switch (other.gameObject.name)
+            {
+                case "Supplier":
+                    Supplier supplier = buildingObject.GetComponent<Supplier>();
+                    supplier.SwitchResource();
+                    break;
+                case "Engine":
+                    break;
+                case "Oxygenator":
+                    break;
+            }
+            yield return new WaitForSeconds(1.0f);
+            isOnBuildingStay = false;
+        }
+    }
+
+
+
+    private void OnBuildingExit(Collider other)
+    {
+        if (other.gameObject.tag == "Building")
+        {
+            buildingObject = null;
         }
     }
 }
