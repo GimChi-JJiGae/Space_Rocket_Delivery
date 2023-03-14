@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Spaceship : MonoBehaviour
 {
-    public static int rows = 21; // ¹Ù´ÚÀÇ Çà °³¼ö
-    public static int cols = 21; // ¹Ù´ÚÀÇ ¿­ °³¼ö
-    public static int size = 5; // ¹Ù´ÚÀÇ Å©±â
+    public static int rows = 21; // ë°”ë‹¥ì˜ í–‰ ê°œìˆ˜
+    public static int cols = 21; // ë°”ë‹¥ì˜ ì—´ ê°œìˆ˜
+    public static int size = 5; // ë°”ë‹¥ì˜ í¬ê¸°
 
     public GameObject[,] modules = new GameObject[cols, rows];
 
     // Start is called before the first frame update
     void Start()
     {
-        SettingModule();
+        
+        StartCoroutine(SettingModule());
     }
 
     // Update is called once per frame
@@ -22,62 +23,78 @@ public class Spaceship : MonoBehaviour
 
     }
 
-    void SettingModule()
+    IEnumerator SettingModule()
     {
-        // Ã»»çÁø ¸ğµâ »ı¼º
+        // ì²­ì‚¬ì§„ ëª¨ë“ˆ ìƒì„±
         for (int z = 0; z < cols; z++)
             for (int x = 0; x < rows; x++)
                 if (x < 9 || x > 11 || z < 9 || z > 11)
                     CreateDefaultModule(x, z, Module.ModuleType.Blueprint);
-        // È­¹°
+        // í™”ë¬¼
         CreateDefaultModule(9, 9, Module.ModuleType.Cargo);
         CreateDefaultModule(11, 11, Module.ModuleType.Cargo);
         CreateDefaultModule(9, 11, Module.ModuleType.Cargo);
         CreateDefaultModule(11, 9, Module.ModuleType.Cargo);
 
-        // ±âº»Æ÷Å¾
+        // ê¸°ë³¸í¬íƒ‘
         CreateDefaultModule(10, 9, Module.ModuleType.DefaultTurret);
 
-        // Á¦ÀÛ±â
+        // ì œì‘ê¸°
         CreateDefaultModule(9, 10, Module.ModuleType.Factory);
 
-        // º¸±Ş±â
+        // ë³´ê¸‰ê¸°
         CreateDefaultModule(10, 10, Module.ModuleType.Supplier);
 
-        // »ê¼Ò»ı¼º±â
+        // ì‚°ì†Œìƒì„±ê¸°
         CreateDefaultModule(11, 10, Module.ModuleType.Oxygenator);
 
-        // ¿£Áø
+        // ì—”ì§„
         CreateDefaultModule(10, 11, Module.ModuleType.Engine);
+
+        yield return new WaitForSeconds(1.0f);
+        CreateDefaultWall();
+        yield return null;
     }
 
     void CreateDefaultModule(int x, int z, Module.ModuleType moduleType)
     {
-        // À§Ä¡ ÁöÁ¤ ¹× ±âº» ¸ğµâ ¼¼ÆÃ
+        // ìœ„ì¹˜ ì§€ì • ë° ê¸°ë³¸ ëª¨ë“ˆ ì„¸íŒ…
         GameObject modulePrefab;
         modulePrefab = Resources.Load<GameObject>("Spaceship/Module/Module");
-        // À§Ä¡ÁöÁ¤
-        float positionX = -(size * rows) / 2 + (x * size) + (size) / 2;     // -ÀüÃ¼Å©±â +³õÀ»À§Ä¡ +Áß¾ÓÁ¤·Ä¿ë size/2
+        // ìœ„ì¹˜ì§€ì •
+        float positionX = -(size * rows) / 2 + (x * size) + (size) / 2;     // -ì „ì²´í¬ê¸° +ë†“ì„ìœ„ì¹˜ +ì¤‘ì•™ì •ë ¬ìš© size/2
         float positionZ = -(size * cols) / 2 + (z * size) + (size) / 2;
         float positionY = 0;
-        Vector3 position = new Vector3(positionX, positionY, positionZ);    // ¹Ù´Ú Å¸ÀÏÀÇ À§Ä¡
-        Quaternion rotation = Quaternion.identity;                           // ¹Ù´Ú Å¸ÀÏÀÇ È¸Àü
+        Vector3 position = new Vector3(positionX, positionY, positionZ);    // ë°”ë‹¥ íƒ€ì¼ì˜ ìœ„ì¹˜
+        Quaternion rotation = Quaternion.identity;                           // ë°”ë‹¥ íƒ€ì¼ì˜ íšŒì „
 
-        // ¸ğµâ »ı¼ºÇÏ°í spaceÀÇ ¹è¿­¿¡ ÇÒ´ç½ÃÅ°±â
+        // ëª¨ë“ˆ ìƒì„±í•˜ê³  spaceì˜ ë°°ì—´ì— í• ë‹¹ì‹œí‚¤ê¸°
         GameObject module = Instantiate(modulePrefab, position, rotation);  
-        module.transform.parent = transform;            // ¸ğµâ À§Ä¡¸¦ Spaceship¾Æ·¡·Î ³»·ÁÁÖ±â
-        module.name = modulePrefab.name;                // ¸ğµâ ÀÌ¸§ º¯°æ
-        modules[z, x] = module;                         // ¸ğµâ ³Ö±â
+        module.transform.parent = transform;            // ëª¨ë“ˆ ìœ„ì¹˜ë¥¼ Spaceshipì•„ë˜ë¡œ ë‚´ë ¤ì£¼ê¸°
+        module.name = modulePrefab.name;                // ëª¨ë“ˆ ì´ë¦„ ë³€ê²½
+        modules[z, x] = module;                         // ëª¨ë“ˆ ë„£ê¸°
 
-        // ¸ğµâÀÇ ¼Ó¼ºÀ» º¯°æ½ÃÅ°±â
+        // ëª¨ë“ˆì˜ ì†ì„±ì„ ë³€ê²½ì‹œí‚¤ê¸°
         Module moduleStatus = module.GetComponent<Module>();
         moduleStatus.idxX = x;
         moduleStatus.idxZ = z;
         moduleStatus.CreateFloor(moduleType);
     }
 
-    // Gets
-    public int GetRows() { return rows; }
+    void CreateDefaultWall()
+    {
+        for (int x = 9; x <= rows / 2 + 1 ; x++)
+        {
+            for (int z = 9; z <= cols / 2 + 1; z++)
+            {
+                GameObject temp = modules[z, x];
+                MakeWall(temp);
+            }
+        }
+    }
+
+        // Gets
+        public int GetRows() { return rows; }
     public int GetCols() { return cols; }
     public int GetSize() { return size; }
 
