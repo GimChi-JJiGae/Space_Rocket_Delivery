@@ -308,8 +308,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 270054265}
   offsetX: 0
-  offsetY: 5
-  offsetZ: -5
+  offsetY: 10
+  offsetZ: -10
   CameraSpeed: 3
 --- !u!1 &912907714
 GameObject:

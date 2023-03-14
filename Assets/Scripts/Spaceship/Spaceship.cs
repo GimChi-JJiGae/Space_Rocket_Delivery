@@ -13,7 +13,6 @@ public class Spaceship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         StartCoroutine(SettingModule());
     }
 
@@ -93,8 +92,8 @@ public class Spaceship : MonoBehaviour
         }
     }
 
-        // Gets
-        public int GetRows() { return rows; }
+    // Gets
+    public int GetRows() { return rows; }
     public int GetCols() { return cols; }
     public int GetSize() { return size; }
 
