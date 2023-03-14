@@ -15,12 +15,12 @@ public class PlayerInput : MonoBehaviour {
     public bool RepairModule { get; private set; }
     public bool DestroyModule { get; private set; }
 
-    private void Update() {
+    private void Update()
+    {
         // if (GameManager.instance != null && GameManager.instance.isGameover)
         // {
         //     Move_GoBack = 0;
         //     Move_LeftRight = 0;
-        //     Rotate = false;
         //     Interact = false;
         //     RepairModule = false;
         //     DestroyModule = false;
@@ -29,8 +29,8 @@ public class PlayerInput : MonoBehaviour {
 
         Move_GoBack = Input.GetAxis(move1AxisName);
         Move_LeftRight = Input.GetAxis(move2AxisName);
-        Interact = Input.GetButton(interactionButtonName);
+        Interact = Input.GetButtonDown(interactionButtonName);
         RepairModule = Input.GetButton(repairButtonName);
-        DestroyModule= Input.GetButton(destroyButtonName);        
+        DestroyModule = Input.GetButton(destroyButtonName);        
     }
 }
