@@ -45,9 +45,9 @@ InputManager:
     positiveButton: space
     altNegativeButton: 
     altPositiveButton: mouse 0
-    gravity: 0
+    gravity: 3
     dead: 0.001
-    sensitivity: 0
+    sensitivity: 3
     snap: 0
     invert: 0
     type: 0
@@ -61,9 +61,9 @@ InputManager:
     positiveButton: z
     altNegativeButton: 
     altPositiveButton: mouse 1
-    gravity: 1000
+    gravity: 3
     dead: 0.001
-    sensitivity: 1000
+    sensitivity: 3
     snap: 0
     invert: 0
     type: 0
