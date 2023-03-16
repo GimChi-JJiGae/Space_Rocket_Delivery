@@ -66,7 +66,6 @@ public class Module : MonoBehaviour
         }
 
         GameObject floorPrefab;
-        GameObject buildingPrefab = null;
         switch (t)
         {
             case ModuleType.Blueprint:      // 청사진
