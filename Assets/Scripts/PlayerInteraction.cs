@@ -50,42 +50,17 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // 범위 내 가장 가까운, liftable 물체를 찾는 함수.
-    private GameObject GetClosestObject()
-    {
-        GameObject closestObject = null;
-        float closestDistance = maxDistance;
-
-        foreach (GameObject obj in LiftableObjects)
-        {
-            float distance = Vector3.Distance(transform.position, obj.transform.position);
-            if (distance <= closestDistance)
-            {
-                closestObject = obj;
-                closestDistance = distance;
-            }
-        }
-
-        //가까운 물체가 없으면 null 반환
-        //설정된 distance 내에 liftable한 물체가 있으면 그 물체 반환
-        return closestObject;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (playerInput.Interact)
+        if (LiftableObjects.Contains(collision.gameObject))
         {
-            if (currentObject == null && LiftableObjects.Contains(collision.gameObject))
-            {
-                currentObject = collision.gameObject;
-                playerAnimator.SetBool("Lift", true);
-                
-                currentObject.GetComponent<Rigidbody>().useGravity = false;
-                currentObject.transform.parent = transform;
-                currentObject.transform.SetPositionAndRotation(leftHand.position, leftHand.rotation);
-            }
-
+            currentObject = collision.gameObject;
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        currentObject = null;
     }
 
     // Update is called once per frame
@@ -94,28 +69,23 @@ public class PlayerInteraction : MonoBehaviour
         // 상호작용 키를 눌렀을 때,
         if (playerInput.Interact)
         {
-            // 들고 있는 currentObject가 없으면
-            if (currentObject == null)
+            // currentObject
+            if (currentObject != null)
             {
-                // 가까운 obj를 찾는다.
-                currentObject = GetClosestObject();
-
-                // currentObject가 갱신됐으면
-                if (currentObject != null)
+                if (playerAnimator.GetBool("Lift") == false)
                 {
-                    // 물체를 든다. Lift 상태를 true로 바꿔주고
                     playerAnimator.SetBool("Lift", true);
-
+                    
                     currentObject.transform.parent = transform;
                     currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);
-                }
-            }
-            else
-            {
-                playerAnimator.SetBool("Lift", false);
 
-                currentObject.transform.parent = null;
-                currentObject = null;
+                }
+                else
+                {
+                    playerAnimator.SetBool("Lift", false);
+
+                    currentObject.transform.parent = null;
+                }
             }
         }
     }
