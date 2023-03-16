@@ -1,24 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    // µé ¼ö ÀÖ´Â ¸ğµç obj¸¦ ´ãÀ» liftableObjects¸¦ ¸®½ºÆ®·Î ¼±¾ğ
+    // ë“¤ ìˆ˜ ìˆëŠ” ëª¨ë“  objë¥¼ ë‹´ì„ liftableObjectsë¥¼ ë¦¬ìŠ¤íŠ¸ë¡œ ì„ ì–¸
     public List<GameObject> LiftableObjects = new();
-    // characterÀÇ ¿Ş¼Õ, ¿À¸¥¼Õ, »óÈ£ÀÛ¿ë ÇÒ ¼ö ÀÖ´Â ¹°Ã¼¿ÍÀÇ ÃÖ´ë °Å¸® ¼±¾ğ
+    // characterì˜ ì™¼ì†, ì˜¤ë¥¸ì†, ìƒí˜¸ì‘ìš© í•  ìˆ˜ ìˆëŠ” ë¬¼ì²´ì™€ì˜ ìµœëŒ€ ê±°ë¦¬ ì„ ì–¸
     public Transform leftHand;
     public Transform rightHand;
     public float maxDistance = 1f;
 
-    public GameObject LiftableObjectPrefab;
+    [SerializeField] private GameObject fuelPrefab;
+    [SerializeField] private GameObject orePrefab;
+    //[SerializeField] private GameObject upgradePrefab;
+    //[SerializeField] private GameObject laserPrefab;
 
-    public Text LiftPrompText;
 
-    private bool isNearLiftableObject = false;
+    //public Text LiftPrompText;
 
-    // currentObject(ÇöÀç ¹°Ã¼)¸¦ null·Î ¼±¾ğ
+    // currentObject(í˜„ì¬ ë¬¼ì²´)ë¥¼ nullë¡œ ì„ ì–¸
     private GameObject currentObject = null;
 
     private PlayerInput playerInput;
@@ -30,21 +33,24 @@ public class PlayerInteraction : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
 
-        LiftPrompText.gameObject.SetActive(false);
+        Mesh fuelMesh = fuelPrefab.GetComponent<MeshFilter>().sharedMesh;
+        Mesh gasMesh = orePrefab.GetComponent<MeshFilter>().sharedMesh;
+        //Mesh upgradeMesh = upgradePrefab.GetComponent<MeshFilter>().sharedMesh;
+        //Mesh laserMesh = laserPrefab.GetComponent<MeshFilter>().sharedMesh;
+
+        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        {
+            MeshFilter objMeshFilter = obj.GetComponent<MeshFilter>();
+
+            if (objMeshFilter != null && (objMeshFilter.sharedMesh == fuelMesh ||
+                objMeshFilter.sharedMesh == gasMesh))
+            {
+                LiftableObjects.Add(obj);
+            }
+        }
     }
 
-    //private IEnumerator Delay(float delay)
-    //{
-    //    isDelaying = true;
-
-    //    yield return new WaitForSeconds(delay);
-
-    //    playerAnimator.SetBool("Lift", false);
-
-    //    isDelaying = false;
-    //}
-
-    // ¹üÀ§ ³» °¡Àå °¡±î¿î, liftable ¹°Ã¼¸¦ Ã£´Â ÇÔ¼ö.
+    // ë²”ìœ„ ë‚´ ê°€ì¥ ê°€ê¹Œìš´, liftable ë¬¼ì²´ë¥¼ ì°¾ëŠ” í•¨ìˆ˜.
     private GameObject GetClosestObject()
     {
         GameObject closestObject = null;
@@ -60,47 +66,45 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        //°¡±î¿î ¹°Ã¼°¡ ¾øÀ¸¸é null ¹İÈ¯
-        //¼³Á¤µÈ distance ³»¿¡ liftableÇÑ ¹°Ã¼°¡ ÀÖÀ¸¸é ±× ¹°Ã¼ ¹İÈ¯
+        //ê°€ê¹Œìš´ ë¬¼ì²´ê°€ ì—†ìœ¼ë©´ null ë°˜í™˜
+        //ì„¤ì •ëœ distance ë‚´ì— liftableí•œ ë¬¼ì²´ê°€ ìˆìœ¼ë©´ ê·¸ ë¬¼ì²´ ë°˜í™˜
         return closestObject;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (LiftableObjects.Contains(other.gameObject))
+        if (playerInput.Interact)
         {
-            isNearLiftableObject = true;
-            LiftPrompText.gameObject.SetActive(true);
-        }
-    }
+            if (currentObject == null && LiftableObjects.Contains(collision.gameObject))
+            {
+                currentObject = collision.gameObject;
+                playerAnimator.SetBool("Lift", true);
+                
+                currentObject.GetComponent<Rigidbody>().useGravity = false;
+                currentObject.transform.parent = transform;
+                currentObject.transform.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+            }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (LiftableObjects.Contains(other.gameObject))
-        {
-            isNearLiftableObject = false;
-            LiftPrompText.gameObject.SetActive(false);
         }
     }
 
     // Update is called once per frame
     private void Update()
     {
-        // »óÈ£ÀÛ¿ë Å°¸¦ ´­·¶À» ¶§,
-        if (isNearLiftableObject && playerInput.Interact)
+        // ìƒí˜¸ì‘ìš© í‚¤ë¥¼ ëˆŒë €ì„ ë•Œ,
+        if (playerInput.Interact)
         {
-            // µé°í ÀÖ´Â currentObject°¡ ¾øÀ¸¸é
+            // ë“¤ê³  ìˆëŠ” currentObjectê°€ ì—†ìœ¼ë©´
             if (currentObject == null)
             {
-                // °¡±î¿î obj¸¦ Ã£´Â´Ù.
+                // ê°€ê¹Œìš´ objë¥¼ ì°¾ëŠ”ë‹¤.
                 currentObject = GetClosestObject();
 
-                // currentObject°¡ °»½ÅµÆÀ¸¸é
+                // currentObjectê°€ ê°±ì‹ ëìœ¼ë©´
                 if (currentObject != null)
                 {
-                    // ¹°Ã¼¸¦ µç´Ù. Lift »óÅÂ¸¦ true·Î ¹Ù²ãÁÖ°í
+                    // ë¬¼ì²´ë¥¼ ë“ ë‹¤. Lift ìƒíƒœë¥¼ trueë¡œ ë°”ê¿”ì£¼ê³ 
                     playerAnimator.SetBool("Lift", true);
-
 
                     currentObject.transform.parent = transform;
                     currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);

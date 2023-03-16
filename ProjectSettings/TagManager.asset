@@ -8,6 +8,7 @@ TagManager:
   - Spaceship
   - Wall
   - Building
+  - Liftable
   layers:
   - Default
   - TransparentFX
