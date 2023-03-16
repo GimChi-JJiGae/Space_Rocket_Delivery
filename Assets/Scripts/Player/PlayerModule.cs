@@ -11,11 +11,11 @@ public class PlayerModule : MonoBehaviour
 
     private Spaceship spaceship;
 
-    // Edge Ã¼Å©¸¦ À§ÇÑ ¿ÀºêÁ§Æ®
+    // Edge ì²´í¬ë¥¼ ìœ„í•œ ì˜¤ë¸Œì íŠ¸
     private GameObject matchObject;
     private GameObject targetObject;
 
-    // Building Ã¼Å©¸¦ À§ÇÑ ¿ÀºêÁ§Æ®
+    // Building ì²´í¬ë¥¼ ìœ„í•œ ì˜¤ë¸Œì íŠ¸
     private GameObject buildingObject;
     private bool isOnBuildingStay = false;
 
@@ -60,10 +60,10 @@ public class PlayerModule : MonoBehaviour
         OnBuildingExit(other);
     }
 
-    // ¸ğ¼­¸®¿¡ µé¾î°¡¼­ Ã»»çÁøÀ» º¸¿©ÁÜ
+    // ëª¨ì„œë¦¬ì— ë“¤ì–´ê°€ì„œ ì²­ì‚¬ì§„ì„ ë³´ì—¬ì¤Œ
     private void OnEdgeEnter(Collider other)
     {
-        // ¸ğ¼­¸®¿¡ ÁøÀÔÇßÀ» ¶§
+        // ëª¨ì„œë¦¬ì— ì§„ì…í–ˆì„ ë•Œ
         if (other.gameObject.tag == "Edge")
         {
             matchObject = other.gameObject;
@@ -85,34 +85,34 @@ public class PlayerModule : MonoBehaviour
                     idxX -= 1;
                     break;
             }
-            // È°¼ºÈ­¸¦ ½ÃÅ²´Ù
+            // í™œì„±í™”ë¥¼ ì‹œí‚¨ë‹¤
             targetObject = spaceship.modules[idxZ, idxX];
             targetObject.GetComponent<Module>().floorModule.SetActive(true);
         }
     }
 
-    // ¸ğ¼­¸® ¾È¿¡ ÀÖÀ» ¶§ ÀÔ·ÂÀ» Ã¼Å©ÇÔ
+    // ëª¨ì„œë¦¬ ì•ˆì— ìˆì„ ë•Œ ì…ë ¥ì„ ì²´í¬í•¨
     private void OnEdgeStay(Collider other)
     {
-        // ¸ğ¼­¸®¾È && ÀÔ·Â && ºí·çÇÁ¸°Æ® ¸ğµâÀÏ ¶§
+        // ëª¨ì„œë¦¬ì•ˆ && ì…ë ¥ && ë¸”ë£¨í”„ë¦°íŠ¸ ëª¨ë“ˆì¼ ë•Œ
         if (other.gameObject.tag == "Edge" && playerInput.Interact && targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
         {
-            Debug.Log("»ı¼ºµÇ¾î¶ó ¾å");
+            Debug.Log("ìƒì„±ë˜ì–´ë¼ ì–");
             matchObject = other.gameObject;
-            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // ¹Ù´Ú»ı¼º
-            spaceship.MakeWall(targetObject);                                           // º®»ı¼º (¿¬°èµÇ¾îÀÖ´Â ¸ğµâÀÌ ¸¹¾Æ ¿ìÁÖ¼±¿¡¼­ °ü¸®)
+            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // ë°”ë‹¥ìƒì„±
+            spaceship.MakeWall(targetObject);                                           // ë²½ìƒì„± (ì—°ê³„ë˜ì–´ìˆëŠ” ëª¨ë“ˆì´ ë§ì•„ ìš°ì£¼ì„ ì—ì„œ ê´€ë¦¬)
         }
     }
 
-    // ¸ğ¼­¸®¸¦ ³ª¿Ã ¶§ Ã»»çÁøÀ» ¾Èº¸¿©ÁÜ
+    // ëª¨ì„œë¦¬ë¥¼ ë‚˜ì˜¬ ë•Œ ì²­ì‚¬ì§„ì„ ì•ˆë³´ì—¬ì¤Œ
     private void OnEdgeExit(Collider other)
     {
         if (other.gameObject.tag == "Edge")
         {
             Module module = targetObject.GetComponentInParent<Module>();            
-            if (module.moduleType == ModuleType.Blueprint)                          // ºí·çÇÁ¸°ÅÍÀÎ »óÈ²ÀÌ¸é
+            if (module.moduleType == ModuleType.Blueprint)                          // ë¸”ë£¨í”„ë¦°í„°ì¸ ìƒí™©ì´ë©´
             {
-                targetObject.GetComponent<Module>().floorModule.SetActive(false);   // ¹Ù´ÚÀ» ºñÈ°¼ºÈ­½ÃÅ²´Ù
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);   // ë°”ë‹¥ì„ ë¹„í™œì„±í™”ì‹œí‚¨ë‹¤
             }
             matchObject = null;
             targetObject = null;
@@ -120,7 +120,7 @@ public class PlayerModule : MonoBehaviour
         }
     }
 
-    // ¿ÀºêÁ§Æ® ¼±ÅÃ
+    // ì˜¤ë¸Œì íŠ¸ ì„ íƒ
     private void OnBuildingEnter(Collider other)
     {
         if (other.gameObject.tag == "Building")
@@ -129,7 +129,7 @@ public class PlayerModule : MonoBehaviour
         }
     }
 
-    // 1ÃÊ¿¡ ÇÑ¹ø¸¸ ¼±ÅÃÇÒ ¼ö ÀÖ°Ô
+    // 1ì´ˆì— í•œë²ˆë§Œ ì„ íƒí•  ìˆ˜ ìˆê²Œ
     private IEnumerator OnBuildingStay(Collider other)
     {
         if (playerInput.Interact && other.gameObject.tag == "Building" && buildingObject)

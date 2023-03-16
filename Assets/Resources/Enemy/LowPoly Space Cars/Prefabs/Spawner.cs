@@ -112,7 +112,7 @@ public class EnemyController : MonoBehaviour
         {
             Debug.LogError("CameraShake component not found on the main camera.");
         }
-
+        spawner.counter++;
         Destroy(gameObject);
     }
 }
