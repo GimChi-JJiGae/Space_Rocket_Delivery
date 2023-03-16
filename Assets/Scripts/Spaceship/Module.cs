@@ -73,7 +73,7 @@ public class Module : MonoBehaviour
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BlueprintFloor");
                 break;
             case ModuleType.Engine:         // 엔진
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Engine");
                 break;
             case ModuleType.Cargo:          // 화물
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Cargo");
