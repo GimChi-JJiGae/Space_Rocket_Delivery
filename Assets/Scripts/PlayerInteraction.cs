@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,11 @@ public class PlayerInteraction : MonoBehaviour
     public Transform rightHand;
     public float maxDistance = 1f;
 
-    public GameObject LiftableObjectPrefab;
+    [SerializeField] private GameObject fuelPrefab;
+    [SerializeField] private GameObject orePrefab;
+    //[SerializeField] private GameObject upgradePrefab;
+    //[SerializeField] private GameObject laserPrefab;
+
 
     //public Text LiftPrompText;
 
@@ -28,7 +33,21 @@ public class PlayerInteraction : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
 
-        //LiftPrompText.gameObject.SetActive(false);
+        Mesh fuelMesh = fuelPrefab.GetComponent<MeshFilter>().sharedMesh;
+        Mesh gasMesh = orePrefab.GetComponent<MeshFilter>().sharedMesh;
+        //Mesh upgradeMesh = upgradePrefab.GetComponent<MeshFilter>().sharedMesh;
+        //Mesh laserMesh = laserPrefab.GetComponent<MeshFilter>().sharedMesh;
+
+        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        {
+            MeshFilter objMeshFilter = obj.GetComponent<MeshFilter>();
+
+            if (objMeshFilter != null && (objMeshFilter.sharedMesh == fuelMesh ||
+                objMeshFilter.sharedMesh == gasMesh))
+            {
+                LiftableObjects.Add(obj);
+            }
+        }
     }
 
     // 범위 내 가장 가까운, liftable 물체를 찾는 함수.
@@ -54,17 +73,18 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Liftable"))
+        if (playerInput.Interact)
         {
-            if (playerInput.Interact)
+            if (currentObject == null && LiftableObjects.Contains(collision.gameObject))
             {
                 currentObject = collision.gameObject;
                 playerAnimator.SetBool("Lift", true);
-
+                
                 currentObject.GetComponent<Rigidbody>().useGravity = false;
                 currentObject.transform.parent = transform;
                 currentObject.transform.SetPositionAndRotation(leftHand.position, leftHand.rotation);
             }
+
         }
     }
 
@@ -85,7 +105,6 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     // 물체를 든다. Lift 상태를 true로 바꿔주고
                     playerAnimator.SetBool("Lift", true);
-
 
                     currentObject.transform.parent = transform;
                     currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);
