@@ -55,7 +55,7 @@ public class Spawner : MonoBehaviour
         rb.freezeRotation = true;
 
         // Rotate the enemy to face the target and then rotate 180 degrees
-        enemy.transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
+        enemy.transform.rotation = Quaternion.LookRotation(direction);
 
         // Set up OnCollisionEnter function to destroy enemy on collision
         EnemyController controller = enemy.AddComponent<EnemyController>();
@@ -68,6 +68,12 @@ public class EnemyController : MonoBehaviour
     public Spawner spawner;
     public float speed = 5f;
     private bool hasExploded = false;
+    public CameraShake cameraShake; // Add this line
+
+    void Start()
+    {
+        cameraShake = Camera.main.GetComponent<CameraShake>(); // Add this line
+    }
     void Update()
     {
         if (!hasExploded)
@@ -82,7 +88,7 @@ public class EnemyController : MonoBehaviour
             rb.freezeRotation = true;
 
             // Rotate the enemy to face the target and then rotate 180 degrees
-            transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180, 0);
+            transform.rotation = Quaternion.LookRotation(direction);
         }
     }
     void OnCollisionEnter(Collision collision)
@@ -96,6 +102,15 @@ public class EnemyController : MonoBehaviour
             // Automatically destroy the VFX instance after the duration of the particle system
             ParticleSystem vfxParticleSystem = vfxInstance.GetComponent<ParticleSystem>();
             Destroy(vfxInstance, vfxParticleSystem.main.duration);
+        }
+
+        if (cameraShake != null)
+        {
+            cameraShake.Shake();
+        }
+        else
+        {
+            Debug.LogError("CameraShake component not found on the main camera.");
         }
 
         Destroy(gameObject);
