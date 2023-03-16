@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace PathCreation.Examples
 {
@@ -19,7 +19,7 @@ namespace PathCreation.Examples
             }
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (pathCreator != null)
             {
