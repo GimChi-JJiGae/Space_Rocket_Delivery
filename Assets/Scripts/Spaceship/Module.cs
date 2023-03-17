@@ -8,34 +8,35 @@ using static Module;
 
 public class Module : MonoBehaviour
 {
-    public int idxX; // x¼ø¹ø
-    public int idxZ; // y¼ø¹ø
+    public int idxX; // xìˆœë²ˆ
+    public int idxZ; // yìˆœë²ˆ
     public enum ModuleType
     {
-        Blueprint,      // Ã»»çÁø
-        Engine,         // ¿£Áø
-        Cargo,          // È­¹°
-        Factory,        // Á¦ÀÛ±â
-        Supplier,       // »ı¼º±â
-        Oxygenator,     // »ê¼ÒÀç»ı±â
-        DefaultTurret,  // ±âº»ÅÍ·¿
-        LaserTurret,    // ·¹ÀÌÀúÅÍ·¿
+        Blueprint,      // ì²­ì‚¬ì§„
+        Engine,         // ì—”ì§„
+        Cargo,          // í™”ë¬¼
+        Factory,        // ì œì‘ê¸°
+        Supplier,       // ìƒì„±ê¸°
+        Oxygenator,     // ì‚°ì†Œì¬ìƒê¸°
+        DefaultTurret,  // ê¸°ë³¸í„°ë ›
+        LaserTurret,    // ë ˆì´ì €í„°ë ›
     }
-    public ModuleType moduleType;   // ¸ğµâÅ¸ÀÔ
-    //private Spaceship spaceship;    // ¿ìÁÖ¼± ¿ªÂüÁ¶
+    public ModuleType moduleType;   // ëª¨ë“ˆíƒ€ì…
+    //private Spaceship spaceship;    // ìš°ì£¼ì„  ì—­ì°¸ì¡°
 
     public GameObject wallTop;
     public GameObject wallLeft;
     public GameObject wallBottom;
     public GameObject wallRight;
 
-    public GameObject floorModule;
+    public GameObject floorModule; // ë°”ë‹¥ ëª¨ë“ˆ
+    public GameObject buildingModule; // ê±´ë¬¼ ëª¨ë“ˆ
 
     // Start is called before the first frame update
     void Start()
     {
         //spaceship = FindAnyObjectByType<Spaceship>();
-        // º® Ã£±â
+        // ë²½ ì°¾ê¸°
         Transform wallTransform = transform.Find("Wall");
 
         wallTop = wallTransform.Find("WallTop").gameObject;
@@ -54,54 +55,70 @@ public class Module : MonoBehaviour
     }
 
 
-    // ¹Ù´ÚÀ» »ı¼ºÇÏ´Â ÇÔ¼ö
+    // ë°”ë‹¥ì„ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
     public void CreateFloor(ModuleType t)
     {
         moduleType = t;
-        GameObject floorPrefab; 
+        if (transform.Find("Floor"))
+        {
+            GameObject beforeFloor = transform.Find("Floor").gameObject;
+            Destroy(beforeFloor);
+        }
+
+        GameObject floorPrefab;
         switch (t)
         {
-            case ModuleType.Blueprint:      // Ã»»çÁø
+            case ModuleType.Blueprint:      // ì²­ì‚¬ì§„
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BlueprintFloor");
                 break;
-            case ModuleType.Engine:         // ¿£Áø
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+            case ModuleType.Engine:         // ì—”ì§„
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Engine");
                 break;
-            case ModuleType.Cargo:          // È­¹°
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+            case ModuleType.Cargo:          // í™”ë¬¼
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Cargo");
                 break;    
-            case ModuleType.Factory:        // Á¦ÀÛ±â
+            case ModuleType.Factory:        // ì œì‘ê¸°
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
-            case ModuleType.Supplier:       // »ı¼º±â
+            case ModuleType.Supplier:       // ìƒì„±ê¸°
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Supplier");
+                break;
+            case ModuleType.Oxygenator:     // ì‚°ì†Œì¬ìƒê¸°
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Oxygenator");
+                break;
+            case ModuleType.DefaultTurret:  // ê¸°ë³¸í„°ë ›
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
-            case ModuleType.Oxygenator:     // »ê¼ÒÀç»ı±â
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
-                break;
-            case ModuleType.DefaultTurret:  // ±âº»ÅÍ·¿
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
-                break;
-            case ModuleType.LaserTurret:    // ·¹ÀÌÀúÅÍ·¿
+            case ModuleType.LaserTurret:    // ë ˆì´ì €í„°ë ›
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
         }
-        float positionX = gameObject.transform.position.x;     // Áö±İ ¿ÀºêÁ§Æ®ÀÇ À§Ä¡¸¦ °¡Á®¿È
+        float positionX = gameObject.transform.position.x;     // ì§€ê¸ˆ ì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜´
         float positionZ = gameObject.transform.position.z;      
         float positionY = gameObject.transform.position.y;
-        Vector3 position = new Vector3(positionX, positionY, positionZ);       // ¹Ù´Ú Å¸ÀÏÀÇ À§Ä¡
-        Quaternion rotation = Quaternion.identity;                             // ¹Ù´Ú Å¸ÀÏÀÇ È¸Àü
+        Vector3 position = new Vector3(positionX, positionY, positionZ);       // ë°”ë‹¥ íƒ€ì¼ì˜ ìœ„ì¹˜
+        Quaternion rotation = Quaternion.identity;                             // ë°”ë‹¥ íƒ€ì¼ì˜ íšŒì „
 
-        floorModule = Instantiate(floorPrefab, position, rotation);    // ¹Ù´Ú »ı¼º½ÃÅ°±â
-        floorModule.name = "Floor";                                               // ¸ğµâ ÀÌ¸§ º¯°æ
-        floorModule.transform.parent = transform;                                 // ¹Ù´Ú À§Ä¡¸¦ Spaceship¾Æ·¡·Î ³»·ÁÁÖ±â
-        
+        floorModule = Instantiate(floorPrefab, position, rotation);    // ë°”ë‹¥ ìƒì„±ì‹œí‚¤ê¸°
+        floorModule.name = "Floor";                                               // ëª¨ë“ˆ ì´ë¦„ ë³€ê²½
+        floorModule.transform.parent = transform;                                 // ë°”ë‹¥ ìœ„ì¹˜ë¥¼ Spaceshipì•„ë˜ë¡œ ë‚´ë ¤ì£¼ê¸°
+
         if (t == ModuleType.Blueprint)
         {
             floorModule.SetActive(false);
+        }
+    }
+
+    public void CreateBuilding(ModuleType t)
+    {
+        moduleType = t;
+        if (transform.Find("Building"))
+        {
+            GameObject beforebuilding = transform.Find("Building").gameObject;
+            Destroy(beforebuilding);
         }
     }
 

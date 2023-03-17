@@ -13,7 +13,6 @@ public class Spaceship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         StartCoroutine(SettingModule());
     }
 
@@ -37,7 +36,7 @@ public class Spaceship : MonoBehaviour
         CreateDefaultModule(11, 9, Module.ModuleType.Cargo);
 
         // 기본포탑
-        CreateDefaultModule(10, 9, Module.ModuleType.DefaultTurret);
+        CreateDefaultModule(10, 11, Module.ModuleType.DefaultTurret);
 
         // 제작기
         CreateDefaultModule(9, 10, Module.ModuleType.Factory);
@@ -49,7 +48,7 @@ public class Spaceship : MonoBehaviour
         CreateDefaultModule(11, 10, Module.ModuleType.Oxygenator);
 
         // 엔진
-        CreateDefaultModule(10, 11, Module.ModuleType.Engine);
+        CreateDefaultModule(10, 9, Module.ModuleType.Engine);
 
         yield return new WaitForSeconds(1.0f);
         CreateDefaultWall();
@@ -93,8 +92,8 @@ public class Spaceship : MonoBehaviour
         }
     }
 
-        // Gets
-        public int GetRows() { return rows; }
+    // Gets
+    public int GetRows() { return rows; }
     public int GetCols() { return cols; }
     public int GetSize() { return size; }
 
