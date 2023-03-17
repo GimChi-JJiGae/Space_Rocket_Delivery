@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Spaceship-Background.unity
+    guid: d69870e1625324343afab53d1f4ee5c6
   m_configObjects: {}
