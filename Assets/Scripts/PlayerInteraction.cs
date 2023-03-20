@@ -18,11 +18,11 @@ public class PlayerInteraction : MonoBehaviour
     //[SerializeField] private GameObject upgradePrefab;
     //[SerializeField] private GameObject laserPrefab;
 
-
     //public Text LiftPrompText;
 
     // currentObject(현재 물체)를 null로 선언
-    private GameObject currentObject = null;
+    public GameObject currentObject = null;
+    public bool isHoldingObject = false;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
@@ -60,7 +60,30 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        currentObject = null;
+        if (currentObject == collision.gameObject)
+        {
+            currentObject = null;
+        }
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (isHoldingObject)
+        {
+            playerAnimator.SetLayerWeight(1, 1);
+        }
+        else
+        {
+            playerAnimator.SetLayerWeight(1, 0);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isHoldingObject)
+        {
+            currentObject.transform.position = leftHand.position;
+        }
     }
 
     // Update is called once per frame
@@ -69,21 +92,18 @@ public class PlayerInteraction : MonoBehaviour
         // 상호작용 키를 눌렀을 때,
         if (playerInput.Interact)
         {
-            // currentObject
             if (currentObject != null)
             {
-                if (playerAnimator.GetBool("Lift") == false)
+                if (!isHoldingObject)
                 {
-                    playerAnimator.SetBool("Lift", true);
+                    isHoldingObject = true;
                     
                     currentObject.transform.parent = transform;
                     currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);
-
                 }
                 else
                 {
-                    playerAnimator.SetBool("Lift", false);
-
+                    isHoldingObject = false;
                     currentObject.transform.parent = null;
                 }
             }
