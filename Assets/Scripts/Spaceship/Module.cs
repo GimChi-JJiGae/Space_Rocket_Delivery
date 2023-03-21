@@ -132,17 +132,6 @@ public class Module : MonoBehaviour
         }
     }
 
-    // 건물 생성
-    public void CreateBuilding(ModuleType t)
-    {
-        moduleType = t;
-        if (transform.Find("Building"))
-        {
-            GameObject beforebuilding = transform.Find("Building").gameObject;
-            Destroy(beforebuilding);
-        }
-    }
-
     void UpgradeModule()
     {
 
