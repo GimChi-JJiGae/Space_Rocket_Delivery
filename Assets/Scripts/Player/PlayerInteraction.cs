@@ -10,7 +10,6 @@ public class PlayerInteraction : MonoBehaviour
     public List<GameObject> LiftableObjects = new();
     // character의 왼손, 오른손, 상호작용 할 수 있는 물체와의 최대 거리 선언
     public Transform leftHand;
-    public Transform rightHand;
     public float maxDistance = 1f;
 
     [SerializeField] private GameObject fuelPrefab;
@@ -18,11 +17,9 @@ public class PlayerInteraction : MonoBehaviour
     //[SerializeField] private GameObject upgradePrefab;
     //[SerializeField] private GameObject laserPrefab;
 
-
-    //public Text LiftPrompText;
-
     // currentObject(현재 물체)를 null로 선언
-    private GameObject currentObject = null;
+    public GameObject currentObject = null;
+    public bool isHoldingObject = false;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
@@ -52,7 +49,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (LiftableObjects.Contains(collision.gameObject))
+        if (currentObject == null && LiftableObjects.Contains(collision.gameObject))
         {
             currentObject = collision.gameObject;
         }
@@ -63,29 +60,58 @@ public class PlayerInteraction : MonoBehaviour
         currentObject = null;
     }
 
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (isHoldingObject)
+        {
+            playerAnimator.SetLayerWeight(1, 1);
+        }
+        else
+        {
+            playerAnimator.SetLayerWeight(1, 0);
+        }
+    }
+
     // Update is called once per frame
     private void Update()
     {
         // 상호작용 키를 눌렀을 때,
-        if (playerInput.Interact)
+        if (playerInput.Interact && playerInput.CanInteract())
         {
-            // currentObject
             if (currentObject != null)
             {
-                if (playerAnimator.GetBool("Lift") == false)
+                if (!isHoldingObject)
                 {
-                    playerAnimator.SetBool("Lift", true);
-                    
-                    currentObject.transform.parent = transform;
-                    currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);
+                    isHoldingObject = true;
 
+                    //currentObject.transform.parent = leftHand;
+                    //currentObject.transform.SetLocalPositionAndRotation(leftHand.position, leftHand.rotation);
+
+                    GameObject parentObject = new()
+                    {
+                        name = currentObject.name + "_parent"
+                    };
+                    parentObject.transform.SetPositionAndRotation(leftHand.position, leftHand.rotation);
+
+                    parentObject.transform.parent = leftHand;
+
+                    // Make the current object a child of the parent object
+                    currentObject.transform.parent = parentObject.transform;
+
+                    // Set the position and rotation of the current object relative to the parent object
+                    currentObject.transform.SetLocalPositionAndRotation(leftHand.position, leftHand.rotation);
                 }
                 else
                 {
-                    playerAnimator.SetBool("Lift", false);
+                    isHoldingObject = false;
 
+                    Destroy(currentObject.transform.parent.gameObject);
+                    
                     currentObject.transform.parent = null;
+
                 }
+
+                StartCoroutine(playerInput.DisableInteractionForSeconds(1f));
             }
         }
     }
