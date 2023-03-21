@@ -5,21 +5,30 @@ using UnityEngine;
 public class RangedEnemyController : MonoBehaviour
 {
     public GameObject projectilePrefab;
-    public float attackRange = 200f;
-    public float minDistance = 200f; // Add this line
+    public float attackRange = 100f;
+    public float minDistance = 100f; // Add this line
     public float speed = 3f; // Add this line
     public float attackInterval = 2f;
     public int health;
     public GameObject target;
     private float nextAttackTime;
+    public float targetUpdateInterval = 5f; // Add this line
+    private float nextTargetUpdateTime; // Add this line
 
     void Start()
     {
+        target = FindClosestWall(); // Update this line
         nextAttackTime = Time.time + attackInterval;
+        nextTargetUpdateTime = Time.time + targetUpdateInterval; // Add this line
     }
 
     void Update()
     {
+        if (Time.time >= nextTargetUpdateTime) // Add this block
+        {
+            target = FindClosestWall();
+            nextTargetUpdateTime = Time.time + targetUpdateInterval;
+        }
         float distance = Vector3.Distance(transform.position, target.transform.position);
 
         if (distance > minDistance) // Add this block
@@ -32,6 +41,16 @@ public class RangedEnemyController : MonoBehaviour
             rb.freezeRotation = true;
             transform.rotation = Quaternion.LookRotation(direction);
         }
+        else if (distance < minDistance) // Add this block
+        {
+            Vector3 direction = (transform.position - target.transform.position).normalized;
+            Vector3 velocity = direction * speed;
+
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.velocity = velocity;
+            rb.freezeRotation = true;
+            transform.rotation = Quaternion.LookRotation(-direction);
+        }
         else
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -42,7 +61,9 @@ public class RangedEnemyController : MonoBehaviour
             Attack();
             nextAttackTime = Time.time + attackInterval;
         }
+
     }
+
 
     void Attack()
     {
@@ -62,22 +83,21 @@ public class RangedEnemyController : MonoBehaviour
     }
 
 
-
-    GameObject FindClosestWindowTile()
+    GameObject FindClosestWall() // Add this method
     {
-        GameObject[] windowTiles;
-        windowTiles = GameObject.FindGameObjectsWithTag("SM_Bld_Wall_Exterior_Window_01");
+        GameObject[] wallObjects;
+        wallObjects = GameObject.FindGameObjectsWithTag("Wall");
 
         GameObject closest = null;
         float minDistance = Mathf.Infinity;
         Vector3 position = transform.position;
 
-        foreach (GameObject windowTile in windowTiles)
+        foreach (GameObject wallObject in wallObjects)
         {
-            float distance = Vector3.Distance(windowTile.transform.position, position);
+            float distance = Vector3.Distance(wallObject.transform.position, position);
             if (distance < minDistance)
             {
-                closest = windowTile;
+                closest = wallObject;
                 minDistance = distance;
             }
         }

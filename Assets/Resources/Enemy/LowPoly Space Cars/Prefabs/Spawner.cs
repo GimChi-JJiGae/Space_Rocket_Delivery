@@ -9,12 +9,10 @@ public class Spawner : MonoBehaviour
     public int[] rangedEnemyHealths;
     public GameObject[] enemies;
     public int[] enemyHealths;
-    public GameObject target;
     public GameObject explosionVFX;
     public float speed = 5f;
     public GameObject rangedEnemyPrefab;
     public float rangedEnemySpawnChance = 0.2f;
-
     void Start()
     {
         InvokeRepeating("spawnEnemy", 0, 0.5f);
@@ -37,17 +35,18 @@ public class Spawner : MonoBehaviour
         randomDirection.y = 0;
         randomDirection.Normalize();
 
-        Vector3 spawnPos = target.transform.position + randomDirection * Random.Range(minDistance, maxDistance);
-        spawnPos.y = 1;
+        Vector3 spawnPos = transform.position + randomDirection * Random.Range(minDistance, maxDistance);
+        spawnPos.y = Random.Range(5f, 20f);
 
         int randomIndex = Random.Range(0, enemies.Length);
         GameObject enemy;
+        GameObject closestWall = FindClosestWall();
 
         if (Random.value < rangedEnemySpawnChance)
         {
             enemy = Instantiate(rangedEnemyPrefab, spawnPos, Quaternion.identity);
             RangedEnemyController rangedController = enemy.GetComponent<RangedEnemyController>();
-            rangedController.target = target;
+            rangedController.target = closestWall;
         }
         else
         {
@@ -55,21 +54,50 @@ public class Spawner : MonoBehaviour
             EnemyController controller = enemy.AddComponent<EnemyController>();
             controller.spawner = this;
             controller.health = enemyHealths[randomIndex];
+            controller.target = closestWall;
         }
         // 원거리 적 프리팹에 BoxCollider를 추가
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
-        collider.size = new Vector3(5, 2, 7); // 필요한 경우 적절한 크기로 조정
+        if (Random.value < rangedEnemySpawnChance)
+        {
+            collider.size = new Vector3(5, 2, 7); // 원거리 적의 경우 적절한 크기로 조정
+        }
+        else
+        {
+            collider.size = new Vector3(3, 2, 3); // 근거리 적의 경우 적절한 크기로 조정
+        }
 
         Rigidbody rb = enemy.AddComponent<Rigidbody>();
         rb.useGravity = false;
 
-        Vector3 direction = (target.transform.position - enemy.transform.position).normalized;
+        Vector3 direction = (closestWall.transform.position - enemy.transform.position).normalized;
         Vector3 velocity = direction * speed;
 
         rb.velocity = velocity;
         rb.freezeRotation = true;
 
         enemy.transform.rotation = Quaternion.LookRotation(direction);
+    }
+    GameObject FindClosestWall() // Add this method
+    {
+        GameObject[] wallObjects;
+        wallObjects = GameObject.FindGameObjectsWithTag("Wall");
+
+        GameObject closest = null;
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+
+        foreach (GameObject wallObject in wallObjects)
+        {
+            float distance = Vector3.Distance(wallObject.transform.position, position);
+            if (distance < minDistance)
+            {
+                closest = wallObject;
+                minDistance = distance;
+            }
+        }
+
+        return closest;
     }
 }
 
@@ -82,7 +110,7 @@ public class EnemyController : MonoBehaviour
     private bool hasExploded = false;
     public CameraShake cameraShake; // Add this line
     public int health; // 변경된 부분: [SerializeField] private int health; 에서 public int health;
-
+    public GameObject target;
 
     void Start()
     {
@@ -93,7 +121,7 @@ public class EnemyController : MonoBehaviour
         if (!hasExploded)
         {
             // Update direction and velocity towards the moving target
-            Vector3 direction = (spawner.target.transform.position - transform.position).normalized;
+            Vector3 direction = (target.transform.position - transform.position).normalized;
             Vector3 velocity = direction * speed;
 
             // Set the velocity and freeze rotation of the enemy object

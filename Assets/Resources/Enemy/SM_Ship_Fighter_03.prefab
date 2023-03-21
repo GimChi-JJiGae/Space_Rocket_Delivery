@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7332319088152447950}
   - component: {fileID: 7309742415120298204}
   - component: {fileID: 7470432335604891955}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Ship_Fighter_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,7 +112,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 1239156983776194, guid: 9bdee3723a4e52c4ca2af5bc5b56474a, type: 3}
-  attackRange: 10
+  attackRange: 20
+  minDistance: 20
+  speed: 3
   attackInterval: 1
   health: 1
   target: {fileID: 0}
+  targetUpdateInterval: 1
