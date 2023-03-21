@@ -9,11 +9,13 @@ public class WaypointSystem : MonoBehaviour
     public List<Transform> waypoints = new List<Transform>();
     public float speed = 20f;
 
+    bool update = false;
     private int currentWaypointIndex = 0;
 
     void Start()
     {
-        // Waypoint¸¦ Ã£¾Æ ¸®½ºÆ®¿¡ Ãß°¡
+        
+        // Waypointë¥¼ ì°¾ì•„ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
         foreach (Transform child in WayPoints.transform)
         {
             if (child.CompareTag("WayPoint"))
@@ -26,17 +28,34 @@ public class WaypointSystem : MonoBehaviour
 
     void Update()
     {
-        // ´ÙÀ½ Waypoint·Î ÀÌµ¿
+        // ë‹¤ìŒ Waypointë¡œ ì´ë™
         if (currentWaypointIndex < waypoints.Count)
         {
             Transform currentWaypoint = waypoints[currentWaypointIndex];
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, speed * Time.deltaTime);
 
-            // Waypoint¿¡ µµ´ŞÇÏ¸é ´ÙÀ½ Waypoint·Î ÀÌµ¿
+            Vector3 direction = currentWaypoint.position - transform.position;
+            Vector3 z_line = new Vector3(0, 0, 1);
+
+            //Quaternion rot = Quaternion.LookRotation(direction.normalized);
+            float angle = Vector3.Angle(direction, z_line);
+
+            Debug.Log(angle);
+            if (!update)
+            {
+                this.transform.Rotate(0, angle, 0);
+                update = true;
+            }
+
+
+            // Waypointì— ë„ë‹¬í•˜ë©´ ë‹¤ìŒ Waypointë¡œ ì´ë™
             if (transform.position == currentWaypoint.position)
             {
                 currentWaypointIndex++;
+                update = false;
             }
+
+
         }
     }
 }
