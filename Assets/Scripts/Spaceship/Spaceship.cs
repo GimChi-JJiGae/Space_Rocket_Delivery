@@ -143,6 +143,36 @@ public class Spaceship : MonoBehaviour
             rightModule.wallLeft.SetActive(false);
         }
     }
+
+    public void DestroyWall(GameObject targetObject)
+    {
+        Module targetModule = targetObject.GetComponent<Module>();
+        Module topModule = modules[targetModule.idxZ + 1, targetModule.idxX].GetComponent<Module>();
+        Module bottomModule = modules[targetModule.idxZ - 1, targetModule.idxX].GetComponent<Module>();
+        Module leftModule = modules[targetModule.idxZ, targetModule.idxX - 1].GetComponent<Module>();
+        Module rightModule = modules[targetModule.idxZ, targetModule.idxX + 1].GetComponent<Module>();
+
+        targetModule.wallTop.SetActive(false);
+        targetModule.wallBottom.SetActive(false);
+        targetModule.wallRight.SetActive(false);
+        targetModule.wallLeft.SetActive(false);
+        if (topModule.moduleType != Module.ModuleType.Blueprint)
+        {
+            topModule.wallBottom.SetActive(true);
+        }
+        if (bottomModule.moduleType != Module.ModuleType.Blueprint)
+        {
+            bottomModule.wallTop.SetActive(true);
+        }
+        if (leftModule.moduleType != Module.ModuleType.Blueprint)
+        {
+            leftModule.wallRight.SetActive(true);
+        }
+        if (rightModule.moduleType != Module.ModuleType.Blueprint)
+        {
+            rightModule.wallLeft.SetActive(true);
+        }
+    }
 }
 
 

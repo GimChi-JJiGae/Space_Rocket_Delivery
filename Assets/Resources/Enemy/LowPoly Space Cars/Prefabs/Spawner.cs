@@ -13,13 +13,15 @@ public class Spawner : MonoBehaviour
     public float speed = 5f;
     public GameObject rangedEnemyPrefab;
     public float rangedEnemySpawnChance = 0.2f;
+
     void Start()
     {
-        InvokeRepeating("spawnEnemy", 0, 0.5f);
+        InvokeRepeating("spawnEnemy", 0, 1f);
     }
 
     public void spawnEnemy()
     {
+        if (--counter == 0) CancelInvoke("spawnEnemy");
         if (counter >= maxEnemies)
         {
             CancelInvoke("spawnEnemy");
@@ -168,5 +170,15 @@ public class EnemyController : MonoBehaviour
         }
         spawner.spawnEnemy();
         Destroy(gameObject);
+
+        Attack(collision);
+    }
+
+    // 공격
+    void Attack(Collision collision)
+    {
+        Module module = collision.gameObject.GetComponentInParent<Module>();
+        // Debug.Log("맞았다!" + module.idxX + module.idxZ);
+        module.Attacked();
     }
 }
