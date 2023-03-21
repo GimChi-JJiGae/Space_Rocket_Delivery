@@ -22,15 +22,20 @@ public class Module : MonoBehaviour
         LaserTurret,    // 레이저터렛
     }
     public ModuleType moduleType;   // 모듈타입
-    //private Spaceship spaceship;    // 우주선 역참조
 
-    public GameObject wallTop;
+    public GameObject wallTop;      // 벽 모듈
     public GameObject wallLeft;
     public GameObject wallBottom;
     public GameObject wallRight;
 
     public GameObject floorModule; // 바닥 모듈
-    public GameObject buildingModule; // 건물 모듈
+
+    public GameObject broken1;      // 데미지 레벨에 따른 이펙트
+    public GameObject broken2;
+
+    public GameObject hitArea;      // 데미지 받는 범위
+
+    public int hp = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +43,6 @@ public class Module : MonoBehaviour
         //spaceship = FindAnyObjectByType<Spaceship>();
         // 벽 찾기
         Transform wallTransform = transform.Find("Wall");
-
         wallTop = wallTransform.Find("WallTop").gameObject;
         wallLeft = wallTransform.Find("WallLeft").gameObject;
         wallBottom = wallTransform.Find("WallBottom").gameObject;
@@ -47,6 +51,15 @@ public class Module : MonoBehaviour
         wallLeft.SetActive(false);
         wallBottom.SetActive(false);
         wallRight.SetActive(false);
+
+        Transform Broken = transform.Find("Broken");
+        broken1 = Broken.Find("Broken1").gameObject;
+        broken2 = Broken.Find("Broken2").gameObject;
+        broken1.SetActive(false);
+        broken2.SetActive(false);
+
+        hitArea = transform.Find("HitArea").gameObject;
+        hitArea.SetActive(false);
     }
 
     // Update is called once per frame
@@ -55,17 +68,22 @@ public class Module : MonoBehaviour
     }
 
 
-    // 바닥을 생성하는 함수
+    // 모듈 생성
+    // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
     {
-        moduleType = t;
-        if (transform.Find("Floor"))
+        moduleType = t;                 
+
+        // 예외처리
+        if (transform.Find("Floor"))    //바닥이 존재하면 부수고 새로 생성
         {
             GameObject beforeFloor = transform.Find("Floor").gameObject;
             Destroy(beforeFloor);
         }
 
+        
         GameObject floorPrefab;
+        // T에 따라 파일 로드
         switch (t)
         {
             case ModuleType.Blueprint:      // 청사진
@@ -78,7 +96,7 @@ public class Module : MonoBehaviour
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Cargo");
                 break;    
             case ModuleType.Factory:        // 제작기
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Factory");
                 break;
             case ModuleType.Supplier:       // 생성기
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Supplier");
@@ -87,38 +105,30 @@ public class Module : MonoBehaviour
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Oxygenator");
                 break;
             case ModuleType.DefaultTurret:  // 기본터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
                 break;
             case ModuleType.LaserTurret:    // 레이저터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
                 break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
         }
+
         float positionX = gameObject.transform.position.x;     // 지금 오브젝트의 위치를 가져옴
         float positionZ = gameObject.transform.position.z;      
         float positionY = gameObject.transform.position.y;
-        Vector3 position = new Vector3(positionX, positionY, positionZ);       // 바닥 타일의 위치
-        Quaternion rotation = Quaternion.identity;                             // 바닥 타일의 회전
+        Vector3 position = new Vector3(positionX, positionY, positionZ);        // 바닥 타일의 위치
+        Quaternion rotation = Quaternion.identity;                              // 바닥 타일의 회전
 
-        floorModule = Instantiate(floorPrefab, position, rotation);    // 바닥 생성시키기
-        floorModule.name = "Floor";                                               // 모듈 이름 변경
-        floorModule.transform.parent = transform;                                 // 바닥 위치를 Spaceship아래로 내려주기
+        floorModule = Instantiate(floorPrefab, position, rotation);             // 바닥 생성시키기
+        floorModule.name = "Floor";                                             // 모듈 이름 변경
+        floorModule.transform.parent = transform;                               // 바닥 위치를 Spaceship아래로 내려주기
 
+        hp = 3;
         if (t == ModuleType.Blueprint)
         {
             floorModule.SetActive(false);
-        }
-    }
-
-    public void CreateBuilding(ModuleType t)
-    {
-        moduleType = t;
-        if (transform.Find("Building"))
-        {
-            GameObject beforebuilding = transform.Find("Building").gameObject;
-            Destroy(beforebuilding);
         }
     }
 
@@ -129,5 +139,41 @@ public class Module : MonoBehaviour
     void DeleteModule()
     {
 
+    }
+
+    // 공격받음
+    public void Attacked()
+    {
+        hp -= 1;
+        if (hp <= 0)
+        {
+            ResetModule();
+        }
+        else if (hp <= 1)
+        {
+            broken2.SetActive(true);
+        }
+        else if (hp <= 2)
+        {
+            broken1.SetActive(true);
+        }
+        
+    }
+
+    // 모듈 초기화시키기
+    private void ResetModule()
+    {
+        // 부수기
+        Destroy(floorModule);
+
+        // 부서짐 이펙트 초기화
+        broken1.SetActive(false);
+        broken2.SetActive(false);
+
+        // 바닥 재생성 (청사진)
+        CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
+
+        // 벽 초기화
+        transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);
     }
 }

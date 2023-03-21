@@ -6,41 +6,21 @@ public class Background_Move : MonoBehaviour
 {
     public float speed = 20f;
 
-    public Transform SpaceShipObj;
-    public List<Transform> waypoints = new List<Transform>();
+
+
    
-
-    private int currentWaypointIndex = 0;
-
 
 
     // Start is called before the first frame update
     void Start()
     {
-        foreach (Transform child in transform)
-        {
-            if (child.CompareTag("WayPoint"))
-            {
-                waypoints.Add(child);
-            }
-        }
+     
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentWaypointIndex < waypoints.Count)
-        {
-            Transform currentWaypoint = waypoints[currentWaypointIndex];
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, speed * Time.deltaTime);
-
-            // Waypoint에 도달하면 다음 Waypoint로 이동
-            if (transform.position == currentWaypoint.position)
-            {
-                currentWaypointIndex++;
-            }
-        }
-
+        transform.Translate(0, 0, speed * Time.deltaTime);
 
         /*
      if (transform.position.z < -400)
