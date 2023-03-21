@@ -38,7 +38,7 @@ public class Spawner : MonoBehaviour
         randomDirection.Normalize();
 
         Vector3 spawnPos = transform.position + randomDirection * Random.Range(minDistance, maxDistance);
-        spawnPos.y = Random.Range(5f, 20f);
+        spawnPos.y = Random.Range(5f, 10f);
 
         int randomIndex = Random.Range(0, enemies.Length);
         GameObject enemy;
@@ -80,7 +80,7 @@ public class Spawner : MonoBehaviour
 
         enemy.transform.rotation = Quaternion.LookRotation(direction);
     }
-    GameObject FindClosestWall() // Add this method
+    public GameObject FindClosestWall() // Add this method
     {
         GameObject[] wallObjects;
         wallObjects = GameObject.FindGameObjectsWithTag("Wall");
@@ -122,6 +122,9 @@ public class EnemyController : MonoBehaviour
     {
         if (!hasExploded)
         {
+            // Find the closest wall and update the target
+            target = spawner.FindClosestWall();
+
             // Update direction and velocity towards the moving target
             Vector3 direction = (target.transform.position - transform.position).normalized;
             Vector3 velocity = direction * speed;
@@ -167,8 +170,8 @@ public class EnemyController : MonoBehaviour
             Destroy(vfxInstance, vfxParticleSystem.main.duration);
 
             spawner.counter--;
+            spawner.spawnEnemy();
         }
-        spawner.spawnEnemy();
         Destroy(gameObject);
 
         Attack(collision);

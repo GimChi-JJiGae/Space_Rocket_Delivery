@@ -660,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 1697939836361152493, guid: a3b89e7df5f0a4f489500de53dfb2dea, type: 3}
     - target: {fileID: 5014509267680804436, guid: 796d23e06f67c9949bb55bee0dc8ff12, type: 3}
       propertyPath: enemyHealths.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5014509267680804436, guid: 796d23e06f67c9949bb55bee0dc8ff12, type: 3}
       propertyPath: enemyHealths.Array.data[0]
