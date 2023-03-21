@@ -9,14 +9,15 @@ TagManager:
   - Spaceship
   - Wall
   - Building
+  - Liftable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy
   - Water
   - UI
-  - 
+  - Module
   - 
   - 
   - 

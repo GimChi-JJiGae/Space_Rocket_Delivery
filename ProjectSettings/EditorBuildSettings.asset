@@ -6,6 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Spaceship-Background.unity
-    guid: d69870e1625324343afab53d1f4ee5c6
+    path: Assets/Scenes/Main.unity
+    guid: 33115ea25dcd04040bc306e21a288b72
+  m_Scenes: []
   m_configObjects: {}

@@ -17,7 +17,7 @@ public class InteractionObject : MonoBehaviour
     {
         if (other.gameObject.CompareTag("PlayerCharacter"))
         {
-            // °¡±îÀÌ °¡¸é ÇÔ¼ö¸¦ ½ÇÇàÇÏ´Âµ¥
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½
         }
     }
 
