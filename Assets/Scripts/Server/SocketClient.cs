@@ -52,8 +52,20 @@ public class SocketClient : MonoBehaviour
         }
     }
 
+    public void Send(string message)
+    {
+        byte[] data = Encoding.UTF8.GetBytes(message);
+        socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, null);
+    }
+
+    private void SendCallback(IAsyncResult result)
+    {
+        socket.EndSend(result);
+    }
+
     private void OnApplicationQuit()
     {
+        Debug.Log("Disconnected from server22");
         // 앱이 종료될 때 소켓 연결 해제
         if (socket != null)
         {
