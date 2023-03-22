@@ -174,7 +174,7 @@ public class EnemyController : MonoBehaviour
         }
         Destroy(gameObject);
 
-        Attack(collision);
+
     }
 
     // 공격
