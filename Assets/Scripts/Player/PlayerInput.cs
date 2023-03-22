@@ -8,13 +8,15 @@ public class PlayerInput : MonoBehaviour {
     public string interactionButtonName = "Interaction"; // Obj를 집어들기 위한 입력 버튼 이름
     public string repairButtonName = "Repair"; // 모듈 수리를 위한 입력 버튼 이름
     public string destroyButtonName = "Destroy"; // 모듈 파괴를 위한 입력 버튼 이름
+    public string submitButtonName = "Submit"; // inputText 제출을 위한 엔터 입력
 
     public float Move_GoBack { get; private set; } // 감지된 움직임 입력값
     public float Move_LeftRight { get; private set; }
     public bool Interact { get; private set; }
     public bool RepairModule { get; private set; }
     public bool DestroyModule { get; private set; }
-
+    public bool Submit { get; private set; }
+    
     private bool canInteract = true;
     private bool interacting = false;
 
@@ -35,6 +37,7 @@ public class PlayerInput : MonoBehaviour {
         Interact = Input.GetButton(interactionButtonName);
         RepairModule = Input.GetButton(repairButtonName);
         DestroyModule = Input.GetButton(destroyButtonName);
+        Submit = Input.GetButton(submitButtonName);
     }
 
     public IEnumerator DisableInteractionForSeconds(float seconds)

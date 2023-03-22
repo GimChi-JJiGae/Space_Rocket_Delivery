@@ -18,16 +18,14 @@ public class PlayerServer : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         socketClient = socketClientObject.GetComponent<SocketClient>();
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerInput.Interact) {
-            socketClient.Send("abcd_aaaa112314088KK");
-            // inputText.GetComponent<TextMeshProUGUI>().text
+        if (playerInput.Submit) {
+            Debug.Log("To Server: " + inputText.GetComponent<TMP_InputField>().text);
+            socketClient.Send(inputText.GetComponent<TMP_InputField>().text);
         }
     }
 }
