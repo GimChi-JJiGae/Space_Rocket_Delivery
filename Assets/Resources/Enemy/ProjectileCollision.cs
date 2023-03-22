@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class ProjectileCollision : MonoBehaviour
 {
-    public GameObject explosionVFX;
-    public GameObject target; // Add this line
+    public GameObject impactFX;
+    public int damage = 1; // 탄환 데미지 설정
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject == target) // Change this line
+        if (collision.gameObject.CompareTag("Wall"))
         {
-            // Instantiate the VFX at the projectile's position and rotation
-            GameObject vfxInstance = Instantiate(explosionVFX, transform.position, transform.rotation);
-
-            // Automatically destroy the VFX instance after the duration of the particle system
-            ParticleSystem vfxParticleSystem = vfxInstance.GetComponent<ParticleSystem>();
-            Destroy(vfxInstance, vfxParticleSystem.main.duration);
-
-            // Handle damage to the target here if needed
-            // ...
-
-            // Destroy the projectile
-            Destroy(gameObject);
+            Module module = collision.gameObject.GetComponentInParent<Module>();
+            if (module != null)
+            {
+                for (int i = 0; i < damage; i++)
+                {
+                    module.Attacked();
+                }
+            }
         }
+
+        GameObject impact = Instantiate(impactFX, transform.position, transform.rotation);
+        Destroy(impact, 2f);
+        Destroy(gameObject);
     }
 }
+
+

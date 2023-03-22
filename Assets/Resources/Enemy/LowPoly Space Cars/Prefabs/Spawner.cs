@@ -13,6 +13,7 @@ public class Spawner : MonoBehaviour
     public float speed = 5f;
     public GameObject rangedEnemyPrefab;
     public float rangedEnemySpawnChance = 0.2f;
+    public AudioClip enemyDestroyedSound;
 
     void Start()
     {
@@ -21,10 +22,8 @@ public class Spawner : MonoBehaviour
 
     public void spawnEnemy()
     {
-        if (--counter == 0) CancelInvoke("spawnEnemy");
         if (counter >= maxEnemies)
         {
-            CancelInvoke("spawnEnemy");
             return;
         }
 
@@ -57,6 +56,8 @@ public class Spawner : MonoBehaviour
             controller.spawner = this;
             controller.health = enemyHealths[randomIndex];
             controller.target = closestWall;
+            controller.enemyDestroyedSound = enemyDestroyedSound;
+
         }
         // 원거리 적 프리팹에 BoxCollider를 추가
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
@@ -113,6 +114,7 @@ public class EnemyController : MonoBehaviour
     public CameraShake cameraShake; // Add this line
     public int health; // 변경된 부분: [SerializeField] private int health; 에서 public int health;
     public GameObject target;
+    public AudioClip enemyDestroyedSound;
 
     void Start()
     {
@@ -141,9 +143,10 @@ public class EnemyController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // SM_Bld_Wall_Exterior_Window_01 오브젝트에 부딪힌 경우
-        if (collision.gameObject.name == "SM_Bld_Wall_Exterior_Window_01")
+        if (collision.gameObject.CompareTag("Wall"))
         {
             DestroyEnemy();
+            Attack(collision);
         }
         else
         {
@@ -157,13 +160,14 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void DestroyEnemy()
+    public void DestroyEnemy()
     {
         if (!hasExploded)
         {
             // Instantiate the VFX at the enemy's position and rotation
             GameObject vfxInstance = Instantiate(spawner.explosionVFX, transform.position, transform.rotation);
             hasExploded = true;
+            AudioSource.PlayClipAtPoint(enemyDestroyedSound, transform.position);
 
             // Automatically destroy the VFX instance after the duration of the particle system
             ParticleSystem vfxParticleSystem = vfxInstance.GetComponent<ParticleSystem>();
@@ -178,7 +182,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // 공격
-    void Attack(Collision collision)
+    public void Attack(Collision collision)
     {
         Module module = collision.gameObject.GetComponentInParent<Module>();
         // Debug.Log("맞았다!" + module.idxX + module.idxZ);
