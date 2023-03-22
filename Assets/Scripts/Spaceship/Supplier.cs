@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 
 public class Supplier : MonoBehaviour
 {
+    public Animator popAnimator;
     public enum ResourceType
     {
         Fuel,      // 연료
@@ -25,7 +26,7 @@ public class Supplier : MonoBehaviour
     //ResourceType[] ResourceTypeArray = (ResourceType[])Enum.GetValues(typeof(ResourceType));
 
     // 생성주기
-    private float spawnWait = 4.0f;
+    private float spawnWait = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,7 @@ public class Supplier : MonoBehaviour
         fuelPrefab = Resources.Load<GameObject>("Resources/Fuel");
         orePrefab = Resources.Load<GameObject>("Resources/Ore");
 
+        popAnimator = GetComponent<Animator>();
         // 3초마다 연속 생성 명령
         StartCoroutine(SpawnResource());
     }
@@ -93,7 +95,13 @@ public class Supplier : MonoBehaviour
                     break;
             }
             Debug.Log("Supplier: " + resourceType + " 생성");
-            Instantiate(currentPrefab, position, Quaternion.identity);
+            GameObject newResource = Instantiate(currentPrefab, position, Quaternion.identity);
+
+            // 이름변경
+            newResource.name  = resourceType.ToString();
+            popAnimator.Play("SupplierPopAnimation");
+
+            // 스폰 코루틴
             yield return new WaitForSeconds(spawnWait);
         }
         
