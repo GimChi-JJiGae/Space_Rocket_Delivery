@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,9 +6,10 @@ public class PlayerInteraction : MonoBehaviour
 {
     public List<string> HoldableObjects = new();
 
-    public Transform leftHand;
+    [SerializeField] private GameObject leftHand;
 
     public GameObject currentObject = null;
+
     public bool isHoldingObject = false;
 
     private PlayerInput playerInput;
@@ -24,11 +26,13 @@ public class PlayerInteraction : MonoBehaviour
         {
             HoldableObjects.Add(prefab.gameObject.name);
         }
+
+        dummyPrefab.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (HoldableObjects.Contains(collision.gameObject.name))
+        if (!isHoldingObject && HoldableObjects.Contains(collision.gameObject.name))
         {
             currentObject = collision.gameObject;
         }
@@ -36,7 +40,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (currentObject != null)
+        if (!isHoldingObject)
         {
             currentObject = null;
         }
@@ -44,7 +48,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (isHoldingObject)
+        if (isHoldingObject && currentObject != null)
         {
             playerAnimator.SetLayerWeight(1, 1);
         }
@@ -54,28 +58,38 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    private void PickUpObject(GameObject obj)
+    {
+        obj.transform.parent = leftHand.transform;
+        obj.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
+
+        obj.GetComponent<Rigidbody>().isKinematic = true;
+        obj.GetComponent<MeshCollider>().enabled = false;
+        isHoldingObject = true;
+    }
+
+    private void DropObject(GameObject obj)
+    {
+        obj.transform.parent = null;
+
+        obj.transform.position = new Vector3(obj.transform.position.x, 0f, obj.transform.position.z);
+
+        obj.GetComponent<Rigidbody>().isKinematic = false;
+        obj.GetComponent<MeshCollider>().enabled = true;
+        isHoldingObject = false;
+    }
+
     private void Update()
     {
-        if (playerInput.Interact && playerInput.CanInteract())
+        if (playerInput.Interact)
         {
-            if (currentObject != null)
+            if (isHoldingObject && currentObject != null)
             {
-                if (isHoldingObject == false)
-                {
-                    isHoldingObject = true;
-
-                    currentObject.transform.parent = leftHand;
-                    currentObject.transform.SetLocalPositionAndRotation(leftHand.position, leftHand.rotation);
-                }
-                else
-                {
-                    isHoldingObject = false;
-                    
-                    currentObject.transform.parent = null;
-
-                }
-
-                StartCoroutine(playerInput.DisableInteractionForSeconds(1f));
+                DropObject(currentObject);
+            }
+            else if (!isHoldingObject && currentObject != null)
+            {
+                PickUpObject(currentObject);
             }
         }
     }
