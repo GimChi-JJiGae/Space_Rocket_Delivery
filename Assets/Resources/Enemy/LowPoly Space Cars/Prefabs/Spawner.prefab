@@ -55,3 +55,4 @@ MonoBehaviour:
   speed: 20
   rangedEnemyPrefab: {fileID: 7319328362840915926, guid: 4738d9cfc31186d40b2040b99e9ffc50, type: 3}
   rangedEnemySpawnChance: 0.2
+  enemyDestroyedSound: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1, type: 3}
