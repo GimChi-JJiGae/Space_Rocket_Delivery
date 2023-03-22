@@ -141,7 +141,7 @@ public class EnemyController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // SM_Bld_Wall_Exterior_Window_01 오브젝트에 부딪힌 경우
-        if (collision.gameObject.name == "SM_Bld_Wall_Exterior_Window_01")
+        if (collision.gameObject.CompareTag("Wall"))
         {
             DestroyEnemy();
         }
@@ -153,6 +153,7 @@ public class EnemyController : MonoBehaviour
             if (!hasExploded && health <= 0) // 체력이 0 이하일 때만 파괴
             {
                 DestroyEnemy();
+                Attack(collision);
             }
         }
     }
@@ -174,7 +175,7 @@ public class EnemyController : MonoBehaviour
         }
         Destroy(gameObject);
 
-        Attack(collision);
+
     }
 
     // 공격
