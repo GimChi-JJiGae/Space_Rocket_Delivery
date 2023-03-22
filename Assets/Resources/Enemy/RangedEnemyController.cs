@@ -56,7 +56,7 @@ public class RangedEnemyController : MonoBehaviour
             GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
 
-        if (Time.time >= nextAttackTime && distance <= attackRange + 10)
+        if (Time.time >= nextAttackTime && distance <= attackRange)
         {
             Attack();
             nextAttackTime = Time.time + attackInterval;
@@ -79,9 +79,20 @@ public class RangedEnemyController : MonoBehaviour
         // Rotate the projectile to face the target
         projectile.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
-        projectile.GetComponent<ProjectileCollision>().target = target;
+        // 추가된 코드: 원거리 적에 대한 참조를 설정합니다.
+        projectile.GetComponent<ProjectileController>().rangedEnemyController = this;
+
     }
 
+
+    public void Attack(Collision collision)
+    {
+        Module module = collision.gameObject.GetComponentInParent<Module>();
+        if (module != null)
+        {
+            module.Attacked();
+        }
+    }
 
     GameObject FindClosestWall() // Add this method
     {
