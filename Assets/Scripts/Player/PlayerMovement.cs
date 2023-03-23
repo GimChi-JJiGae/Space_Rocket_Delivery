@@ -7,14 +7,20 @@ public class PlayerMovement : MonoBehaviour {
     public float rotateSpeed = 10f;
 
     private PlayerInput playerInput;
+    private PlayerInteraction playerInteraction;
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
+
+    public GameObject player;
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerInteraction = GetComponent<PlayerInteraction>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
+
+        player = GameObject.Find("PlayerCharacter");
     }
 
     private void FixedUpdate()
@@ -28,7 +34,7 @@ public class PlayerMovement : MonoBehaviour {
     private void Move()
     {
         Vector3 dir = new(playerInput.Move_LeftRight, 0, playerInput.Move_GoBack);
-        
+
         if (!(playerInput.Move_GoBack == 0 && playerInput.Move_LeftRight == 0))
         {
             playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * Time.deltaTime * dir);

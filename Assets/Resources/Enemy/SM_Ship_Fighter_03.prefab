@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7321295058062826942}
   - component: {fileID: 7341033518665101926}
   - component: {fileID: 7332319088152447950}
-  - component: {fileID: 7309742415120298204}
+  - component: {fileID: 7470432335604891955}
   m_Layer: 3
   m_Name: SM_Ship_Fighter_03
   m_TagString: enemy
@@ -84,17 +84,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7309742415120298204
-MeshCollider:
+--- !u!114 &7470432335604891955
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7319328362840915926}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: b9cd94a24f904184e81989744300be87, type: 3}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 1239156983776194, guid: 9bdee3723a4e52c4ca2af5bc5b56474a,
+    type: 3}
+  attackRange: 20
+  minDistance: 20
+  speed: 3
+  attackInterval: 1
+  health: 1
+  target: {fileID: 0}
+  targetUpdateInterval: 1

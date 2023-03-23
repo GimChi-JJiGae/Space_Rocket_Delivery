@@ -1,58 +1,38 @@
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
-    // 들 수 있는 모든 obj를 담을 liftableObjects를 리스트로 선언
-    public List<GameObject> LiftableObjects = new();
-    // character의 왼손, 오른손, 상호작용 할 수 있는 물체와의 최대 거리 선언
-    public Transform leftHand;
-    public Transform rightHand;
-    public float maxDistance = 1f;
+    public List<string> HoldableObjects = new();
 
-    [SerializeField] private GameObject fuelPrefab;
-    [SerializeField] private GameObject orePrefab;
-    //[SerializeField] private GameObject upgradePrefab;
-    //[SerializeField] private GameObject laserPrefab;
+    [SerializeField] private GameObject leftHand;
 
+    public GameObject currentObject = null;
 
-    //public Text LiftPrompText;
-
-    // currentObject(현재 물체)를 null로 선언
-    private GameObject currentObject = null;
+    public bool isHoldingObject = false;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
 
-    // Start is called before the first frame update
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
 
-        Mesh fuelMesh = fuelPrefab.GetComponent<MeshFilter>().sharedMesh;
-        Mesh gasMesh = orePrefab.GetComponent<MeshFilter>().sharedMesh;
-        //Mesh upgradeMesh = upgradePrefab.GetComponent<MeshFilter>().sharedMesh;
-        //Mesh laserMesh = laserPrefab.GetComponent<MeshFilter>().sharedMesh;
+        GameObject dummyPrefab = GameObject.Find("Dummy");
 
-        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        foreach (Transform prefab in dummyPrefab.transform)
         {
-            MeshFilter objMeshFilter = obj.GetComponent<MeshFilter>();
-
-            if (objMeshFilter != null && (objMeshFilter.sharedMesh == fuelMesh ||
-                objMeshFilter.sharedMesh == gasMesh))
-            {
-                LiftableObjects.Add(obj);
-            }
+            HoldableObjects.Add(prefab.gameObject.name);
         }
+
+        dummyPrefab.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (LiftableObjects.Contains(collision.gameObject))
+        if (!isHoldingObject && HoldableObjects.Contains(collision.gameObject.name))
         {
             currentObject = collision.gameObject;
         }
@@ -60,32 +40,56 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        currentObject = null;
+        if (!isHoldingObject)
+        {
+            currentObject = null;
+        }
     }
 
-    // Update is called once per frame
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (isHoldingObject && currentObject != null)
+        {
+            playerAnimator.SetLayerWeight(1, 1);
+        }
+        else
+        {
+            playerAnimator.SetLayerWeight(1, 0);
+        }
+    }
+
+    private void PickUpObject(GameObject obj)
+    {
+        obj.transform.parent = leftHand.transform;
+        obj.transform.SetPositionAndRotation(leftHand.transform.position, leftHand.transform.rotation);
+
+        obj.GetComponent<Rigidbody>().isKinematic = true;
+        obj.GetComponent<MeshCollider>().enabled = false;
+        isHoldingObject = true;
+    }
+
+    private void DropObject(GameObject obj)
+    {
+        obj.transform.parent = null;
+
+        obj.transform.position = new Vector3(obj.transform.position.x, 0f, obj.transform.position.z);
+
+        obj.GetComponent<Rigidbody>().isKinematic = false;
+        obj.GetComponent<MeshCollider>().enabled = true;
+        isHoldingObject = false;
+    }
+
     private void Update()
     {
-        // 상호작용 키를 눌렀을 때,
         if (playerInput.Interact)
         {
-            // currentObject
-            if (currentObject != null)
+            if (isHoldingObject && currentObject != null)
             {
-                if (playerAnimator.GetBool("Lift") == false)
-                {
-                    playerAnimator.SetBool("Lift", true);
-                    
-                    currentObject.transform.parent = transform;
-                    currentObject.transform.SetLocalPositionAndRotation(leftHand.localPosition, leftHand.localRotation);
-
-                }
-                else
-                {
-                    playerAnimator.SetBool("Lift", false);
-
-                    currentObject.transform.parent = null;
-                }
+                DropObject(currentObject);
+            }
+            else if (!isHoldingObject && currentObject != null)
+            {
+                PickUpObject(currentObject);
             }
         }
     }

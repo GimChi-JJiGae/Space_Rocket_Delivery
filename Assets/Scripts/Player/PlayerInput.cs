@@ -29,8 +29,12 @@ public class PlayerInput : MonoBehaviour {
 
         Move_GoBack = Input.GetAxis(move1AxisName);
         Move_LeftRight = Input.GetAxis(move2AxisName);
-        Interact = Input.GetButton(interactionButtonName);
         RepairModule = Input.GetButton(repairButtonName);
-        DestroyModule = Input.GetButton(destroyButtonName);        
+        DestroyModule = Input.GetButton(destroyButtonName);
+    }
+
+    private void Update()
+    {
+        Interact = Input.GetButtonDown(interactionButtonName);
     }
 }
