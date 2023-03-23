@@ -558,7 +558,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 818804139}
-  - component: {fileID: 818804138}
   m_Layer: 0
   m_Name: Players
   m_TagString: Untagged
@@ -566,20 +565,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &818804138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 818804137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53dffb5b13481b0498a499eb1f1d5540, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isHost: 0
-  playerIndex: 0
 --- !u!4 &818804139
 Transform:
   m_ObjectHideFlags: 0
@@ -1022,6 +1007,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1636152527}
   - component: {fileID: 1636152528}
+  - component: {fileID: 1636152529}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -1056,6 +1042,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a2f5e408cc3ce04fbfa19032629f558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1636152529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636152526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc9d8881cded5f84398c83008e65b292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHost: 0
+  playerIndex: 0
 --- !u!1 &1796507381
 GameObject:
   m_ObjectHideFlags: 0

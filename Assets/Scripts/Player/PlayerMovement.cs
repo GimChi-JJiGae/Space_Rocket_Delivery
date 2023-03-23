@@ -11,8 +11,6 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
 
-
-
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -32,6 +30,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             playerInteraction.currentObject.transform.position = transform.position;
         }
+
+        
     }
 
     private void Move()
@@ -43,5 +43,6 @@ public class PlayerMovement : MonoBehaviour {
             playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * Time.deltaTime * dir);
             playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
         }
+
     }
 }
