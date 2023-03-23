@@ -86,6 +86,7 @@ public class PlayerInteraction : MonoBehaviour
             if (isHoldingObject && currentObject != null)
             {
                 DropObject(currentObject);
+                currentObject = null;
             }
             else if (!isHoldingObject && currentObject != null)
             {
