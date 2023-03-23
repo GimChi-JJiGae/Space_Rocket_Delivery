@@ -48,12 +48,16 @@ public class SocketClient : MonoBehaviour
         int bytesRead = socket.EndReceive(result);
         if (bytesRead > 0)
         {
-            
             // 수신한 데이터 처리
             string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            Debug.Log("recieve Message" + message);
-            DeSerialization(message);
-
+            //Debug.Log("recieve Message" + message);
+            
+            try
+            {
+                DeSerialization(message);
+            }
+            catch { 
+            }
             // 다시 데이터 수신 대기
             socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
         }
@@ -104,25 +108,33 @@ public class SocketClient : MonoBehaviour
             data = data.Append(b);
         }
 
-        Debug.Log("Byte Array is: " + String.Join(" ", data));
+        //Debug.Log("Byte Array is: " + String.Join(" ", data));
+
         socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, null);
     }
 
     private void DeSerialization(string data)
     {
-        byte[] header1 = ByteSubstring(data, 0, 4);
+        int head = 0;
+        byte[] header1 = ByteSubstring(data, head, sizeof(int));
+        head += sizeof(int);
         int d1 = BitConverter.ToInt32(header1);
-        byte[] header2 = ByteSubstring(data, 4, 4);
+        byte[] header2 = ByteSubstring(data, head, sizeof(int));
+        head += sizeof(int);
         int d2 = BitConverter.ToInt32(header2);
-        byte[] header3 = ByteSubstring(data, 8, 8);
+        byte[] header3 = ByteSubstring(data, head, sizeof(double));
+        head += sizeof(double);
         double d3 = BitConverter.ToDouble(header3);
-        byte[] header4 = ByteSubstring(data, 16, 8);
+        byte[] header4 = ByteSubstring(data, head, sizeof(double));
+        head += sizeof(double);
         double d4 = BitConverter.ToDouble(header4);
-        byte[] header5 = ByteSubstring(data, 24, 8);
+        byte[] header5 = ByteSubstring(data, head, sizeof(double));
         double d5 = BitConverter.ToDouble(header5);
 
+        Debug.Log("size :" + sizeof(float));
+        Debug.Log("recieve: header: " + d1 + ", header: " + d2 + ", x: " + d3 + ", y: " + d4 + ", z: " + d5);
+        
         NetworkPlayer.MoveOtherPlayer(3, (float)d3, (float)d4, (float)d5);
-        Debug.Log("recieve: "+d1 + "," + d2 + "," + d3 + "," + d4 + "," + d5);
     }
 
     private void SendCallback(IAsyncResult result)

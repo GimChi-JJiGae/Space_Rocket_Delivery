@@ -33,10 +33,12 @@ public class NetworkPlayer : MonoBehaviour
     public void MoveOtherPlayer(int idx, float px, float py, float pz)//, float rx, float ry, float rz, float rw)
     {
         Vector3 v = new Vector3(px, py, pz);
-        Quaternion q = new Quaternion();
+        //Quaternion q = new Quaternion();
         //q.Set(rx, ry, rz, rw);
-        players[idx].transform.position = v;
+        players[0].GetComponent<Rigidbody>().MovePosition(v);
+        players[3].GetComponent<Rigidbody>().MovePosition(v);
         //players[idx].transform.rotation = q;
+        Debug.Log(players[3].name);
     }
 
     // 생성된 플레이어들 중 n에 할당
