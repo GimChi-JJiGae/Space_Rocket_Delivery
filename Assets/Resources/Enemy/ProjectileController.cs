@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    public float speed = 10f;
+    public float speed = 20f;
     public float lifeTime = 5f;
     public AudioClip projectileDestroyedSound;
     public RangedEnemyController rangedEnemyController;
+    private Rigidbody rb;
+
     void Start()
     {
         Invoke("DestroyProjectile", lifeTime);
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = transform.forward * speed;
     }
 
     void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -23,24 +26,17 @@ public class ProjectileController : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             Module module = collision.gameObject.GetComponentInParent<Module>();
-            if (module != null) // 이 줄 추가
+            if (module != null)
             {
-                Attack(collision);
-                DestroyProjectile();
+                module.Attacked();
             }
+            DestroyProjectile();
         }
     }
-
 
     void DestroyProjectile()
     {
         AudioSource.PlayClipAtPoint(projectileDestroyedSound, transform.position);
         Destroy(gameObject);
-    }
-    public void Attack(Collision collision)
-    {
-        Module module = collision.gameObject.GetComponentInParent<Module>();
-        // Debug.Log("맞았다!" + module.idxX + module.idxZ);
-        module.Attacked();
     }
 }

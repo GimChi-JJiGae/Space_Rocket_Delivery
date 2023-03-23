@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7470432335604891955}
   m_Layer: 3
   m_Name: SM_Ship_Fighter_03
-  m_TagString: Untagged
+  m_TagString: RangedEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 9bdee3723a4e52c4ca2af5bc5b56474a, type: 3}
-  attackRange: 20
-  minDistance: 20
+  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080, type: 3}
+  attackRange: 10
+  minDistance: 10
   speed: 3
   attackInterval: 1
   health: 1
