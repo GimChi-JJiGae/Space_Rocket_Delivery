@@ -36,7 +36,7 @@ public class Spaceship : MonoBehaviour
         CreateDefaultModule(11, 9, Module.ModuleType.Cargo);
 
         // 기본포탑
-        CreateDefaultModule(10, 11, Module.ModuleType.DefaultTurret);
+        CreateDefaultModule(10, 11, Module.ModuleType.BasicTurret);
 
         // 제작기
         CreateDefaultModule(9, 10, Module.ModuleType.Factory);

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7341033518665101926}
   - component: {fileID: 7332319088152447950}
   - component: {fileID: 7309742415120298204}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Ship_Fighter_03
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
