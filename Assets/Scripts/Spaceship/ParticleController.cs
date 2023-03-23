@@ -34,7 +34,6 @@ public class ParticleController : MonoBehaviour
         Debug.Log("Particle collided with " + other.name);
         if (other.tag == "enemy")
         {
-            Destroy(other);
         }
     }
     IEnumerator RepeatParticleSystem()
