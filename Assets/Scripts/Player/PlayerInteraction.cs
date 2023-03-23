@@ -1,6 +1,6 @@
-
 using System.Collections.Generic;
 using UnityEngine;
+using static Module;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -8,17 +8,29 @@ public class PlayerInteraction : MonoBehaviour
 
     [SerializeField] private GameObject leftHand;
 
-    public GameObject currentObject = null;
 
-    public bool isHoldingObject = false;
+    private bool isHoldingObject = false;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
+    private Rigidbody playerRigidbody;
+
+    private GameObject currentObject;
+    private GameObject matchObject;
+    private GameObject targetObject;
+    private GameObject buildingObject;
+    
+    private Spaceship spaceship;
+
+
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
+        playerRigidbody = GetComponent<Rigidbody>();
+        spaceship = FindAnyObjectByType<Spaceship>();
+
 
         GameObject dummyPrefab = GameObject.Find("Dummy");
 
@@ -27,8 +39,92 @@ public class PlayerInteraction : MonoBehaviour
             HoldableObjects.Add(prefab.gameObject.name);
         }
 
-        dummyPrefab.SetActive(false);
+        Destroy(dummyPrefab);
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        matchObject = other.gameObject;
+    //        Module module = matchObject.GetComponentInParent<Module>();
+
+    //        int idxZ = module.idxZ;
+    //        int idxX = module.idxX;
+    //        switch (other.gameObject.name)
+    //        {
+    //            case "EdgeTop":
+    //                idxZ += 1;
+    //                break;
+    //            case "EdgeBottom":
+    //                idxZ -= 1;
+    //                break;
+    //            case "EdgeRight":
+    //                idxX += 1;
+    //                break;
+    //            case "EdgeLeft":
+    //                idxX -= 1;
+    //                break;
+    //        }
+
+    //        targetObject = spaceship.modules[idxZ, idxX];
+    //        targetObject.GetComponent<Module>().floorModule.SetActive(true);
+    //    }
+
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        buildingObject = other.gameObject;
+    //    }
+    //}
+
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        if (playerInput.Interact)
+    //        {
+    //            if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+    //            {
+    //                targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+    //                spaceship.MakeWall(targetObject);
+    //            }
+    //        }
+    //    }
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        switch (other.gameObject.name)
+    //        {
+    //            case "Supplier":
+    //                Supplier supplier = buildingObject.GetComponent<Supplier>();
+    //                supplier.SwitchResource();
+    //                break;
+    //            case "Engine":
+    //                break;
+    //            case "Oxygenator":
+    //                break;
+    //        }
+    //    }
+    //}
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        Module module = targetObject.GetComponentInParent<Module>();
+
+    //        if (module.moduleType == ModuleType.Blueprint)
+    //        {
+    //            targetObject.GetComponent<Module>().floorModule.SetActive(false);
+    //        }
+
+    //        matchObject = null;
+    //        targetObject = null;
+    //    }
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        buildingObject = null;
+    //    }
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {
