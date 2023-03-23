@@ -25,7 +25,13 @@ public class RangedEnemyController : MonoBehaviour
 
     void Update()
     {
-        if (Time.time >= nextTargetUpdateTime)
+
+        if(health == 0)
+        {
+            Destroy(gameObject);
+        }
+
+        if (Time.time >= nextTargetUpdateTime) // Add this block
         {
             target = FindClosestWall();
             nextTargetUpdateTime = Time.time + targetUpdateInterval;
