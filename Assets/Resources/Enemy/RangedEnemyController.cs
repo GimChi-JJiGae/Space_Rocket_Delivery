@@ -5,33 +5,41 @@ using UnityEngine;
 public class RangedEnemyController : MonoBehaviour
 {
     public GameObject projectilePrefab;
-    public float attackRange = 100f;
-    public float minDistance = 100f; // Add this line
-    public float speed = 3f; // Add this line
+    public float attackRange = 50f;
+    public float minDistance = 100f;
+    public float speed = 3f;
     public float attackInterval = 2f;
     public int health;
     public GameObject target;
     private float nextAttackTime;
-    public float targetUpdateInterval = 5f; // Add this line
-    private float nextTargetUpdateTime; // Add this line
+    public float targetUpdateInterval = 5f;
+    private float nextTargetUpdateTime;
+    private bool isProjectileDestroyed = true;
 
     void Start()
     {
-        target = FindClosestWall(); // Update this line
+        target = FindClosestWall();
         nextAttackTime = Time.time + attackInterval;
-        nextTargetUpdateTime = Time.time + targetUpdateInterval; // Add this line
+        nextTargetUpdateTime = Time.time + targetUpdateInterval;
     }
 
     void Update()
     {
+
+        if(health == 0)
+        {
+            Destroy(gameObject);
+        }
+
         if (Time.time >= nextTargetUpdateTime) // Add this block
         {
             target = FindClosestWall();
             nextTargetUpdateTime = Time.time + targetUpdateInterval;
         }
+
         float distance = Vector3.Distance(transform.position, target.transform.position);
 
-        if (distance > minDistance) // Add this block
+        if (distance > minDistance)
         {
             Vector3 direction = (target.transform.position - transform.position).normalized;
             Vector3 velocity = direction * speed;
@@ -41,7 +49,7 @@ public class RangedEnemyController : MonoBehaviour
             rb.freezeRotation = true;
             transform.rotation = Quaternion.LookRotation(direction);
         }
-        else if (distance < minDistance) // Add this block
+        else if (distance < minDistance)
         {
             Vector3 direction = (transform.position - target.transform.position).normalized;
             Vector3 velocity = direction * speed;
@@ -62,28 +70,28 @@ public class RangedEnemyController : MonoBehaviour
             nextAttackTime = Time.time + attackInterval;
         }
 
-    }
 
+    }
 
     void Attack()
     {
         Vector3 spawnPosition = transform.position + transform.forward * 2.0f;
         GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
 
-        // Calculate the direction from the spawn position to the target
         Vector3 directionToTarget = (target.transform.position - spawnPosition).normalized;
-
-        // Set the projectile's velocity and direction
-        projectile.GetComponent<Rigidbody>().velocity = directionToTarget * 10;
-
-        // Rotate the projectile to face the target
         projectile.transform.rotation = Quaternion.LookRotation(directionToTarget);
 
-        projectile.GetComponent<ProjectileCollision>().target = target;
+        // 수정된 ProjectileController에 대한 참조를 설정합니다.
+        projectile.GetComponent<ProjectileController>().rangedEnemyController = this;
+
+        // 이 부분을 수정하여 발사체의 Rigidbody를 가져온 뒤 속도를 설정합니다.
+        Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+        projectileRb.velocity = directionToTarget * speed; // speed를 설정한 발사체 속도로 변경
     }
 
 
-    GameObject FindClosestWall() // Add this method
+
+    GameObject FindClosestWall()
     {
         GameObject[] wallObjects;
         wallObjects = GameObject.FindGameObjectsWithTag("Wall");

@@ -4631,11 +4631,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4658961821477466}
+  - component: {fileID: -1873395763957933146}
   - component: {fileID: 198555335796361922}
-  - component: {fileID: -8493157788381421120}
-  - component: {fileID: -5447788983275825501}
   - component: {fileID: 199620593360992220}
-  - component: {fileID: 316268273585032672}
+  - component: {fileID: -3040747436403027700}
+  - component: {fileID: -5313261049914225069}
   m_Layer: 0
   m_Name: FX_Fireball_Shooting_Straight_01
   m_TagString: Untagged
@@ -4660,6 +4660,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-1873395763957933146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239156983776194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29619e41a4cb0f4fb3a98b2b8449ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 20
+  lifeTime: 5
+  projectileDestroyedSound: {fileID: 0}
+  rangedEnemyController: {fileID: 0}
 --- !u!198 &198555335796361922
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9457,34 +9473,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &-8493157788381421120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239156983776194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85f23f0a53462414fb3a5a8659948406, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  explosionVFX: {fileID: 0}
-  target: {fileID: 0}
---- !u!114 &-5447788983275825501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239156983776194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f29619e41a4cb0f4fb3a98b2b8449ba2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
-  lifeTime: 5
 --- !u!199 &199620593360992220
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -9558,7 +9546,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!54 &316268273585032672
+--- !u!54 &-3040747436403027700
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9574,6 +9562,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &-5313261049914225069
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239156983776194}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1557318409414624
 GameObject:
   m_ObjectHideFlags: 0

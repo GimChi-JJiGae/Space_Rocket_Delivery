@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3409819905040534073}
   - component: {fileID: 4195485445356560186}
   m_Layer: 0
-  m_Name: Fuel
+  m_Name: Fuel_sample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1933,7 +1933,7 @@ GameObject:
   - component: {fileID: 2047863987777784828}
   - component: {fileID: 7195298189220374049}
   m_Layer: 0
-  m_Name: Ore
+  m_Name: Ore_sample
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

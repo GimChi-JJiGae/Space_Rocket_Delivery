@@ -4,16 +4,39 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    public float speed = 10f; // 발사체 속도
-    public float lifeTime = 5f; // 발사체의 지속 시간 (초 단위)
+    public float speed = 20f;
+    public float lifeTime = 5f;
+    public AudioClip projectileDestroyedSound;
+    public RangedEnemyController rangedEnemyController;
+    private Rigidbody rb;
 
     void Start()
     {
-        Destroy(gameObject, lifeTime);
+        Invoke("DestroyProjectile", lifeTime);
+        rb = GetComponent<Rigidbody>();
+        rb.velocity = transform.forward * speed;
     }
 
     void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Module module = collision.gameObject.GetComponentInParent<Module>();
+            if (module != null)
+            {
+                module.Attacked();
+            }
+            DestroyProjectile();
+        }
+    }
+
+    void DestroyProjectile()
+    {
+        AudioSource.PlayClipAtPoint(projectileDestroyedSound, transform.position);
+        Destroy(gameObject);
     }
 }

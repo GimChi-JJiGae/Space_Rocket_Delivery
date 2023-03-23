@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 1713190221073761487}
   - component: {fileID: 1689382136187491649}
   - component: {fileID: -7309041485927597083}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SM_Ship_Stealth_04
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

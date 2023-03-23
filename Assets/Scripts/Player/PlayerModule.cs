@@ -24,18 +24,11 @@ public class PlayerModule : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
-        spaceship = FindAnyObjectByType<Spaceship>();
-        
-        
+        spaceship = FindAnyObjectByType<Spaceship>(); 
     }
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
-
-    void Edge()
     {
         
     }
