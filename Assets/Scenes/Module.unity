@@ -718,8 +718,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HoldableObjects: []
   leftHand: {fileID: 1467227817}
-  currentObject: {fileID: 0}
-  isHoldingObject: 0
 --- !u!114 &111363820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -797,7 +795,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 111363817}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4348db7eae927134b9eca9652e0fbfe3, type: 3}
   m_Name: 
