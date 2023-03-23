@@ -11,6 +11,7 @@ TagManager:
   - Building
   - Liftable
   - enemy
+  - RangedEnemy
   layers:
   - Default
   - TransparentFX
@@ -19,6 +20,7 @@ TagManager:
   - Water
   - UI
   - Module
+  - RangedEnemy
   - Lazer
   - 
   - 

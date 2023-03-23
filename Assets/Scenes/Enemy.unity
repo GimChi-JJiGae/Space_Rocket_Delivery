@@ -545,11 +545,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6236ec84190c0814ab0ac43a78f9e145, type: 3}
---- !u!1 &254011928 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8577546844799266658, guid: 1fcaeb522dab2514ca7acf5bf0439fdd, type: 3}
-  m_PrefabInstance: {fileID: 1213649686}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &260655114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2310,16 +2305,6 @@ Transform:
   m_Father: {fileID: 1524877353}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1152626136 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8839642714515750018, guid: b5d7f8909d1620441be35ea32c89341f, type: 3}
-  m_PrefabInstance: {fileID: 507750192}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1203156274 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6844827901609421029, guid: d997b76448c686149a63d4ffb7ca7ec1, type: 3}
-  m_PrefabInstance: {fileID: 486470323}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1204580196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2944,12 +2929,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: def445a42c43f9f479356198d4b980c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LiftableObjects: []
+  HoldableObjects: []
   leftHand: {fileID: 86839033}
-  rightHand: {fileID: 1203156274}
-  maxDistance: 2
-  fuelPrefab: {fileID: 1152626136}
-  orePrefab: {fileID: 254011928}
+  currentObject: {fileID: 0}
+  isHoldingObject: 0
 --- !u!114 &1524877349
 MonoBehaviour:
   m_ObjectHideFlags: 0
