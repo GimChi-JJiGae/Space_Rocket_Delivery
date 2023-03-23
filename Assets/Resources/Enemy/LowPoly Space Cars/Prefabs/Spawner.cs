@@ -122,6 +122,11 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
+        if(health == 0)
+        {
+            DestroyEnemy();
+        }
+
         if (!hasExploded)
         {
             // Find the closest wall and update the target

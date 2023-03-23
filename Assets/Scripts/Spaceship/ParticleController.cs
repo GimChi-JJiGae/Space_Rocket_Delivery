@@ -34,6 +34,17 @@ public class ParticleController : MonoBehaviour
         Debug.Log("Particle collided with " + other.name);
         if (other.tag == "enemy")
         {
+            EnemyController controller = other.GetComponent<EnemyController>();     // 근거리 적일 경우
+            if (controller != null)
+            {
+                controller.health -= 1;
+            }
+            else
+            {
+                RangedEnemyController Rangedcontroller = other.GetComponent<RangedEnemyController>();   // 원거리 적일 경우
+                Rangedcontroller.health -= 1;
+            }
+            
         }
     }
     IEnumerator RepeatParticleSystem()

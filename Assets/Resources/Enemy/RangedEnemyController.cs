@@ -24,6 +24,12 @@ public class RangedEnemyController : MonoBehaviour
 
     void Update()
     {
+
+        if(health == 0)
+        {
+            Destroy(gameObject);
+        }
+
         if (Time.time >= nextTargetUpdateTime) // Add this block
         {
             target = FindClosestWall();
@@ -93,6 +99,8 @@ public class RangedEnemyController : MonoBehaviour
             module.Attacked();
         }
     }
+
+
 
     GameObject FindClosestWall() // Add this method
     {
