@@ -15,9 +15,6 @@ public class PlayerInput : MonoBehaviour {
     public bool RepairModule { get; private set; }
     public bool DestroyModule { get; private set; }
 
-    private bool canInteract = true;
-    private bool interacting = false;
-
     private void FixedUpdate()
     {
         // if (GameManager.instance != null && GameManager.instance.isGameover)
@@ -32,40 +29,12 @@ public class PlayerInput : MonoBehaviour {
 
         Move_GoBack = Input.GetAxis(move1AxisName);
         Move_LeftRight = Input.GetAxis(move2AxisName);
-        Interact = Input.GetButton(interactionButtonName);
         RepairModule = Input.GetButton(repairButtonName);
         DestroyModule = Input.GetButton(destroyButtonName);
     }
 
-    public IEnumerator DisableInteractionForSeconds(float seconds)
+    private void Update()
     {
-        canInteract = false;
-        yield return new WaitForSeconds(seconds);
-        canInteract = true;
-    }
-
-    private IEnumerator InteractCoroutine()
-    {
-        interacting = true;
-        while (Interact)
-        {
-            yield return null;
-        }
-        interacting = false;
-    }
-
-    public bool CanInteract()
-    {
-        return canInteract;
-    }
-
-    public bool InteractPressed()
-    {
-        if (Interact && !interacting)
-        {
-            StartCoroutine(InteractCoroutine());
-            return true;
-        }
-        return false;
+        Interact = Input.GetButtonDown(interactionButtonName);
     }
 }
