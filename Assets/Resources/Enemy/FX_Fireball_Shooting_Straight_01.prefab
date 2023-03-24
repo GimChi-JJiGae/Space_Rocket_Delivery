@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4648616537092224}
   - component: {fileID: 198871336625838312}
   - component: {fileID: 199717599490469586}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_Explosion_Embers_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4636,7 +4636,7 @@ GameObject:
   - component: {fileID: 199620593360992220}
   - component: {fileID: -3040747436403027700}
   - component: {fileID: -5313261049914225069}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4674,7 +4674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   lifeTime: 5
-  projectileDestroyedSound: {fileID: 0}
+  projectileDestroyedSound: {fileID: 8300000, guid: f01c623f724825e44a923d1ae50256f2, type: 3}
   rangedEnemyController: {fileID: 0}
 --- !u!198 &198555335796361922
 ParticleSystem:
@@ -9586,7 +9586,7 @@ GameObject:
   - component: {fileID: 4250514815741902}
   - component: {fileID: 198812381747292032}
   - component: {fileID: 199584796902900458}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_Explosion_Core_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14217,7 +14217,7 @@ GameObject:
   - component: {fileID: 4929873581643144}
   - component: {fileID: 198097287430497664}
   - component: {fileID: 199253968778295878}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_Trail_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18782,7 +18782,7 @@ GameObject:
   - component: {fileID: 4662470218466344}
   - component: {fileID: 198452277511786420}
   - component: {fileID: 199719907443069990}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_Explosion_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23415,7 +23415,7 @@ GameObject:
   - component: {fileID: 4098676016777950}
   - component: {fileID: 198618828582005044}
   - component: {fileID: 199647179129018618}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FX_Fireball_Shooting_Straight_Embers_Trail_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
