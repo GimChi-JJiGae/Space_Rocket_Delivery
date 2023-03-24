@@ -188,6 +188,15 @@ public class PlayerInteraction : MonoBehaviour
             {
                 PickUpObject(currentObject);
             }
+            else if (gameObject.GetComponent<PlayerModule>().matchObject != null)
+            {
+                gameObject.GetComponent<PlayerModule>().OnEdgeStay();
+            }
+            else if (gameObject.GetComponent<PlayerModule>().buildingObject != null)
+            {
+                gameObject.GetComponent<PlayerModule>().OnBuildingStay();
+            }
+
         }
     }
 }

@@ -12,14 +12,13 @@ public class PlayerModule : MonoBehaviour
     private Spaceship spaceship;
 
     // Edge 체크를 위한 오브젝트
-    private GameObject matchObject;
+    public GameObject matchObject;
     private GameObject targetObject;
 
     // Building 체크를 위한 오브젝트
-    private GameObject buildingObject;
+    public GameObject buildingObject;
     private bool isOnBuildingStay = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -28,7 +27,7 @@ public class PlayerModule : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
     }
@@ -37,15 +36,6 @@ public class PlayerModule : MonoBehaviour
     {
         OnEdgeEnter(other);
         OnBuildingEnter(other);
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        OnEdgeStay(other);
-        if (!isOnBuildingStay)
-        {
-            StartCoroutine(OnBuildingStay(other));
-        }
-        
     }
     private void OnTriggerExit(Collider other)
     {
@@ -85,13 +75,13 @@ public class PlayerModule : MonoBehaviour
     }
 
     // 모서리 안에 있을 때 입력을 체크함
-    private void OnEdgeStay(Collider other)
+    public void OnEdgeStay()
     {
         // 모서리안 && 입력 && 블루프린트 모듈일 때
-        if (other.gameObject.tag == "Edge" && playerInput.Interact && targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+        if (matchObject.tag == "Edge" && targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
         {
             Debug.Log("생성되어라 얍");
-            matchObject = other.gameObject;
+            matchObject = gameObject;
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
             spaceship.MakeWall(targetObject);                                           // 벽생성 (연계되어있는 모듈이 많아 우주선에서 관리)
         }
@@ -123,12 +113,11 @@ public class PlayerModule : MonoBehaviour
     }
 
     // 1초에 한번만 선택할 수 있게
-    private IEnumerator OnBuildingStay(Collider other)
+    public void OnBuildingStay()
     {
-        if (playerInput.Interact && other.gameObject.tag == "Building" && buildingObject)
+        if (buildingObject.tag == "Building")
         {
-            isOnBuildingStay = true;
-            switch (other.gameObject.name)
+            switch (buildingObject.name)
             {
                 case "Supplier":
                     Supplier supplier = buildingObject.GetComponent<Supplier>();
@@ -139,8 +128,6 @@ public class PlayerModule : MonoBehaviour
                 case "Oxygenator":
                     break;
             }
-            yield return new WaitForSeconds(1.0f);
-            isOnBuildingStay = false;
         }
     }
 
