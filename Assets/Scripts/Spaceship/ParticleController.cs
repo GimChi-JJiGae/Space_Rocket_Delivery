@@ -14,6 +14,10 @@ public class ParticleController : MonoBehaviour
     public float interval = 7f; // 반복 주기
     public float miniInterval = 0.5f;
 
+
+    public float damageInterval = 0.2f;
+    public float timeAfterDamaged = 0f;
+
     public GameObject turretLazer;
 
     // Start is called before the first frame update
@@ -37,12 +41,30 @@ public class ParticleController : MonoBehaviour
             EnemyController controller = other.GetComponent<EnemyController>();     // 근거리 적일 경우
             if (controller != null)
             {
-                controller.health -= 1;
+                if (timeAfterDamaged > damageInterval)
+                {
+                    controller.health -= 1;
+                    timeAfterDamaged = 0;
+                }
+                else
+                {
+                    timeAfterDamaged += Time.deltaTime;
+                }
             }
             else
             {
                 RangedEnemyController Rangedcontroller = other.GetComponent<RangedEnemyController>();   // 원거리 적일 경우
-                Rangedcontroller.health -= 1;
+
+
+                if (timeAfterDamaged > damageInterval)
+                {
+                    Rangedcontroller.health -= 1;
+                    timeAfterDamaged = 0;
+                }
+                else
+                {
+                    timeAfterDamaged += Time.deltaTime;
+                }
             }
             
         }
