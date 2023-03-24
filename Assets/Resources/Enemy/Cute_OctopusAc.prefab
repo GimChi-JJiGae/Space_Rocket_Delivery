@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627976}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tentacle_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627978}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tentacle_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627984}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7630159245973627986}
   - component: {fileID: 7630159245962163578}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: OctopusA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627988}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tentacle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627990}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tentacle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,9 +258,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7630159245973627992}
   - component: {fileID: 7630159245966396346}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_OctopusAc
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -311,7 +311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627994}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -347,7 +347,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627996}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: head_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7630159245973627998}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}

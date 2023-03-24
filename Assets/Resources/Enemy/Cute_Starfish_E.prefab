@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127361}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127363}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127365}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127367}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,9 +135,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1326248736506127369}
   - component: {fileID: 1326248736515738603}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_Starfish_E
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127371}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127373}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1326248736506127375}
   - component: {fileID: 1326248736511571243}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_Starfish_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127377}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127379}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127385}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127387}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,7 +480,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127389}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
