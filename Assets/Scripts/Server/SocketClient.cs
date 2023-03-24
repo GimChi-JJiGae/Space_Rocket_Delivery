@@ -2,6 +2,7 @@ using Palmmedia.ReportGenerator.Core.Common;
 using System;
 using System.Collections;
 using System.Data.SqlTypes;
+//using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -23,6 +24,7 @@ public class SocketClient : MonoBehaviour
     {
         // 서버 주소와 포트번호 설정
         string serverAddress = "192.168.30.116";
+        // string serverAddress = "192.168.30.31";
         int serverPort = 5555;
         IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(serverAddress), serverPort);
 
@@ -54,7 +56,7 @@ public class SocketClient : MonoBehaviour
             
             try
             {
-                DeSerialization(message);
+                DeSerialization(buffer);
             }
             catch { 
             }
@@ -77,35 +79,39 @@ public class SocketClient : MonoBehaviour
 
     public void MovementSend(double px, double py, double pz)
     {
-        byte[] data = new byte[0];
+        byte[] data = new byte[32];
         //byte[] messageDatas = Encoding.UTF8.GetBytes(message);
-        int a = 1;
+        int a = 9;
         byte[] header = BitConverter.GetBytes(a);
-        a = 3;
+        a = 7;
         byte[] header2 = BitConverter.GetBytes(a);
         byte[] bpx = BitConverter.GetBytes(px);
         byte[] bpy = BitConverter.GetBytes(py);
         byte[] bpz = BitConverter.GetBytes(pz);
-
+        int i = 0;
         foreach (byte b in header)
         {
-            data = data.Append(b);
+            data[i++] = b;
         }
         foreach (byte b in header2)
         {
-            data = data.Append(b);
+            data[i++] = b;
+
         }
         foreach (byte b in bpx)
         {
-            data = data.Append(b);
+            data[i++] = b;
+
         }
         foreach (byte b in bpy)
         {
-            data = data.Append(b);
+            data[i++] = b;
+
         }
         foreach (byte b in bpz)
         {
-            data = data.Append(b);
+            data[i++] = b;
+
         }
 
         //Debug.Log("Byte Array is: " + String.Join(" ", data));
@@ -113,28 +119,23 @@ public class SocketClient : MonoBehaviour
         socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, null);
     }
 
-    private void DeSerialization(string data)
+    private void DeSerialization(byte[] buffer)
     {
-        int head = 0;
-        byte[] header1 = ByteSubstring(data, head, sizeof(int));
-        head += sizeof(int);
-        int d1 = BitConverter.ToInt32(header1);
-        byte[] header2 = ByteSubstring(data, head, sizeof(int));
-        head += sizeof(int);
-        int d2 = BitConverter.ToInt32(header2);
-        byte[] header3 = ByteSubstring(data, head, sizeof(double));
-        head += sizeof(double);
-        double d3 = BitConverter.ToDouble(header3);
-        byte[] header4 = ByteSubstring(data, head, sizeof(double));
-        head += sizeof(double);
-        double d4 = BitConverter.ToDouble(header4);
-        byte[] header5 = ByteSubstring(data, head, sizeof(double));
-        double d5 = BitConverter.ToDouble(header5);
+        byte[] ttt1 = SplitArray(buffer, 0, 4); 
+        int d1 = BitConverter.ToInt32(ttt1);
+        byte[] ttt2 = SplitArray(buffer, 4, 4);
+        int d2 = BitConverter.ToInt32(ttt2);
+        byte[] ttt3 = SplitArray(buffer, 8, 8);
+        double d3 = BitConverter.ToDouble(ttt3);
+        byte[] ttt4 = SplitArray(buffer, 16, 8);
+        double d4 = BitConverter.ToDouble(ttt4);
+        byte[] ttt5 = SplitArray(buffer, 24, 8);
+        double d5 = BitConverter.ToDouble(ttt5);
 
         Debug.Log("size :" + sizeof(float));
         Debug.Log("recieve: header: " + d1 + ", header: " + d2 + ", x: " + d3 + ", y: " + d4 + ", z: " + d5);
-        
-        NetworkPlayer.MoveOtherPlayer(3, (float)d3, (float)d4, (float)d5);
+
+        //NetworkPlayer.MoveOtherPlayer(3, (float)d3, (float)d4, (float)d5);
     }
 
     private void SendCallback(IAsyncResult result)
@@ -152,12 +153,21 @@ public class SocketClient : MonoBehaviour
         }
     }
 
-    public byte[] ByteSubstring(String Data, int StartIdx, int byteLength)
+    public byte[] ByteSubstring(string Data, int StartIdx, int byteLength)
     {
         byte[] byteTEMP = Encoding.Default.GetBytes(Data, StartIdx, byteLength);
 
         return byteTEMP;
     }
+
+    public byte[] SplitArray(byte[] array, int startIndex, int length)
+    {
+        byte[] result = new byte[length];
+        Array.Copy(array, startIndex, result, 0, length);
+        return result;
+    }
+
+
 }
 
 public static class Extensions
