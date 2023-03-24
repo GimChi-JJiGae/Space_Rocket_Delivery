@@ -420,22 +420,6 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 10
   player: {fileID: 0}
---- !u!114 &557755715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557755707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: def445a42c43f9f479356198d4b980c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HoldableObjects: []
-  leftHand: {fileID: 1632310465}
-  currentObject: {fileID: 0}
-  isHoldingObject: 0
 --- !u!114 &557755716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,6 +454,32 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &557755719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557755707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def445a42c43f9f479356198d4b980c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHead: {fileID: 0}
+  HoldableObjects: []
+--- !u!114 &557755720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557755707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4348db7eae927134b9eca9652e0fbfe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &653861598
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1030,7 +1040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1632310466}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: PlayerHead
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

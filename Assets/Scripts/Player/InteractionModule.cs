@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Module;
 
-public class PlayerModule : MonoBehaviour
+public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
     private Rigidbody playerRigidbody;
