@@ -10,6 +10,8 @@ public class ProjectileController : MonoBehaviour
     public RangedEnemyController rangedEnemyController;
     private Rigidbody rb;
 
+    bool destroyed = false;
+
     void Start()
     {
         Invoke("DestroyProjectile", lifeTime);
@@ -34,9 +36,11 @@ public class ProjectileController : MonoBehaviour
         }
     }
 
+
     void DestroyProjectile()
     {
         AudioSource.PlayClipAtPoint(projectileDestroyedSound, transform.position);
         Destroy(gameObject);
     }
+
 }
