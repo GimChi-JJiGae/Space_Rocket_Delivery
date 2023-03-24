@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127361}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0.04848645, y: 0.03604643, z: -0.5955319, w: 0.8010565}
   m_LocalPosition: {x: 4.7417285e-18, y: 0.11122981, z: 3.0224297e-18}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127373}
   m_RootOrder: 0
@@ -39,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127363}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,6 +57,7 @@ Transform:
   m_LocalRotation: {x: 0.06593, y: 0, z: -0, w: 0.99782425}
   m_LocalPosition: {x: -1.5418081e-33, y: 0.101965465, z: -6.892376e-17}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127379}
   m_RootOrder: 0
@@ -69,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127365}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +88,7 @@ Transform:
   m_LocalRotation: {x: -0.022715172, y: -0.06745217, z: 0.9453012, w: -0.31833932}
   m_LocalPosition: {x: 4.8226526e-17, y: 0.109384716, z: -3.554257e-18}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127367}
   m_RootOrder: 0
@@ -99,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127367}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,6 +119,7 @@ Transform:
   m_LocalRotation: {x: -0.022715172, y: -0.06745217, z: 0.9453012, w: 0.31833932}
   m_LocalPosition: {x: -0.10333368, y: -0.131791, z: 0.006798113}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127365}
   m_Father: {fileID: 1326248736506127371}
@@ -131,9 +135,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1326248736506127369}
   - component: {fileID: 1326248736515738603}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_Starfish_E
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,6 +152,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127375}
   - {fileID: 1326248736506127377}
@@ -156,7 +161,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1326248736515738603
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -169,10 +174,11 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &1326248736506361899
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127371}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,6 +205,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0.2284082, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127373}
   - {fileID: 1326248736506127367}
@@ -217,7 +224,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127373}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,6 +241,7 @@ Transform:
   m_LocalRotation: {x: -0.04848645, y: -0.03604643, z: 0.5955319, w: 0.8010565}
   m_LocalPosition: {x: -0.16743933, y: 0.071317516, z: 0.0046827635}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127361}
   m_Father: {fileID: 1326248736506127371}
@@ -249,7 +257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1326248736506127375}
   - component: {fileID: 1326248736511571243}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_Starfish_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,6 +274,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127369}
   m_RootOrder: 0
@@ -281,9 +290,12 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 3
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -295,6 +307,7 @@ SkinnedMeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -340,7 +353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127377}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,6 +370,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127371}
   m_Father: {fileID: 1326248736506127369}
@@ -371,7 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127379}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,6 +402,7 @@ Transform:
   m_LocalRotation: {x: -0.06593, y: -1.6061321e-17, z: 8.521213e-17, w: 0.99782425}
   m_LocalPosition: {x: -0, y: 0.20052215, z: 0.0046827635}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127363}
   m_Father: {fileID: 1326248736506127371}
@@ -402,7 +417,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127385}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,6 +434,7 @@ Transform:
   m_LocalRotation: {x: -0.022715172, y: -0.06745217, z: 0.9453012, w: -0.31833932}
   m_LocalPosition: {x: 0.00000027219184, y: -0.10938452, z: 0.000000024484404}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127387}
   m_RootOrder: 0
@@ -432,7 +448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127387}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,6 +465,7 @@ Transform:
   m_LocalRotation: {x: -0.31833932, y: 0.9453012, z: 0.06745217, w: -0.022715172}
   m_LocalPosition: {x: 0.103333995, y: -0.13179101, z: 0.00679811}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127385}
   m_Father: {fileID: 1326248736506127371}
@@ -463,7 +480,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127389}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -480,6 +497,7 @@ Transform:
   m_LocalRotation: {x: 0.04848645, y: 0.03604643, z: -0.5955319, w: 0.8010565}
   m_LocalPosition: {x: 0.0000007782243, y: -0.11123, z: -0.000000025927765}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1326248736506127391}
   m_RootOrder: 0
@@ -493,7 +511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326248736506127391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,6 +528,7 @@ Transform:
   m_LocalRotation: {x: 0.80105644, y: -0.5955319, z: -0.03604643, w: 0.048486445}
   m_LocalPosition: {x: 0.167439, y: 0.07131779, z: 0.0046827598}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1326248736506127389}
   m_Father: {fileID: 1326248736506127371}
