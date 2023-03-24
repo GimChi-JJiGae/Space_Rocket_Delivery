@@ -42,89 +42,89 @@ public class PlayerInteraction : MonoBehaviour
         Destroy(dummyPrefab);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Edge"))
-        {
-            matchObject = other.gameObject;
-            Module module = matchObject.GetComponentInParent<Module>();
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        matchObject = other.gameObject;
+    //        Module module = matchObject.GetComponentInParent<Module>();
 
-            int idxZ = module.idxZ;
-            int idxX = module.idxX;
-            switch (other.gameObject.name)
-            {
-                case "EdgeTop":
-                    idxZ += 1;
-                    break;
-                case "EdgeBottom":
-                    idxZ -= 1;
-                    break;
-                case "EdgeRight":
-                    idxX += 1;
-                    break;
-                case "EdgeLeft":
-                    idxX -= 1;
-                    break;
-            }
+    //        int idxZ = module.idxZ;
+    //        int idxX = module.idxX;
+    //        switch (other.gameObject.name)
+    //        {
+    //            case "EdgeTop":
+    //                idxZ += 1;
+    //                break;
+    //            case "EdgeBottom":
+    //                idxZ -= 1;
+    //                break;
+    //            case "EdgeRight":
+    //                idxX += 1;
+    //                break;
+    //            case "EdgeLeft":
+    //                idxX -= 1;
+    //                break;
+    //        }
 
-            targetObject = spaceship.modules[idxZ, idxX];
-            targetObject.GetComponent<Module>().floorModule.SetActive(true);
-        }
+    //        targetObject = spaceship.modules[idxZ, idxX];
+    //        targetObject.GetComponent<Module>().floorModule.SetActive(true);
+    //    }
 
-        else if (other.gameObject.CompareTag("Building"))
-        {
-            buildingObject = other.gameObject;
-        }
-    }
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        buildingObject = other.gameObject;
+    //    }
+    //}
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Edge"))
-        {
-            if (playerInput.Interact)
-            {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
-                    spaceship.MakeWall(targetObject);
-                }
-            }
-        }
-        else if (other.gameObject.CompareTag("Building"))
-        {
-            switch (other.gameObject.name)
-            {
-                case "Supplier":
-                    Supplier supplier = buildingObject.GetComponent<Supplier>();
-                    supplier.SwitchResource();
-                    break;
-                case "Engine":
-                    break;
-                case "Oxygenator":
-                    break;
-            }
-        }
-    }
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        if (playerInput.Interact)
+    //        {
+    //            if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+    //            {
+    //                targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+    //                spaceship.MakeWall(targetObject);
+    //            }
+    //        }
+    //    }
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        switch (other.gameObject.name)
+    //        {
+    //            case "Supplier":
+    //                Supplier supplier = buildingObject.GetComponent<Supplier>();
+    //                supplier.SwitchResource();
+    //                break;
+    //            case "Engine":
+    //                break;
+    //            case "Oxygenator":
+    //                break;
+    //        }
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Edge"))
-        {
-            Module module = targetObject.GetComponentInParent<Module>();
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Edge"))
+    //    {
+    //        Module module = targetObject.GetComponentInParent<Module>();
 
-            if (module.moduleType == ModuleType.Blueprint)
-            {
-                targetObject.GetComponent<Module>().floorModule.SetActive(false);
-            }
+    //        if (module.moduleType == ModuleType.Blueprint)
+    //        {
+    //            targetObject.GetComponent<Module>().floorModule.SetActive(false);
+    //        }
 
-            matchObject = null;
-            targetObject = null;
-        }
-        else if (other.gameObject.CompareTag("Building"))
-        {
-            buildingObject = null;
-        }
-    }
+    //        matchObject = null;
+    //        targetObject = null;
+    //    }
+    //    else if (other.gameObject.CompareTag("Building"))
+    //    {
+    //        buildingObject = null;
+    //    }
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {
