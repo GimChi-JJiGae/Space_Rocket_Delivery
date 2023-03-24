@@ -46,9 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   counter: 0
   maxEnemies: 20
-  rangedEnemyHealths: 01000000
-  enemies: []
-  enemyHealths: 
+  rangedEnemyHealths: 02000000
+  enemies:
+  - {fileID: 1326248736506361897, guid: d221cb255f8c4874393f33c89e0334e0, type: 3}
+  - {fileID: 7630159245973665912, guid: c376d2b745c3efa4e9eb270daf92582e, type: 3}
+  enemyHealths: 0500000005000000
   explosionVFX: {fileID: 4914716930404006884, guid: aed12c224fbc8704d8eaa07a52e88f44, type: 3}
   speed: 20
   rangedEnemyPrefab: {fileID: 5693058009959157407, guid: f8550245053610d41b7b5556ba4dea6f, type: 3}
