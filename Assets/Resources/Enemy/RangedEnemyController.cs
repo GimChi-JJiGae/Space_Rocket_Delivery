@@ -15,6 +15,8 @@ public class RangedEnemyController : MonoBehaviour
     public float targetUpdateInterval = 5f;
     private float nextTargetUpdateTime;
     private bool isProjectileDestroyed = true;
+    public float projectileSpeed = 20f;
+
 
     void Start()
     {
@@ -25,13 +27,7 @@ public class RangedEnemyController : MonoBehaviour
 
     void Update()
     {
-
-        if(health == 0)
-        {
-            Destroy(gameObject);
-        }
-
-        if (Time.time >= nextTargetUpdateTime) // Add this block
+        if (Time.time >= nextTargetUpdateTime)
         {
             target = FindClosestWall();
             nextTargetUpdateTime = Time.time + targetUpdateInterval;
@@ -86,7 +82,7 @@ public class RangedEnemyController : MonoBehaviour
 
         // 이 부분을 수정하여 발사체의 Rigidbody를 가져온 뒤 속도를 설정합니다.
         Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-        projectileRb.velocity = directionToTarget * speed; // speed를 설정한 발사체 속도로 변경
+        projectileRb.velocity = directionToTarget * projectileSpeed;
     }
 
 
