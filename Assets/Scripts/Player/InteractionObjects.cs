@@ -5,7 +5,7 @@ public class InteractionObjects : MonoBehaviour
 {
     public List<string> HoldableObjects = new();
 
-    private bool isHoldingObject = false;
+    public bool isHoldingObject = false;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
