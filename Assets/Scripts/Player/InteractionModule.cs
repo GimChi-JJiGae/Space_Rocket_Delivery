@@ -4,6 +4,7 @@ using static Module;
 public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
+    private Rigidbody playerRigidbody;
     private InteractionObjects interactionObjects;
 
     private Spaceship spaceship;
@@ -18,6 +19,7 @@ public class InteractionModule : MonoBehaviour
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerRigidbody = GetComponent<Rigidbody>();
         interactionObjects = GetComponent<InteractionObjects>();
 
         spaceship = FindAnyObjectByType<Spaceship>(); 
