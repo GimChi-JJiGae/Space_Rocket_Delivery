@@ -45,12 +45,6 @@ public class Supplier : MonoBehaviour
         StartCoroutine(SpawnResource());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     // 자원 변경
     public void SwitchResource()
     {
