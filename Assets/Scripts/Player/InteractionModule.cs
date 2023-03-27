@@ -16,7 +16,9 @@ public class InteractionModule : MonoBehaviour
     // Building 체크를 위한 오브젝트
     private GameObject buildingObject;
 
-    void Start()
+    private GameObject fixedObject;
+
+    private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
@@ -36,6 +38,7 @@ public class InteractionModule : MonoBehaviour
 
                 int idxZ = module.idxZ;
                 int idxX = module.idxX;
+
                 switch (other.gameObject.name)
                 {
                     case "EdgeTop":
@@ -62,43 +65,6 @@ public class InteractionModule : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (!interactionObjects.isHoldingObject)
-        {
-            if (targetObject != null)
-            {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
-                {
-                    Debug.Log(4);
-                    if (playerInput.Interact)
-                    {
-                        Debug.Log(5);
-                        targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
-                        spaceship.MakeWall(targetObject);
-                    }
-                }
-            }
-            else if (buildingObject != null)
-            {
-                if (playerInput.Interact)
-                {
-                    switch (buildingObject.name)
-                    {
-                        case "Supplier":
-                            Supplier supplier = buildingObject.GetComponent<Supplier>();
-                            supplier.SwitchResource();
-                            break;
-                        case "Engine":
-                            break;
-                        case "Oxygenator":
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
     private void OnTriggerExit(Collider other)
     {
         if (!interactionObjects.isHoldingObject)
@@ -120,5 +86,43 @@ public class InteractionModule : MonoBehaviour
                 buildingObject = null;
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (playerInput.RepairModule)
+        {
+
+        }
+    }
+
+    private void Update()
+    {
+        if (playerInput.Interact)
+        {
+            if (matchObject != null && targetObject != null)
+            {
+                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                {
+                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+                    spaceship.MakeWall(targetObject);
+                }
+            }
+            else if (buildingObject != null)
+            {
+                switch (buildingObject.name)
+                {
+                    case "Supplier":
+                        Supplier supplier = buildingObject.GetComponent<Supplier>();
+                        supplier.SwitchResource();
+                        break;
+                    case "Engine":
+                        break;
+                    case "Oxygenator":
+                        break;
+                }
+            }
+        }
+
     }
 }
