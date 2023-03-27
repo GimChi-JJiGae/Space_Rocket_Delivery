@@ -374,7 +374,6 @@ GameObject:
   - component: {fileID: 5693058009958798207}
   - component: {fileID: 5693058009968655605}
   - component: {fileID: -6319459689928066372}
-  - component: {fileID: -5170012952468543876}
   m_Layer: 3
   m_Name: Krake_B
   m_TagString: enemy
@@ -431,37 +430,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080,
-    type: 3}
+  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080, type: 3}
   attackRange: 20
   minDistance: 20
   speed: 3
   attackInterval: 2
   health: 2
   target: {fileID: 0}
-  targetUpdateInterval: 5
-  projectileSpeed: 20
---- !u!114 &-5170012952468543876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5693058009959157407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080,
-    type: 3}
-  attackRange: 10
-  minDistance: 10
-  speed: 3
-  attackInterval: 2
-  health: 0
-  target: {fileID: 0}
-  targetUpdateInterval: 5
+  targetUpdateInterval: 1
   projectileSpeed: 20
 --- !u!1 &5693058009959157537
 GameObject:

@@ -20711,6 +20711,8 @@ MonoBehaviour:
   delay: 0.2
   interval: 7
   miniInterval: 0.5
+  damageInterval: 0.2
+  timeAfterDamaged: 0
   turretLazer: {fileID: 8253860921856510219}
 --- !u!1 &8253860921856510219 stripped
 GameObject:

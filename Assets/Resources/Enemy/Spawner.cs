@@ -63,11 +63,11 @@ public class Spawner : MonoBehaviour
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
         if (Random.value < rangedEnemySpawnChance)
         {
-            collider.size = new Vector3(5, 3, 8); // 원거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // 원거리 적의 경우 적절한 크기로 조정
         }
         else
         {
-            collider.size = new Vector3(3, 2, 3); // 근거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // 근거리 적의 경우 적절한 크기로 조정
         }
 
         Rigidbody rb = enemy.AddComponent<Rigidbody>();

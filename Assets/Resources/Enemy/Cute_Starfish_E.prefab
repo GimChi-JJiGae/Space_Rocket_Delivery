@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 1326248736511571243}
   m_Layer: 3
   m_Name: Cute_Starfish_A
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
