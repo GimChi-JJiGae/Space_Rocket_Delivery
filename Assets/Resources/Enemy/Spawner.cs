@@ -4,30 +4,52 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public int counter;
-    public int maxEnemies = 20;
-    public int[] rangedEnemyHealths;
     public GameObject[] enemies;
     public int[] enemyHealths;
     public GameObject explosionVFX;
     public float speed = 5f;
-    public GameObject rangedEnemyPrefab;
-    public float rangedEnemySpawnChance = 0.2f;
     public AudioClip enemyDestroyedSound;
+    public float spawnInterval = 5f;
+    public float difficultyTimeStep = 300f; // 난이도가 증가하는 시간 간격 (초)
+    private float nextDifficultyIncreaseTime; // 다음 난이도 증가 시간
+    private int difficultyLevel = 0; // 현재 난이도 레벨
+    public GameObject[] enemiesTier2; // 레벨 2에 등장하는 적의 프리팹 배열
+    public GameObject[] enemiesTier3; // 레벨 3에 등장하는 적의 프리팹 배열
+    public int[] enemyHealthsTier2; // 레벨 2 적 체력 배열
+    public int[] enemyHealthsTier3; // 레벨 3 적 체력 배열
+
+
 
     void Start()
     {
-        InvokeRepeating("spawnEnemy", 0, 1f);
+        StartCoroutine(SpawnEnemyRoutine());
+        nextDifficultyIncreaseTime = Time.time + difficultyTimeStep;
     }
+
+    IEnumerator SpawnEnemyRoutine()
+    {
+        while (true)
+        {
+            spawnEnemy();
+            yield return new WaitForSeconds(spawnInterval);
+            Debug.Log("Enemy spawned at: " + Time.time); // Add this line
+        }
+    }
+
+
+    void Update()
+    {
+        if (Time.time >= nextDifficultyIncreaseTime)
+        {
+            difficultyLevel++;
+            nextDifficultyIncreaseTime = Time.time + difficultyTimeStep;
+        }
+    }
+
+
 
     public void spawnEnemy()
     {
-        if (counter >= maxEnemies)
-        {
-            return;
-        }
-
-        counter++;
 
         float minDistance = 80;
         float maxDistance = 100;
@@ -39,29 +61,60 @@ public class Spawner : MonoBehaviour
         Vector3 spawnPos = transform.position + randomDirection * Random.Range(minDistance, maxDistance);
         spawnPos.y = Random.Range(5f, 10f);
 
-        int randomIndex = Random.Range(0, enemies.Length);
+        GameObject[] currentEnemies;
+        int[] currentEnemyHealths;
+
+        if (difficultyLevel == 0)
+        {
+            currentEnemies = enemies;
+            currentEnemyHealths = enemyHealths;
+        }
+        else if (difficultyLevel == 1)
+        {
+            currentEnemies = enemiesTier2;
+            currentEnemyHealths = enemyHealthsTier2;
+        }
+        else
+        {
+            currentEnemies = enemiesTier3;
+            currentEnemyHealths = enemyHealthsTier3;
+        }
+
+        if (currentEnemies.Length == 0)
+        {
+            Debug.LogError("currentEnemies 배열이 비어있습니다.");
+            return;
+        }
+
+        int randomIndex = Random.Range(0, currentEnemies.Length);
         GameObject enemy;
         GameObject closestWall = FindClosestWall();
 
-        if (Random.value < rangedEnemySpawnChance)
+        if (closestWall == null)
         {
-            enemy = Instantiate(rangedEnemyPrefab, spawnPos, Quaternion.identity);
+            Debug.LogError("가장 가까운 벽을 찾을 수 없습니다.");
+            return;
+        }
+
+        enemy = Instantiate(currentEnemies[randomIndex], spawnPos, Quaternion.identity);
+
+        if (enemy.GetComponent<RangedEnemyController>() != null)
+        {
             RangedEnemyController rangedController = enemy.GetComponent<RangedEnemyController>();
             rangedController.target = closestWall;
         }
         else
         {
-            enemy = Instantiate(enemies[randomIndex], spawnPos, Quaternion.identity);
             EnemyController controller = enemy.AddComponent<EnemyController>();
-            controller.spawner = this;
-            controller.health = enemyHealths[randomIndex];
+            controller.spawner = this; // spawner를 설정해주세요.
+            controller.health = currentEnemyHealths[randomIndex];
             controller.target = closestWall;
             controller.enemyDestroyedSound = enemyDestroyedSound;
-
         }
-        // 원거리 적 프리팹에 BoxCollider를 추가
+
+
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
-        if (Random.value < rangedEnemySpawnChance)
+        if (enemy.GetComponent<RangedEnemyController>() != null)
         {
             collider.size = new Vector3(5, 3, 8); // 원거리 적의 경우 적절한 크기로 조정
         }
@@ -81,6 +134,8 @@ public class Spawner : MonoBehaviour
 
         enemy.transform.rotation = Quaternion.LookRotation(direction);
     }
+
+
     public GameObject FindClosestWall() // Add this method
     {
         GameObject[] wallObjects;
@@ -122,7 +177,8 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        if(health == 0)
+
+        if (health == 0)
         {
             DestroyEnemy();
         }
@@ -177,14 +233,10 @@ public class EnemyController : MonoBehaviour
             // Automatically destroy the VFX instance after the duration of the particle system
             ParticleSystem vfxParticleSystem = vfxInstance.GetComponent<ParticleSystem>();
             Destroy(vfxInstance, vfxParticleSystem.main.duration);
-
-            spawner.counter--;
-            spawner.spawnEnemy();
         }
         Destroy(gameObject);
-
-
     }
+
 
     // 공격
     public void Attack(Collision collision)
