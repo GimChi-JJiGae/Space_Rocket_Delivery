@@ -139,11 +139,9 @@ public class InteractionModule : MonoBehaviour
 
             playerAnimator.SetBool("Repairing", true);
 
-            struckModule.hp += 0.1f;
-
-            if (struckModule.hp >= 4)
+            if (struckModule.hp < 3)
             {
-                Debug.Log("수리 완료");
+                struckModule.hp += 0.1f;
             }
         }
         else
