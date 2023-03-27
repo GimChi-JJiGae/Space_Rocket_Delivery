@@ -1,11 +1,13 @@
 using Palmmedia.ReportGenerator.Core.Common;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.SqlTypes;
 //using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Unity.VisualScripting;
@@ -16,22 +18,24 @@ using UnityEngine.Profiling.Memory.Experimental;
 
 public class SocketClient : MonoBehaviour
 {
+    // 소켓 연결과 직렬화 버퍼
     private Socket socket;
-    private byte[] buffer = new byte[1024];
-    NetworkPlayer NetworkPlayer;
+    private byte[] buffer = new byte[1024]; // 직렬화 버퍼
+
+    // 로직은 컨트롤러에 위임
+    Controller controller;
 
     private void Start()
     {
+        controller = GetComponent<Controller>();
+
         // 서버 주소와 포트번호 설정
-        string serverAddress = "192.168.30.116";
-        // string serverAddress = "192.168.30.31";
-        int serverPort = 5555;
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(serverAddress), serverPort);
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.1.6"), 5555); // 서버주소, 포트번호
 
         // 소켓 생성 및 연결 시도
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.BeginConnect(endPoint, ConnectCallback, null);
-        NetworkPlayer = gameObject.GetComponent<NetworkPlayer>();
+
     }
 
     private void ConnectCallback(IAsyncResult result)
@@ -50,16 +54,11 @@ public class SocketClient : MonoBehaviour
         int bytesRead = socket.EndReceive(result);
         if (bytesRead > 0)
         {
-            // 수신한 데이터 처리
-            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            //Debug.Log("recieve Message" + message);
-            
-            try
-            {
-                DeSerialization(buffer);
-            }
-            catch { 
-            }
+            try{
+                // 수신한 데이터 역직렬화
+                Receive(buffer);
+            }catch { }
+
             // 다시 데이터 수신 대기
             socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
         }
@@ -71,71 +70,54 @@ public class SocketClient : MonoBehaviour
         }
     }
 
-    public void Send(string message)
+    // 직렬화 후 전송
+    public void Send(String header, params object[] args)          // 인자를 object배열로 받아옴
     {
-        byte[] data = Encoding.UTF8.GetBytes(message);
-        socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, null);
+        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
+
+        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+        switch (header)
+        {
+            case "character":
+                byteList.AddRange(BitConverter.GetBytes((int)100));
+                break;
+            case "module":
+                byteList.AddRange(BitConverter.GetBytes((int)8));
+                break;
+        }
+
+        // params 직렬화
+        for (int i = 0; i < args.Length; i++)               
+        {
+            object arg = args[i];
+            Type type = arg.GetType();
+            
+            if (type.Equals(typeof(int)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((int)arg));
+            }
+            else if (type.Equals(typeof(float)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((float)arg));
+            }
+            else if (type.Equals(typeof(double)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((double)arg));
+            }
+        }
+        byte[] byteArray = byteList.ToArray();
+        
+        // 전송 시작
+        socket.BeginSend(byteArray, 0, byteArray.Length, SocketFlags.None, SendCallback, null);
     }
 
-    public void MovementSend(double px, double py, double pz)
+    // 역직렬화
+    private void Receive(byte[] buffer)
     {
-        byte[] data = new byte[32];
-        //byte[] messageDatas = Encoding.UTF8.GetBytes(message);
-        int a = 9;
-        byte[] header = BitConverter.GetBytes(a);
-        a = 7;
-        byte[] header2 = BitConverter.GetBytes(a);
-        byte[] bpx = BitConverter.GetBytes(px);
-        byte[] bpy = BitConverter.GetBytes(py);
-        byte[] bpz = BitConverter.GetBytes(pz);
-        int i = 0;
-        foreach (byte b in header)
-        {
-            data[i++] = b;
-        }
-        foreach (byte b in header2)
-        {
-            data[i++] = b;
+        int header = BitConverter.ToInt32(SplitArray(buffer, 0, 4));
+        byte[] data = SplitArray(buffer, 4, buffer.Length - 4);
 
-        }
-        foreach (byte b in bpx)
-        {
-            data[i++] = b;
-
-        }
-        foreach (byte b in bpy)
-        {
-            data[i++] = b;
-
-        }
-        foreach (byte b in bpz)
-        {
-            data[i++] = b;
-
-        }
-
-        //Debug.Log("Byte Array is: " + String.Join(" ", data));
-
-        socket.BeginSend(data, 0, data.Length, SocketFlags.None, SendCallback, null);
-    }
-
-    private void DeSerialization(byte[] buffer)
-    {
-        byte[] ttt1 = SplitArray(buffer, 0, 4); 
-        int d1 = BitConverter.ToInt32(ttt1);
-        byte[] ttt2 = SplitArray(buffer, 4, 4);
-        int d2 = BitConverter.ToInt32(ttt2);
-        byte[] ttt3 = SplitArray(buffer, 8, 8);
-        double d3 = BitConverter.ToDouble(ttt3);
-        byte[] ttt4 = SplitArray(buffer, 16, 8);
-        double d4 = BitConverter.ToDouble(ttt4);
-        byte[] ttt5 = SplitArray(buffer, 24, 8);
-        double d5 = BitConverter.ToDouble(ttt5);
-
-        Debug.Log("size :" + sizeof(float));
-        Debug.Log("recieve: header: " + d1 + ", header: " + d2 + ", x: " + d3 + ", y: " + d4 + ", z: " + d5);
-
-        //NetworkPlayer.MoveOtherPlayer(3, (float)d3, (float)d4, (float)d5);
+        controller.Receive(header, data);
     }
 
     private void SendCallback(IAsyncResult result)
@@ -145,7 +127,7 @@ public class SocketClient : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Debug.Log("Disconnected from server22");
+        Debug.Log("Disconnected from server");
         // 앱이 종료될 때 소켓 연결 해제
         if (socket != null)
         {
@@ -153,34 +135,12 @@ public class SocketClient : MonoBehaviour
         }
     }
 
-    public byte[] ByteSubstring(string Data, int StartIdx, int byteLength)
-    {
-        byte[] byteTEMP = Encoding.Default.GetBytes(Data, StartIdx, byteLength);
-
-        return byteTEMP;
-    }
-
-    public byte[] SplitArray(byte[] array, int startIndex, int length)
+    // Array를 나누는 함수
+    public byte[] SplitArray(byte[] array, int startIndex, int length)  
     {
         byte[] result = new byte[length];
         Array.Copy(array, startIndex, result, 0, length);
         return result;
     }
 
-
-}
-
-public static class Extensions
-{
-    public static T[] Append<T>(this T[] array, T item)
-    {
-        if (array == null)
-        {
-            return new T[] { item };
-        }
-        Array.Resize(ref array, array.Length + 1);
-        array[array.Length - 1] = item;
-
-        return array;
-    }
 }
