@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -36,7 +37,7 @@ public class Module : MonoBehaviour
 
     public GameObject hitArea;      // 데미지 받는 범위
 
-    public int hp = 0;
+    public float hp = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +74,7 @@ public class Module : MonoBehaviour
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
     {
-        moduleType = t;
+        moduleType = t;                 
 
         // 예외처리
         if (transform.Find("Floor"))    //바닥이 존재하면 부수고 새로 생성
@@ -82,7 +83,7 @@ public class Module : MonoBehaviour
             Destroy(beforeFloor);
         }
 
-
+        
         GameObject floorPrefab;
         // T에 따라 파일 로드
         switch (t)
@@ -95,7 +96,7 @@ public class Module : MonoBehaviour
                 break;
             case ModuleType.Cargo:          // 화물
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Cargo");
-                break;
+                break;    
             case ModuleType.Factory:        // 제작기
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Factory");
                 break;
@@ -110,7 +111,7 @@ public class Module : MonoBehaviour
                 break;
             case ModuleType.LaserTurret:    // 레이저터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
-                break;
+                break;                      
             case ModuleType.BasicTurret:    // 기존 제공 터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BasicTurret");
                 break;
@@ -120,7 +121,7 @@ public class Module : MonoBehaviour
         }
 
         float positionX = gameObject.transform.position.x;     // 지금 오브젝트의 위치를 가져옴
-        float positionZ = gameObject.transform.position.z;
+        float positionZ = gameObject.transform.position.z;      
         float positionY = gameObject.transform.position.y;
         Vector3 position = new Vector3(positionX, positionY, positionZ);        // 바닥 타일의 위치
         Quaternion rotation = Quaternion.identity;                              // 바닥 타일의 회전
@@ -161,7 +162,7 @@ public class Module : MonoBehaviour
         {
             broken1.SetActive(true);
         }
-
+        
     }
 
     // 모듈 초기화시키기
@@ -179,5 +180,10 @@ public class Module : MonoBehaviour
 
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);
+    }
+
+    public static implicit operator Module(GameObject v)
+    {
+        throw new NotImplementedException();
     }
 }

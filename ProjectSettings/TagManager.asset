@@ -9,9 +9,9 @@ TagManager:
   - Spaceship
   - Wall
   - Building
-  - Liftable
   - enemy
   - RangedEnemy
+  - Insert
   layers:
   - Default
   - TransparentFX
@@ -22,7 +22,6 @@ TagManager:
   - Module
   - RangedEnemy
   - Lazer
-  - 
   - 
   - 
   - 

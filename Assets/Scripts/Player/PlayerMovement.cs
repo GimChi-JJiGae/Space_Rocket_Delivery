@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour {
     public float rotateSpeed = 10f;
 
     private PlayerInput playerInput;
-    private PlayerInteraction playerInteraction;
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
 
@@ -16,7 +15,6 @@ public class PlayerMovement : MonoBehaviour {
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        playerInteraction = GetComponent<PlayerInteraction>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
 
