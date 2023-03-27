@@ -1,13 +1,15 @@
+using System;
 using UnityEngine;
 using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private Rigidbody playerRigidbody;
-    private InteractionObjects interactionObjects;
+    private Animator playerAnimator;
+    private InteractionObject interactionObject;
 
     private Spaceship spaceship;
+    private GameObject player;
 
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
@@ -16,20 +18,30 @@ public class InteractionModule : MonoBehaviour
     // Building 체크를 위한 오브젝트
     private GameObject buildingObject;
 
-    private GameObject fixedObject;
+    // 맞은 모듈 확인
+    private Module struckModule;
+    private bool isRepairing;
+
+    // player 위치
+    private Vector3 playerPosition;
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        playerRigidbody = GetComponent<Rigidbody>();
-        interactionObjects = GetComponent<InteractionObjects>();
+        playerAnimator = GetComponent<Animator>();
+        interactionObject = GetComponent<InteractionObject>();
 
-        spaceship = FindAnyObjectByType<Spaceship>(); 
+        isRepairing = playerAnimator.GetBool("Repairing");
+
+        spaceship = FindAnyObjectByType<Spaceship>();
+
+        player = GameObject.Find("PlayerCharacter");
+        playerPosition = player.GetComponent<Transform>().position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!interactionObjects.isHoldingObject)
+        if (!interactionObject.isHoldingObject)
         {
             if (other.gameObject.CompareTag("Edge"))
             {
@@ -67,7 +79,7 @@ public class InteractionModule : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!interactionObjects.isHoldingObject)
+        if (!interactionObject.isHoldingObject)
         {
             if (targetObject != null)
             {
@@ -85,14 +97,6 @@ public class InteractionModule : MonoBehaviour
             {
                 buildingObject = null;
             }
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if (playerInput.RepairModule)
-        {
-
         }
     }
 
@@ -124,5 +128,27 @@ public class InteractionModule : MonoBehaviour
             }
         }
 
+        if (playerInput.RepairModule)
+        {
+            playerPosition = player.GetComponent<Transform>().position;
+
+            int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
+            int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
+
+            struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
+
+            playerAnimator.SetBool("Repairing", true);
+
+            struckModule.hp += 0.1f;
+
+            if (struckModule.hp >= 4)
+            {
+                Debug.Log("수리 완료");
+            }
+        }
+        else
+        {
+            playerAnimator.SetBool("Repairing", false);
+        }
     }
 }

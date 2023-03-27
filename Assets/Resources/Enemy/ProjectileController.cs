@@ -10,17 +10,11 @@ public class ProjectileController : MonoBehaviour
     public RangedEnemyController rangedEnemyController;
     private Rigidbody rb;
 
-    bool destroyed = false;
-
     void Start()
     {
         Invoke("DestroyProjectile", lifeTime);
         rb = GetComponent<Rigidbody>();
         rb.velocity = transform.forward * speed;
-    }
-
-    void Update()
-    {
     }
 
     void OnCollisionEnter(Collision collision)

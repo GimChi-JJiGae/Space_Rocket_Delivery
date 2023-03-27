@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     public string interactionButtonName = "Interaction"; // Obj를 집어들기 위한 입력 버튼 이름
     public string repairButtonName = "Repair"; // 모듈 수리를 위한 입력 버튼 이름
     public string destroyButtonName = "Destroy"; // 모듈 파괴를 위한 입력 버튼 이름
+
     public float Move_GoBack { get; private set; }
     public float Move_LeftRight { get; private set; }
     public bool Interact { get; private set; }
@@ -28,7 +29,6 @@ public class PlayerInput : MonoBehaviour
         Move_GoBack = Input.GetAxis(move1AxisName);
         Move_LeftRight = Input.GetAxis(move2AxisName);
         RepairModule = Input.GetButton(repairButtonName);
-        DestroyModule = Input.GetButton(destroyButtonName);
     }
 
     private void Update()
