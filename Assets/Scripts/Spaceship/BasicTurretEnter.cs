@@ -5,12 +5,19 @@ using UnityEngine;
 
 public class BasicTurretEnter : MonoBehaviour
 {
+    public GameObject enteredPlayer;
+    public bool isUserIn = false;
+
+    public GameObject MainCam;
+
+   
 
     Vector3 SittingPosition = new Vector3(-1.23f, 2.2f, 4.31f);
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject maincam = GameObject.Find("Main Camera");
+        MainCam = maincam;
     }
 
     // Update is called once per frame
@@ -24,9 +31,11 @@ public class BasicTurretEnter : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("여기충돌했어!");
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !isUserIn)
             {
+                isUserIn = true;                                // 유저가 이미 들어가있음을 확인
                 other.transform.position = SittingPosition;
+                enteredPlayer = other.gameObject;               // 나중에 다른 스크립트에서 유저 잠금 해제를 위해 퍼블릭으로 저장해두자
                 PlayerMovement controller = other.GetComponent<PlayerMovement>();
                 controller.enabled = false;                                 // 유저의 컨트롤 잠금
 
@@ -52,8 +61,8 @@ public class BasicTurretEnter : MonoBehaviour
                                 GameObject TurretCam = obj.gameObject;
                                 TurretCam.SetActive(true);
 
-                                GameObject maincam = GameObject.Find("Main Camera");
-                                maincam.SetActive(false);
+                                
+                                MainCam.SetActive(false);
 
 
                             }
@@ -66,7 +75,7 @@ public class BasicTurretEnter : MonoBehaviour
                                 {
                                     if (cam.name == "TurretCam")
                                     {
-                                        Debug.Log("test");
+                                        
                                         GameObject TurretCam = cam.gameObject;
                                         TurretCam.SetActive(true);
 

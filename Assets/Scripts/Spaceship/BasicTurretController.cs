@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BasicTurretController : MonoBehaviour
 {
     public float degree = 15f;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +34,50 @@ public class BasicTurretController : MonoBehaviour
         {
             Vector3 rotationDirection = new Vector3(-vertical, 0, 0f);
             transform.Rotate(rotationDirection * degree * Time.deltaTime);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameObject.GetComponent<BasicTurretController>().enabled = false; // 일단 이 스크립트 잠금
+            GameObject turretHead = transform.parent.gameObject;
+            turretHead.GetComponent<BasicTurretSpinController>().enabled = false; // 터렛 수평회전 스크립트 잠금
+
+            //GameObject maincam = GameObject.Find("Main Camera");
+            //maincam.SetActive(true);
+
+
+            
+
+            
+
+
+            GameObject basicTurret = turretHead.transform.parent.gameObject;
+
+            foreach (Transform child in basicTurret.transform)     // TurretEnter를 찾아내어 그 안에 있는 스크립트 조정
+            {
+                if (child.name == "TurretEnter")
+                {
+                    BasicTurretEnter turretEnter = child.GetComponent<BasicTurretEnter>();
+                   
+                    PlayerMovement playerMovement = turretEnter.enteredPlayer.GetComponent<PlayerMovement>();
+                    
+                    turretEnter.isUserIn = false;
+                    playerMovement.enabled = true;
+
+                    turretEnter.MainCam.SetActive(true);
+
+                    foreach (Transform cam in transform)
+                    {
+                        if (cam.name == "TurretCam")
+                        {
+                            cam.gameObject.SetActive(false);
+                        }
+                    }
+
+
+                }
+            }
+
         }
     }
 }
