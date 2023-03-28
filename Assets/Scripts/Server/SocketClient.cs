@@ -71,42 +71,8 @@ public class SocketClient : MonoBehaviour
     }
 
     // 직렬화 후 전송
-    public void Send(String header, params object[] args)          // 인자를 object배열로 받아옴
+    public void Send(byte[] byteArray)         
     {
-        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
-
-        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        switch (header)
-        {
-            case "character":
-                byteList.AddRange(BitConverter.GetBytes((int)100));
-                break;
-            case "module":
-                byteList.AddRange(BitConverter.GetBytes((int)8));
-                break;
-        }
-
-        // params 직렬화
-        for (int i = 0; i < args.Length; i++)               
-        {
-            object arg = args[i];
-            Type type = arg.GetType();
-            
-            if (type.Equals(typeof(int)))
-            {
-                byteList.AddRange(BitConverter.GetBytes((int)arg));
-            }
-            else if (type.Equals(typeof(float)))
-            {
-                byteList.AddRange(BitConverter.GetBytes((float)arg));
-            }
-            else if (type.Equals(typeof(double)))
-            {
-                byteList.AddRange(BitConverter.GetBytes((double)arg));
-            }
-        }
-        byte[] byteArray = byteList.ToArray();
-        
         // 전송 시작
         socket.BeginSend(byteArray, 0, byteArray.Length, SocketFlags.None, SendCallback, null);
     }

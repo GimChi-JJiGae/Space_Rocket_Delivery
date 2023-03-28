@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Reflection;
 using UnityEngine;
 
@@ -11,9 +12,12 @@ public class Controller : MonoBehaviour
 
     // Player관련 함수
     Multiplayer multiplayer;
+    SocketClient socketClient;
 
     void Start()
     {
+        socketClient = GetComponent<SocketClient>();
+
         // 필요한 컨트롤러를 정의한다.
         playerPositionController = new PlayerPositionController();
 
@@ -43,7 +47,7 @@ public class Controller : MonoBehaviour
                 case 3:
                     break;
                 case 100:
-                    playerPositionController.RecieveDTO(data);
+                    playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
             }
@@ -52,6 +56,46 @@ public class Controller : MonoBehaviour
         {
             Debug.LogException(ex);
         }
+    }
+
+    public void Send(int header, params object[] args)      // 인자를 object배열로 받아옴
+    {
+        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
+
+        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+        switch (header)
+        {
+            case 100:
+                byteList.AddRange(BitConverter.GetBytes((int)100));
+                break;
+            case 90:
+                byteList.AddRange(BitConverter.GetBytes((int)90));
+                break;
+        }
+
+        // params 직렬화
+        for (int i = 0; i < args.Length; i++)
+        {
+            object arg = args[i];
+            Type type = arg.GetType();
+
+            if (type.Equals(typeof(int)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((int)arg));
+            }
+            else if (type.Equals(typeof(float)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((float)arg));
+            }
+            else if (type.Equals(typeof(double)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((double)arg));
+            }
+        }
+        byte[] byteArray = byteList.ToArray();
+
+        // 전송 시작
+        socketClient.Send(byteArray);
     }
 }
 
@@ -71,7 +115,7 @@ public class PlayerPositionController : ReceiveController
     {
         if (this.GetAct())
         {
-            multiplayer.MoveOtherPlayer(userId, (float)px, (float)py, (float)pz, (float)rx, (float)ry, (float)rz, (float)rw);
+            multiplayer.MoveOtherPlayer(userId, px, py, pz, rx, ry,rz, rw);
             this.SetAct(false);
         }
     }
@@ -107,7 +151,7 @@ public class ReceiveController
 {
     private bool isAct = false;     // 활성화 되어있으면 실행시킨다.
 
-    public void RecieveDTO(byte[] data) // 데이터를 받으면 역직렬화 후 Class에 맞는 데이터로 변형시킨다.
+    public void ReceiveDTO(byte[] data) // 데이터를 받으면 역직렬화 후 Class에 맞는 데이터로 변형시킨다.
     {
         Type typeClass = this.GetType();
         FieldInfo[] fields = typeClass.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance); // 이 클래스를 참조하여 필요한 필드를 찾는다.

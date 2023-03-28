@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 public class Multiplayer : MonoBehaviour
 {
     public bool isHost = false;
@@ -12,10 +12,27 @@ public class Multiplayer : MonoBehaviour
     public GameObject[] players = new GameObject[5];   // 참조를 쉽게 하기 위해 오브젝트 저장
 
     GameObject mainCamera;                              // 메인 카메라를 연동하기 위함
+    private Controller controller;
+
+    private GameObject LandingPageCanvas;
+
+    private Button createRoomBtn;
+    private Button enterRoomBtn;
+    private TMP_InputField enterRoomInput;
 
 
     void Start()
     {
+        controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
+        LandingPageCanvas = GameObject.Find("LandingPageCanvas");   // 캔버스 찾기
+
+        createRoomBtn = LandingPageCanvas.transform.Find("CreateRoomBtn").GetComponent<Button>();    // 방 생성
+        createRoomBtn.onClick.AddListener(OnCreateRoom);            // 방 생성 이벤트 연결
+
+        enterRoomBtn = LandingPageCanvas.transform.Find("EnterRoomBtn").GetComponent<Button>();    // 방 생성
+        enterRoomBtn.onClick.AddListener(OnEnterRoom);
+        enterRoomInput = LandingPageCanvas.transform.Find("EnterRoomInput").GetComponent<TMP_InputField>();   
+
         playersObject = GameObject.Find("Players");                 // 오브젝트 연동
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
@@ -26,10 +43,11 @@ public class Multiplayer : MonoBehaviour
 
     void FixedUpdate()
     {
+        // TODO : 0.1초마다 전송하게 변경
         Vector3 a = players[playerIndex].transform.position;
         Quaternion b = players[playerIndex].transform.rotation;
-        
-        GameObject.Find("Server").GetComponent<SocketClient>().Send("character", playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
+
+        controller.Send(100, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
     }
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
@@ -42,7 +60,6 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
-
     // 생성된 플레이어들 중 n에 할당
     void AssignPlayer(int n)
     {
@@ -53,9 +70,18 @@ public class Multiplayer : MonoBehaviour
         player.AddComponent<PlayerInput>();
         player.AddComponent<PlayerInteraction>();
         player.AddComponent<PlayerMovement>();
-        player.AddComponent<PlayerServer>();
 
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
+    }
+
+    void OnCreateRoom()
+    {
+        Debug.Log("OnCreateRoom");
+    }
+
+    void OnEnterRoom()
+    {
+        Debug.Log("OnEnterRoom: " + enterRoomInput.text);
     }
 }
