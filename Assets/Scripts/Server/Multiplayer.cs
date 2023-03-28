@@ -27,18 +27,18 @@ public class Multiplayer : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 a = players[playerIndex].transform.position;
-        double x = a.x;
-        double y = a.y;
-        double z = a.z;
-        GameObject.Find("Server").GetComponent<SocketClient>().Send("character", playerIndex, x, y, z);
+        Quaternion b = players[playerIndex].transform.rotation;
+        
+        GameObject.Find("Server").GetComponent<SocketClient>().Send("character", playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
     }
 
-    public void MoveOtherPlayer(int idx, float px, float py, float pz)
+    public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
+        idx = 3;
         if (idx != playerIndex)
         {
             players[idx].transform.position = new Vector3(px, py, pz);
-
+            players[idx].transform.rotation = new Quaternion(rx, ry, rz, rw);
         }
     }
 

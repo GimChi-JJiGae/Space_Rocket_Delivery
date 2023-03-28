@@ -59,15 +59,19 @@ public class Controller : MonoBehaviour
 public class PlayerPositionController : ReceiveController
 {
     public int userId;
-    public double px;
-    public double py;
-    public double pz;
+    public float px;
+    public float py;
+    public float pz;
+    public float rx;
+    public float ry;
+    public float rz;
+    public float rw;
 
     public void Service(Multiplayer multiplayer) // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {
-            multiplayer.MoveOtherPlayer(userId, (float)px, (float)py, (float)pz);
+            multiplayer.MoveOtherPlayer(userId, (float)px, (float)py, (float)pz, (float)rx, (float)ry, (float)rz, (float)rw);
             this.SetAct(false);
         }
     }
@@ -81,10 +85,10 @@ public class ModuleController : ReceiveController
 
     public int moduleType;     // 모듈 타입
 
-    public bool wallTop ;      // 벽 모듈
-    public bool wallLeft;
-    public bool wallBottom;
-    public bool wallRight;
+    public char wallTop ;      // 벽 모듈
+    public char wallLeft;
+    public char wallBottom;
+    public char wallRight;
 
     public float hp;           // 체력
 
@@ -109,7 +113,6 @@ public class ReceiveController
         FieldInfo[] fields = typeClass.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance); // 이 클래스를 참조하여 필요한 필드를 찾는다.
 
         int n = 0;
-        Debug.Log(fields.Length);
         foreach (FieldInfo field in fields) // 필드별로 돌며 역직렬화 한다.
         {
 
