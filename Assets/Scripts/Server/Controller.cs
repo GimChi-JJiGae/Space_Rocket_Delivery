@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
+    CreateRoomController createRoomController; // 방 생성을 위한 컨트롤러
+    EnterRoomController enterRoomController; // 방 참가를 위한 컨트롤러
+
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
@@ -18,7 +22,9 @@ public class Controller : MonoBehaviour
     {
         socketClient = GetComponent<SocketClient>();
 
-        // 필요한 컨트롤러를 정의한다.
+        // 필요한 컨트롤러 인스턴스 생성.
+        createRoomController = new CreateRoomController();
+        enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
 
         // 멀티플레이 관련 로직 
@@ -29,6 +35,8 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        createRoomController.Service();
+        enterRoomController.Service();
         playerPositionController.Service(multiplayer);
     }
 
@@ -45,6 +53,14 @@ public class Controller : MonoBehaviour
                 case 2:
                     break;
                 case 3:
+                    break;
+                case 10:
+                    createRoomController.ReceiveDTO(data);
+                    createRoomController.SetAct(true);
+                    break;
+                case 11:
+                    enterRoomController.ReceiveDTO(data);
+                    enterRoomController.SetAct(true);
                     break;
                 case 100:
                     playerPositionController.ReceiveDTO(data);
@@ -63,15 +79,7 @@ public class Controller : MonoBehaviour
         List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
 
         // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        switch (header)
-        {
-            case 100:
-                byteList.AddRange(BitConverter.GetBytes((int)100));
-                break;
-            case 90:
-                byteList.AddRange(BitConverter.GetBytes((int)90));
-                break;
-        }
+        byteList.AddRange(BitConverter.GetBytes(header));
 
         // params 직렬화
         for (int i = 0; i < args.Length; i++)
@@ -90,6 +98,12 @@ public class Controller : MonoBehaviour
             else if (type.Equals(typeof(double)))
             {
                 byteList.AddRange(BitConverter.GetBytes((double)arg));
+            }
+            else if (type.Equals(typeof(string))) 
+            {
+                byte[] stringBytes = Encoding.UTF8.GetBytes((string)arg); // 문자열을 바이트 배열로 변환
+                byteList.AddRange(BitConverter.GetBytes(stringBytes.Length)); // 문자열 바이트 길이를 먼저 추가
+                byteList.AddRange(stringBytes); // 문자열 바이트 배열 추가
             }
         }
         byte[] byteArray = byteList.ToArray();
@@ -116,6 +130,36 @@ public class PlayerPositionController : ReceiveController
         if (this.GetAct())
         {
             multiplayer.MoveOtherPlayer(userId, px, py, pz, rx, ry,rz, rw);
+            this.SetAct(false);
+        }
+    }
+}
+
+// CreateRoomController
+public class CreateRoomController : ReceiveController
+{
+    public string text;      // 텍스트
+
+    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            Debug.Log(text);
+            this.SetAct(false);
+        }
+    }
+}
+
+// EnterRoomController
+public class EnterRoomController : ReceiveController
+{
+    public string text;      // 텍스트
+
+    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            Debug.Log(text);
             this.SetAct(false);
         }
     }
@@ -182,6 +226,21 @@ public class ReceiveController
                 Array.Copy(data, n, result, 0, sizeof(double));
                 field.SetValue(this, BitConverter.ToDouble(result));
                 n += sizeof(double);
+            }
+            else if (type.Equals(typeof(string))) // 추가된 부분
+            {
+                byte[] stringLengthBytes = new byte[sizeof(int)];
+                Array.Copy(data, n, stringLengthBytes, 0, sizeof(int));
+                int stringLength = BitConverter.ToInt32(stringLengthBytes);
+                n += sizeof(int);
+
+                byte[] stringBytes = new byte[stringLength];
+                Array.Copy(data, n, stringBytes, 0, stringLength);
+                
+                n += stringLength;
+
+                string stringValue = Encoding.UTF8.GetString(stringBytes);
+                field.SetValue(this, stringValue);
             }
         }
     }

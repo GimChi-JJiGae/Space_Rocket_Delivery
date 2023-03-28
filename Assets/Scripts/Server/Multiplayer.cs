@@ -78,6 +78,7 @@ public class Multiplayer : MonoBehaviour
     void OnCreateRoom()
     {
         Debug.Log("OnCreateRoom");
+        controller.Send(10, "Receive OnCreateRoom");
     }
 
     void OnEnterRoom()
