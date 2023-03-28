@@ -58,10 +58,10 @@ public class Controller : MonoBehaviour
 // 유저 움직임
 public class PlayerPositionController : ReceiveController
 {
-    public int userId { get; set; }
-    public double px { get; set; }
-    public double py { get; set; }
-    public double pz { get; set; }
+    public int userId;
+    public double px;
+    public double py;
+    public double pz;
 
     public void Service(Multiplayer multiplayer) // isAct가 활성화 되었을 때 실행할 로직
     {
@@ -73,6 +73,30 @@ public class PlayerPositionController : ReceiveController
     }
 }
 
+// 모듈 컨트롤러
+public class ModuleController : ReceiveController
+{
+    public int idxX;           // 위치
+    public int idxZ;
+
+    public int moduleType;     // 모듈 타입
+
+    public bool wallTop ;      // 벽 모듈
+    public bool wallLeft;
+    public bool wallBottom;
+    public bool wallRight;
+
+    public float hp;           // 체력
+
+    public void Service(Module module) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            //multiplayer.MoveOtherPlayer(userId, (float)px, (float)py, (float)pz);
+            this.SetAct(false);
+        }
+    }
+}
 
 // 컨트롤러 정의
 public class ReceiveController
