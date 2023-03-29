@@ -8,10 +8,10 @@ TagManager:
   - Edge
   - Spaceship
   - Wall
-  - Building
   - enemy
   - RangedEnemy
   - Insert
+  - Change
   layers:
   - Default
   - TransparentFX

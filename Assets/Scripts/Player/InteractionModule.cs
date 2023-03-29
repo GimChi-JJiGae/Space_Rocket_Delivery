@@ -1,3 +1,4 @@
+using ResourceNamespace;
 using System;
 using UnityEngine;
 using static Module;
@@ -7,7 +8,8 @@ public class InteractionModule : MonoBehaviour
     private PlayerInput playerInput;
     private Animator playerAnimator;
     private InteractionObject interactionObject;
-
+    
+    private ResourceChanger resourceChanger;
     private Spaceship spaceship;
     private GameObject player;
 
@@ -15,12 +17,11 @@ public class InteractionModule : MonoBehaviour
     private GameObject matchObject;
     private GameObject targetObject;
 
-    // Building 체크를 위한 오브젝트
-    private GameObject buildingObject;
+    // Resource 변경을 위한 오브젝트
+    private GameObject resourceObject;
 
     // 맞은 모듈 확인
     private Module struckModule;
-    private bool isRepairing;
 
     // player 위치
     private Vector3 playerPosition;
@@ -31,8 +32,6 @@ public class InteractionModule : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         interactionObject = GetComponent<InteractionObject>();
 
-        isRepairing = playerAnimator.GetBool("Repairing");
-
         spaceship = FindAnyObjectByType<Spaceship>();
 
         player = GameObject.Find("PlayerCharacter");
@@ -41,63 +40,60 @@ public class InteractionModule : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!interactionObject.isHoldingObject)
+        if (!interactionObject.isHoldingObject && other.gameObject.CompareTag("Edge"))
         {
-            if (other.gameObject.CompareTag("Edge"))
+            matchObject = other.gameObject;
+            Module module = matchObject.GetComponentInParent<Module>();
+
+            int idxZ = module.idxZ;
+            int idxX = module.idxX;
+
+            switch (other.gameObject.name)
             {
-                matchObject = other.gameObject;
-                Module module = matchObject.GetComponentInParent<Module>();
-
-                int idxZ = module.idxZ;
-                int idxX = module.idxX;
-
-                switch (other.gameObject.name)
-                {
-                    case "EdgeTop":
-                        idxZ += 1;
-                        break;
-                    case "EdgeBottom":
-                        idxZ -= 1;
-                        break;
-                    case "EdgeRight":
-                        idxX += 1;
-                        break;
-                    case "EdgeLeft":
-                        idxX -= 1;
-                        break;
-                }
-
-                targetObject = spaceship.modules[idxZ, idxX];
-                targetObject.GetComponent<Module>().floorModule.SetActive(true);
+                case "EdgeTop":
+                    idxZ += 1;
+                    break;
+                case "EdgeBottom":
+                    idxZ -= 1;
+                    break;
+                case "EdgeRight":
+                    idxX += 1;
+                    break;
+                case "EdgeLeft":
+                    idxX -= 1;
+                    break;
             }
-            else if (other.gameObject.CompareTag("Building"))
-            {
-                buildingObject = other.gameObject;
-            }
+
+            targetObject = spaceship.modules[idxZ, idxX];
+            targetObject.GetComponent<Module>().floorModule.SetActive(true);
+        }
+        else if (other.gameObject.CompareTag("Change"))
+        {
+            resourceObject = other.gameObject;
+            Debug.Log(resourceObject);
+            Debug.Log("업데이트");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!interactionObject.isHoldingObject)
-        {
-            if (targetObject != null)
-            {
-                Module module = targetObject.GetComponentInParent<Module>();
+        if (!interactionObject.isHoldingObject && targetObject != null)
+        { 
+            Module module = targetObject.GetComponentInParent<Module>();
 
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
-            }
-            else if (buildingObject != null)
+            if (module.moduleType == ModuleType.Blueprint)
             {
-                buildingObject = null;
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
             }
+
+            matchObject = null;
+            targetObject = null;
         }
+        else if (resourceObject != null)
+        {
+            resourceObject = null;
+        }
+        
     }
 
     private void Update()
@@ -112,19 +108,9 @@ public class InteractionModule : MonoBehaviour
                     spaceship.MakeWall(targetObject);
                 }
             }
-            else if (buildingObject != null)
+            else if (resourceObject != null)
             {
-                switch (buildingObject.name)
-                {
-                    case "Supplier":
-                        Supplier supplier = buildingObject.GetComponent<Supplier>();
-                        supplier.SwitchResource();
-                        break;
-                    case "Engine":
-                        break;
-                    case "Oxygenator":
-                        break;
-                }
+                resourceObject.GetComponent<ResourceChanger>().SwitchResource();
             }
         }
 
