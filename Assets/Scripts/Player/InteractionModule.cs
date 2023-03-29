@@ -12,6 +12,7 @@ public class InteractionModule : MonoBehaviour
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
+    private GameObject buildingObject;
     private bool isRepairing;
 
     private void OnTriggerEnter(Collider other)

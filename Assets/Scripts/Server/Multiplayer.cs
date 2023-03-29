@@ -4,6 +4,8 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
+
 public class Multiplayer : MonoBehaviour
 {
     public bool isHost = false;
@@ -21,6 +23,8 @@ public class Multiplayer : MonoBehaviour
     private Button enterRoomBtn;
     private TMP_InputField enterRoomInput;
 
+    Vector3[] targetPosition = new Vector3[4];
+    Quaternion[] targetRotation = new Quaternion[4];
 
     void Start()
     {
@@ -52,22 +56,32 @@ public class Multiplayer : MonoBehaviour
                                                    // 반복해서 호출할 함수 호출
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
-            controller.Send(100, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
+            controller.Send(100, playerIndex, a.x + 1, a.y, a.z + 1, b.x, b.y, b.z, b.w);
         }
     }
 
     void FixedUpdate()
     {
+        Rigidbody rigidbody = players[3].GetComponent<Rigidbody>();
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (targetPosition[i] != null && i != playerIndex)
+            {
+                players[i].transform.position = players[i].transform.position + (targetPosition[i] - players[i].transform.position) * 5.0f * Time.deltaTime;
+                players[i].transform.rotation = Quaternion.Lerp(targetRotation[i], players[i].transform.rotation, 2.0f * Time.deltaTime);
+            }
+        }
     }
-
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
-        idx = 3;
+        //idx = 3;
         if (idx != playerIndex)
         {
-            players[idx].transform.position = new Vector3(px, py, pz);
-            players[idx].transform.rotation = new Quaternion(rx, ry, rz, rw);
+            Vector3 dir = new Vector3(px, py, pz);
+            Quaternion q = new Quaternion(rx, ry, rz, rw);
+            targetRotation[idx] = q;
+            targetPosition[idx] = dir;
         }
     }
 
@@ -79,7 +93,6 @@ public class Multiplayer : MonoBehaviour
 
         // 캐릭터 모듈 연결
         player.AddComponent<PlayerInput>();
-        player.AddComponent<PlayerInteraction>();
         player.AddComponent<PlayerMovement>();
 
         // 카메라 연동
