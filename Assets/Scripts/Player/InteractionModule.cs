@@ -5,8 +5,6 @@ using static Module;
 public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private Animator playerAnimator;
-    private InteractionObject interactionObject;
 
     private Spaceship spaceship;
     private GameObject player;
@@ -14,30 +12,7 @@ public class InteractionModule : MonoBehaviour
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
-
-    // Building 체크를 위한 오브젝트
-    private GameObject buildingObject;
-
-    // 맞은 모듈 확인
-    private Module struckModule;
     private bool isRepairing;
-
-    // player 위치
-    private Vector3 playerPosition;
-
-    private void Start()
-    {
-        playerInput = GetComponent<PlayerInput>();
-        playerAnimator = GetComponent<Animator>();
-        interactionObject = GetComponent<InteractionObject>();
-
-        isRepairing = playerAnimator.GetBool("Repairing");
-
-        spaceship = FindAnyObjectByType<Spaceship>();
-
-        player = GameObject.Find("PlayerCharacter");
-        playerPosition = player.GetComponent<Transform>().position;
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -98,6 +73,28 @@ public class InteractionModule : MonoBehaviour
                 buildingObject = null;
             }
         }
+    }
+    private Animator playerAnimator;
+    private InteractionObject interactionObject;
+
+    // 맞은 모듈 확인
+    private Module struckModule;
+
+    // player 위치
+    private Vector3 playerPosition;
+
+    private void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        playerAnimator = GetComponent<Animator>();
+        interactionObject = GetComponent<InteractionObject>();
+
+        isRepairing = playerAnimator.GetBool("Repairing");
+
+        spaceship = FindAnyObjectByType<Spaceship>();
+
+        player = GameObject.Find("PlayerCharacter");
+        playerPosition = player.GetComponent<Transform>().position;
     }
 
     private void Update()
