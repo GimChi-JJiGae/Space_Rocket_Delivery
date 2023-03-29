@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionObjects : MonoBehaviour
+public class InteractionObject : MonoBehaviour
 {
     public List<string> HoldableObjects = new();
 
