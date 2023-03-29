@@ -4209,7 +4209,7 @@ PrefabInstance:
       objectReference: {fileID: 1326248736506361897, guid: d221cb255f8c4874393f33c89e0334e0, type: 3}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: rangedEnemySpawnChance
-      value: 0.5
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: enemyHealths.Array.size
