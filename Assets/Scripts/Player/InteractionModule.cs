@@ -104,7 +104,7 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);    // 바닥생성
                     spaceship.MakeWall(targetObject);
                 }
             }

@@ -20,7 +20,9 @@ public class Module : MonoBehaviour
         Oxygenator,     // 산소재생기
         DefaultTurret,  // 기본터렛
         LaserTurret,    // 레이저터렛
-        BasicTurret     // 제공되는 커다란 기본 터렛
+        BasicTurret,     // 제공되는 커다란 기본 터렛
+        ShotgunTurret
+
     }
     public ModuleType moduleType;   // 모듈타입
 
@@ -113,6 +115,9 @@ public class Module : MonoBehaviour
                 break;                      
             case ModuleType.BasicTurret:    // 기존 제공 터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BasicTurret");
+                break;
+            case ModuleType.ShotgunTurret:    // 샷건터렛
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShotgunTurret");
                 break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
