@@ -1719,7 +1719,7 @@ GameObject:
   - component: {fileID: 1440234790}
   - component: {fileID: 1440234789}
   m_Layer: 5
-  m_Name: CreateRoomBtn (1)
+  m_Name: QuitGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
