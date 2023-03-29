@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2138444976435800935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1859239011623957876}
+  - component: {fileID: 4574894504240720203}
+  m_Layer: 0
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1859239011623957876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138444976435800935}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.2320204, y: 2.467731, z: 1.4024203}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4574894504240720203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138444976435800935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a330401bb81b3b045a4416f19afe6b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies:
+  - {fileID: 7630159245973665912, guid: c376d2b745c3efa4e9eb270daf92582e, type: 3}
+  - {fileID: 1326248736506361897, guid: d221cb255f8c4874393f33c89e0334e0, type: 3}
+  enemyHealths: 0200000002000000
+  explosionVFX: {fileID: 4914716930404006884, guid: aed12c224fbc8704d8eaa07a52e88f44, type: 3}
+  speed: 20
+  enemyDestroyedSound: {fileID: 8300000, guid: 8524588a69a4f3e40bb597b6221138f1, type: 3}
+  spawnInterval: 1
+  difficultyTimeStep: 120
+  enemiesTier2:
+  - {fileID: 7319328362840915926, guid: 4738d9cfc31186d40b2040b99e9ffc50, type: 3}
+  enemiesTier3:
+  - {fileID: 5693058009959157407, guid: f8550245053610d41b7b5556ba4dea6f, type: 3}
+  enemyHealthsTier2: 01000000
+  enemyHealthsTier3: 01000000

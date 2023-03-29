@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,6 +21,7 @@ public class Module : MonoBehaviour
         Oxygenator,     // 산소재생기
         DefaultTurret,  // 기본터렛
         LaserTurret,    // 레이저터렛
+        BasicTurret     // 제공되는 커다란 기본 터렛
     }
     public ModuleType moduleType;   // 모듈타입
 
@@ -35,7 +37,7 @@ public class Module : MonoBehaviour
 
     public GameObject hitArea;      // 데미지 받는 범위
 
-    public int hp = 0;
+    public float hp = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -109,6 +111,9 @@ public class Module : MonoBehaviour
                 break;
             case ModuleType.LaserTurret:    // 레이저터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
+                break;                      
+            case ModuleType.BasicTurret:    // 기존 제공 터렛
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BasicTurret");
                 break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
@@ -175,5 +180,10 @@ public class Module : MonoBehaviour
 
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);
+    }
+
+    public static implicit operator Module(GameObject v)
+    {
+        throw new NotImplementedException();
     }
 }

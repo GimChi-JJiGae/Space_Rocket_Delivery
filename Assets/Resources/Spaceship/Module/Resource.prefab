@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3409819905040534073}
   - component: {fileID: 4195485445356560186}
   m_Layer: 0
-  m_Name: Fuel
+  m_Name: FuelBlueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 5700135875250792672}
   m_Layer: 0
   m_Name: Resource
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1933,7 +1933,7 @@ GameObject:
   - component: {fileID: 2047863987777784828}
   - component: {fileID: 7195298189220374049}
   m_Layer: 0
-  m_Name: Ore
+  m_Name: OreBlueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

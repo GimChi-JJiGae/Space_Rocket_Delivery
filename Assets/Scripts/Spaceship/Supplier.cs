@@ -31,9 +31,9 @@ public class Supplier : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Transform fuelTransform = transform.Find("Resource").Find("Fuel");
+        Transform fuelTransform = transform.Find("Resource").Find("FuelBlueprint");
         fuelObject = fuelTransform.gameObject;
-        Transform oreTransform = transform.Find("Resource").Find("Ore");
+        Transform oreTransform = transform.Find("Resource").Find("OreBlueprint");
         oreObject = oreTransform.gameObject;
         oreObject.SetActive(false);
 
@@ -43,12 +43,6 @@ public class Supplier : MonoBehaviour
         popAnimator = GetComponent<Animator>();
         // 3초마다 연속 생성 명령
         StartCoroutine(SpawnResource());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // 자원 변경
