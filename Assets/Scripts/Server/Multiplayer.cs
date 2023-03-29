@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,17 +39,27 @@ public class Multiplayer : MonoBehaviour
 
         int[] nums = { 0, 1, 2, 3 };                                // 멀티플레이어 생성
 
-        AssignPlayer(1);                                            // 플레이어 지정
+        AssignPlayer(1);
+
+        StartCoroutine(CallFunctionRepeatedly());
+    }
+
+    IEnumerator CallFunctionRepeatedly()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
+                                                   // 반복해서 호출할 함수 호출
+            Vector3 a = players[playerIndex].transform.position;
+            Quaternion b = players[playerIndex].transform.rotation;
+            controller.Send(100, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
+        }
     }
 
     void FixedUpdate()
     {
-        // TODO : 0.1초마다 전송하게 변경
-        Vector3 a = players[playerIndex].transform.position;
-        Quaternion b = players[playerIndex].transform.rotation;
-
-        controller.Send(100, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
     }
+
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
