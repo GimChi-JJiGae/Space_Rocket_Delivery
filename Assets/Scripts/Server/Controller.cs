@@ -6,8 +6,32 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+public enum PacketType
+{
+    NONE,
+    HELLO,
+    BYE,
+    CREATE_ROOM,
+    PARTICIPATE_USER, // 유저가 방에 입장한다는 것
+    DEPARTURE_USER,
+    PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
+    MOVE = 200,
+    MODULE_CONTROL = 222,
+    REPLICATION,
+
+    OBJECT_MOVE,
+    OBJECT_CONTROL,
+    
+    MODULE_STATUS,
+    CURRENT_POSITION,
+    ENEMY_MOVE,
+    TURRET_STATUS,
+    BASIC_TURRET,
+};
+
 public class Controller : MonoBehaviour
 {
+    
     CreateRoomController createRoomController;      // 방 생성을 위한 컨트롤러
     EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
@@ -44,33 +68,26 @@ public class Controller : MonoBehaviour
         createModuleController.Service(multiSpaceship);
     }
 
-    public void Receive(int header, byte[] data)
+    public void Receive(PacketType header, byte[] data)
     {
         try
         {
             switch (header)
             {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 10:
+                case PacketType.CREATE_ROOM:
                     createRoomController.ReceiveDTO(data);
                     createRoomController.SetAct(true);
                     break;
-                case 11:
+                case PacketType.PARTICIPATE_USER:
                     enterRoomController.ReceiveDTO(data);
                     enterRoomController.SetAct(true);
                     break;
-                case 100:
+                case PacketType.MOVE:
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
-                case 301:
+                case PacketType.MODULE_CONTROL:
+                    Debug.Log("왜 ㅠ" + createModuleController.xIdx + createModuleController.zIdx);
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
                     break;
@@ -82,12 +99,13 @@ public class Controller : MonoBehaviour
         }
     }
 
-    public void Send(int header, params object[] args)      // 인자를 object배열로 받아옴
+    public void Send(PacketType header, params object[] args)      // 인자를 object배열로 받아옴
     {
         List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
 
+
         // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        byteList.AddRange(BitConverter.GetBytes(header));
+        byteList.Add((byte)header); // BitConverter.GetBytes()
 
         // params 직렬화
         for (int i = 0; i < args.Length; i++)

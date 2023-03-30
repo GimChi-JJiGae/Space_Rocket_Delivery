@@ -22,7 +22,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void SendCreateModule(int xIdx, int zIdx, int moduleType)
     {
-        controller.Send(301, xIdx, zIdx, moduleType);
+        controller.Send(PacketType.MODULE_CONTROL, xIdx, zIdx, moduleType);
     }
 
     public void ReceiveCreateModule(int xIdx, int zIdx, int moduleType)

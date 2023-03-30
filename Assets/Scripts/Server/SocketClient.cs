@@ -2,6 +2,7 @@ using Palmmedia.ReportGenerator.Core.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlTypes;
 //using System.Diagnostics;
 using System.Linq;
@@ -20,7 +21,7 @@ public class SocketClient : MonoBehaviour
 {
     // 소켓 연결과 직렬화 버퍼
     private Socket socket;
-    private byte[] buffer = new byte[1024]; // 직렬화 버퍼
+    private byte[] buffer = new byte[50]; // 직렬화 버퍼
 
     // 로직은 컨트롤러에 위임
     Controller controller;
@@ -80,10 +81,11 @@ public class SocketClient : MonoBehaviour
     // 역직렬화
     private void Receive(byte[] buffer)
     {
-        int header = BitConverter.ToInt32(SplitArray(buffer, 0, 4));
-        byte[] data = SplitArray(buffer, 4, buffer.Length - 4);
-
-        controller.Receive(header, data);
+        byte[] header = SplitArray(buffer, 0, 1);
+        Debug.Log((int)header[0]);
+        byte[] data = SplitArray(buffer, 1, buffer.Length - 1);
+        Debug.Log("re: " + (int)header[0] + "re: " + data.Length + "re: " + header.Length);
+        controller.Receive((PacketType)header[0], data);
     }
 
     private void SendCallback(IAsyncResult result)
@@ -110,3 +112,4 @@ public class SocketClient : MonoBehaviour
     }
 
 }
+

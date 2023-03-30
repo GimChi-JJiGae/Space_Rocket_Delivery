@@ -41,8 +41,10 @@ public class InteractionModule : MonoBehaviour
 
         multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
 
+        /*
         player = GameObject.Find("PlayerCharacter");
         playerPosition = player.GetComponent<Transform>().position;
+        */
 
     }
 

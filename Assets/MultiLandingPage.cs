@@ -38,7 +38,7 @@ public class MultiLandingPage : MonoBehaviour
     void OnCreateRoom()
     {
         Debug.Log("OnCreateRoom");
-        controller.Send(10, "Receive OnCreateRoom");
+        controller.Send(PacketType.CREATE_ROOM, "Receive OnCreateRoom");
     }
 
     void OnEnterRoom()

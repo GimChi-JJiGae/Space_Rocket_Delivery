@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(1);
+        AssignPlayer(0);
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -38,7 +39,8 @@ public class Multiplayer : MonoBehaviour
                                                    // 반복해서 호출할 함수 호출
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
-            controller.Send(100, playerIndex, a.x + 1, a.y, a.z + 1, b.x, b.y, b.z, b.w);
+            
+            controller.Send(PacketType.MOVE, playerIndex, a.x + 1, a.y, a.z + 1, b.x, b.y, b.z, b.w);
         }
     }
 
