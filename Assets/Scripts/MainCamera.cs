@@ -23,23 +23,34 @@ public class MainCamera : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // 타겟의 x, y, z 좌표에 카메라의 좌표를 더하여 카메라의 위치를 결정
-        TargetPos = new Vector3(
+        if(Target != null)
+        {
+            // 타겟의 x, y, z 좌표에 카메라의 좌표를 더하여 카메라의 위치를 결정
+            TargetPos = new Vector3(
             Target.transform.position.x + offsetX,
             Target.transform.position.y + offsetY,
             Target.transform.position.z + offsetZ
             );
 
-        if (cameraShake != null)
-        {
-            TargetPos += cameraShake.GetShakeOffset();
-        }
-        else
-        {
-            Debug.LogError("CameraShake component not found.");
-        }
+            if (cameraShake != null)
+            {
+                TargetPos += cameraShake.GetShakeOffset();
+            }
+            else
+            {
+                Debug.LogError("CameraShake component not found.");
+            }
 
-        // 카메라의 움직임을 부드럽게 하는 함수(Lerp)
-        transform.position = Vector3.Lerp(transform.position, TargetPos, Time.deltaTime * CameraSpeed);
+            // 카메라의 움직임을 부드럽게 하는 함수(Lerp)
+            transform.position = Vector3.Lerp(transform.position, TargetPos, Time.deltaTime * CameraSpeed);
+        }
+    }
+
+    public void SetTarget(GameObject target)
+    {
+        if (target != null)
+        {
+            Target = target;
+        }
     }
 }
