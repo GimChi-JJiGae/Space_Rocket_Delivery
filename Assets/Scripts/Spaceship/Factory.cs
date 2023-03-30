@@ -12,16 +12,9 @@ public class Factory : MonoBehaviour
     private GameObject fuelPrefab;
     private GameObject orePrefab;
 
-    public enum PrintType
-    {
-        Kit,
-        Laser,
-    }
     
     private GameObject kitObject;
     private GameObject LaserObject;
-
-    PrintType objectType = PrintType.Kit;
 
     private GameObject kitPrefab; // 프리펩 저장
     private GameObject laserPrefab; // 프리펩 저장

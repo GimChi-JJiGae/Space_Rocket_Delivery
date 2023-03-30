@@ -130,6 +130,10 @@ public class InteractionModule : MonoBehaviour
                     resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
                 }
             }
+            else if (inputObject != null)
+            {
+
+            }
         }
 
         if (playerInput.RepairModule)

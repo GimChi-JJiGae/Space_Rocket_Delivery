@@ -61,31 +61,5 @@ public class Supplier : MonoBehaviour
 
             yield return new WaitForSeconds(respawnTime);
         }
-
-
-        //while (true)
-        //{
-        //    switch (resourceType)
-        //    {
-        //        case ResourceType.Fuel:
-        //            prefabState = fuelPrefab;
-        //            break;
-        //        case ResourceType.Ore:
-        //            prefabState = orePrefab;
-        //            break;
-        //    }
-
-        //    Debug.Log("Supplier: " + resourceType + " 생성");
-
-        //    GameObject newResource = Instantiate(resourceChanger.currentPrefab, position, Quaternion.identity);
-
-        //    // 이름변경
-        //    newResource.name = resourceType.ToString();
-
-        //    popAnimator.Play("SupplierPopAnimation");
-
-        //    // 스폰 코루틴
-        //    yield return new WaitForSeconds(spawnWait);
-        //}
     }
 }
