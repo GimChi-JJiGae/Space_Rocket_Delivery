@@ -13,15 +13,15 @@ public class Module : MonoBehaviour
     public int idxZ; // y순번
     public enum ModuleType
     {
-        Blueprint,      // 청사진
-        Engine,         // 엔진
-        Cargo,          // 화물
-        Factory,        // 제작기
-        Supplier,       // 생성기
-        Oxygenator,     // 산소재생기
-        DefaultTurret,  // 기본터렛
-        LaserTurret,    // 레이저터렛
-        BasicTurret     // 제공되는 커다란 기본 터렛
+        Blueprint = 1,      // 청사진
+        Engine = 2,         // 엔진
+        Cargo = 3,          // 화물
+        Factory = 4,        // 제작기
+        Supplier = 5,       // 생성기
+        Oxygenator = 6,     // 산소재생기
+        DefaultTurret = 7,  // 기본터렛
+        LaserTurret = 8,    // 레이저터렛
+        BasicTurret = 9     // 제공되는 커다란 기본 터렛
     }
     public ModuleType moduleType;   // 모듈타입
 

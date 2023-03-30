@@ -1,19 +1,50 @@
+//using ResourceNamespace;
 using System;
 using UnityEngine;
 using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
-    private PlayerInput playerInput;
+    public bool isMulti = true;
 
+    private PlayerInput playerInput;
+    private Animator playerAnimator;
+    private InteractionObject interactionObject;
+
+    //private ResourceChanger resourceChanger;
     private Spaceship spaceship;
     private GameObject player;
 
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
-    private GameObject buildingObject;
-    private bool isRepairing;
+
+    // Resource 변경을 위한 오브젝트
+    private GameObject resourceObject;
+
+    // 맞은 모듈 확인
+    private Module struckModule;
+
+    // player 위치
+    private Vector3 playerPosition;
+
+    // 멀티를 위한 오브젝트
+    public MultiSpaceship multiSpaceship;
+
+    private void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        playerAnimator = GetComponent<Animator>();
+        interactionObject = GetComponent<InteractionObject>();
+
+        spaceship = FindAnyObjectByType<Spaceship>();
+
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
+        player = GameObject.Find("PlayerCharacter");
+        playerPosition = player.GetComponent<Transform>().position;
+
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -46,56 +77,33 @@ public class InteractionModule : MonoBehaviour
                 targetObject = spaceship.modules[idxZ, idxX];
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
-            else if (other.gameObject.CompareTag("Building"))
-            {
-                buildingObject = other.gameObject;
-            }
+        }
+
+        if (other.gameObject.CompareTag("Change"))
+        {
+            resourceObject = other.gameObject;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!interactionObject.isHoldingObject)
+        if (!interactionObject.isHoldingObject && targetObject != null)
         {
-            if (targetObject != null)
-            {
-                Module module = targetObject.GetComponentInParent<Module>();
+            Module module = targetObject.GetComponentInParent<Module>();
 
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
-            }
-            else if (buildingObject != null)
+            if (module.moduleType == ModuleType.Blueprint)
             {
-                buildingObject = null;
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
             }
+
+            matchObject = null;
+            targetObject = null;
         }
-    }
-    private Animator playerAnimator;
-    private InteractionObject interactionObject;
+        else if (resourceObject != null)
+        {
+            resourceObject = null;
+        }
 
-    // 맞은 모듈 확인
-    private Module struckModule;
-
-    // player 위치
-    private Vector3 playerPosition;
-
-    private void Start()
-    {
-        playerInput = GetComponent<PlayerInput>();
-        playerAnimator = GetComponent<Animator>();
-        interactionObject = GetComponent<InteractionObject>();
-
-        isRepairing = playerAnimator.GetBool("Repairing");
-
-        spaceship = FindAnyObjectByType<Spaceship>();
-
-        player = GameObject.Find("PlayerCharacter");
-        playerPosition = player.GetComponent<Transform>().position;
     }
 
     private void Update()
@@ -106,23 +114,22 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
-                    spaceship.MakeWall(targetObject);
+                    if (isMulti)
+                    {
+                        Module module = targetObject.GetComponent<Module>();
+                        Debug.Log("space" + module.idxX + " , " + module.idxZ + " , " + (int)ModuleType.LaserTurret);
+                        multiSpaceship.SendCreateModule(module.idxX, module.idxZ, (int)ModuleType.LaserTurret);    // 바닥생성
+                    }
+                    else
+                    {
+                        targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+                        spaceship.MakeWall(targetObject);
+                    }
                 }
             }
-            else if (buildingObject != null)
+            else if (resourceObject != null)
             {
-                switch (buildingObject.name)
-                {
-                    case "Supplier":
-                        Supplier supplier = buildingObject.GetComponent<Supplier>();
-                        supplier.SwitchResource();
-                        break;
-                    case "Engine":
-                        break;
-                    case "Oxygenator":
-                        break;
-                }
+                //resourceObject.GetComponent<ResourceChanger>().SwitchResource();
             }
         }
 

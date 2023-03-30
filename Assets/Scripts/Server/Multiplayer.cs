@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Multiplayer : MonoBehaviour
 {
     public bool isHost = false;
+
     public int playerIndex;                            // 사용자의 플레이어 인덱스
 
     public GameObject[] players = new GameObject[4];   // 참조를 쉽게 하기 위해 오브젝트 저장
@@ -15,31 +16,12 @@ public class Multiplayer : MonoBehaviour
     GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
     private Controller controller;
 
-    private GameObject LandingPageCanvas;
-
-    private Button createRoomBtn;
-    private Button enterRoomBtn;
-    private Button QuitGameBtn;
-    private TMP_InputField enterRoomInput;
-
     Vector3[] targetPosition = new Vector3[4];
     Quaternion[] targetRotation = new Quaternion[4];
 
     void Start()
     {
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
-        LandingPageCanvas = GameObject.Find("LandingPageCanvas");   // 캔버스 찾기
-
-        createRoomBtn = LandingPageCanvas.transform.Find("CreateRoomBtn").GetComponent<Button>();    // 방 생성
-        createRoomBtn.onClick.AddListener(OnCreateRoom);            
-
-        enterRoomBtn = LandingPageCanvas.transform.Find("EnterRoomBtn").GetComponent<Button>();      // 방 입장
-        enterRoomBtn.onClick.AddListener(OnEnterRoom);
-
-        enterRoomInput = LandingPageCanvas.transform.Find("EnterRoomInput").GetComponent<TMP_InputField>();   // 방입장 코드
-
-        QuitGameBtn = LandingPageCanvas.transform.Find("QuitGameBtn").GetComponent<Button>();        // 방 입장
-        QuitGameBtn.onClick.AddListener(OnApplicationQuit);
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
@@ -104,19 +86,5 @@ public class Multiplayer : MonoBehaviour
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
 
-    void OnCreateRoom()
-    {
-        Debug.Log("OnCreateRoom");
-        controller.Send(10, "Receive OnCreateRoom");
-    }
 
-    void OnEnterRoom()
-    {
-        Debug.Log("OnEnterRoom: " + enterRoomInput.text);
-    }
-
-    void OnApplicationQuit()
-    {
-        Application.Quit();
-    }
 }

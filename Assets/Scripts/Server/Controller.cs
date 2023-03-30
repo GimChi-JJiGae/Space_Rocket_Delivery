@@ -8,14 +8,16 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-    CreateRoomController createRoomController; // 방 생성을 위한 컨트롤러
-    EnterRoomController enterRoomController; // 방 참가를 위한 컨트롤러
-
+    CreateRoomController createRoomController;      // 방 생성을 위한 컨트롤러
+    EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
+    CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
     // Player관련 함수
     Multiplayer multiplayer;
+    MultiSpaceship multiSpaceship;
+
     SocketClient socketClient;
 
     void Start()
@@ -26,10 +28,11 @@ public class Controller : MonoBehaviour
         createRoomController = new CreateRoomController();
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
+        createModuleController = new CreateModuleController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
-        multiplayer = gameObject.GetComponent<Multiplayer>();  
+        multiSpaceship = GetComponent<MultiSpaceship>();
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class Controller : MonoBehaviour
         createRoomController.Service();
         enterRoomController.Service();
         playerPositionController.Service(multiplayer);
+        createModuleController.Service(multiSpaceship);
     }
 
     public void Receive(int header, byte[] data)
@@ -65,6 +69,10 @@ public class Controller : MonoBehaviour
                 case 100:
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
+                    break;
+                case 301:
+                    createModuleController.ReceiveDTO(data);
+                    createModuleController.SetAct(true);
                     break;
             }
         }
@@ -166,25 +174,19 @@ public class EnterRoomController : ReceiveController
 }
 
 // 모듈 컨트롤러
-public class ModuleController : ReceiveController
+public class CreateModuleController : ReceiveController
 {
-    public int idxX;           // 위치
-    public int idxZ;
+    public int xIdx;           // 위치
+    public int zIdx;
 
     public int moduleType;     // 모듈 타입
 
-    public char wallTop ;      // 벽 모듈
-    public char wallLeft;
-    public char wallBottom;
-    public char wallRight;
-
-    public float hp;           // 체력
-
-    public void Service(Module module) // isAct가 활성화 되었을 때 실행할 로직
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {
-            //multiplayer.MoveOtherPlayer(userId, (float)px, (float)py, (float)pz);
+            Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + moduleType);
+            multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
             this.SetAct(false);
         }
     }

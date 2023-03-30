@@ -4768,7 +4768,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 34a4ba78352494a4e98c473ec2ec24ee, type: 2}
+  - {fileID: 2100000, guid: 5c270a73328a99e439fec44a0cf3a17d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20711,6 +20711,8 @@ MonoBehaviour:
   delay: 0.2
   interval: 7
   miniInterval: 0.5
+  damageInterval: 0.2
+  timeAfterDamaged: 0
   turretLazer: {fileID: 8253860921856510219}
 --- !u!1 &8253860921856510219 stripped
 GameObject:
