@@ -21,7 +21,7 @@ public class SocketClient : MonoBehaviour
 {
     // 소켓 연결과 직렬화 버퍼
     private Socket socket;
-    private byte[] buffer = new byte[50]; // 직렬화 버퍼
+    private byte[] buffer = new byte[1024]; // 직렬화 버퍼
 
     // 로직은 컨트롤러에 위임
     Controller controller;
@@ -82,9 +82,8 @@ public class SocketClient : MonoBehaviour
     private void Receive(byte[] buffer)
     {
         byte[] header = SplitArray(buffer, 0, 1);
-        Debug.Log((int)header[0]);
+        //Debug.Log((int)header[0]);
         byte[] data = SplitArray(buffer, 1, buffer.Length - 1);
-        Debug.Log("re: " + (int)header[0] + "re: " + data.Length + "re: " + header.Length);
         controller.Receive((PacketType)header[0], data);
     }
 

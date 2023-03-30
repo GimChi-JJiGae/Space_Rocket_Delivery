@@ -87,7 +87,6 @@ public class Controller : MonoBehaviour
                     playerPositionController.SetAct(true);
                     break;
                 case PacketType.MODULE_CONTROL:
-                    Debug.Log("왜 ㅠ" + createModuleController.xIdx + createModuleController.zIdx);
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
                     break;
