@@ -10,13 +10,19 @@ public class InteractionObject : MonoBehaviour
     private PlayerInput playerInput;
     private Animator playerAnimator;
 
+    private InteractionModule interactionModule;
+
     private GameObject playerHead;
-    private GameObject currentObject;
+
+    private GameObject collideObject;
+    public GameObject currentObject;
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
+
+        interactionModule = GetComponent<InteractionModule>();
 
         playerHead = GameObject.Find("PlayerHead");
 
@@ -34,15 +40,15 @@ public class InteractionObject : MonoBehaviour
     {
         if (!isHoldingObject && HoldableObjects.Contains(collision.gameObject.name))
         {
-            currentObject = collision.gameObject;
+            collideObject = collision.gameObject;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (!isHoldingObject)
+        if (collideObject != null)
         {
-            currentObject = null;
+            collideObject = null;
         }
     }
 
@@ -65,6 +71,8 @@ public class InteractionObject : MonoBehaviour
 
         obj.GetComponent<Rigidbody>().isKinematic = true;
         obj.GetComponent<MeshCollider>().enabled = false;
+
+        currentObject = obj;
         isHoldingObject = true;
     }
 
@@ -76,6 +84,16 @@ public class InteractionObject : MonoBehaviour
 
         obj.GetComponent<Rigidbody>().isKinematic = false;
         obj.GetComponent<MeshCollider>().enabled = true;
+
+        currentObject = null;
+        isHoldingObject = false;
+    }
+
+    private void InsertObject(GameObject obj)
+    {
+        obj.transform.parent = null;
+        Destroy(obj);
+
         isHoldingObject = false;
     }
 
@@ -83,14 +101,28 @@ public class InteractionObject : MonoBehaviour
     {
         if (playerInput.Interact)
         {
-            if (isHoldingObject && currentObject != null)
+            if (!isHoldingObject && collideObject != null)
             {
-                DropObject(currentObject);
-                currentObject = null;
+                PickUpObject(collideObject);
             }
-            else if (!isHoldingObject && currentObject != null)
+            else if (isHoldingObject)
             {
-                PickUpObject(currentObject);
+                if (interactionModule.inputObject != null)
+                {
+                    if (currentObject.name == "Fuel" && interactionModule.inputObject.GetComponentInParent<Oxygenator>())
+                    {
+                        InsertObject(currentObject);
+                        currentObject = null;
+                    }
+                    else
+                    {
+                        DropObject(currentObject);
+                    }
+                }
+                else
+                {
+                    DropObject(currentObject);
+                }
             }
         }
     }
