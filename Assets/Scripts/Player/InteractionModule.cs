@@ -45,10 +45,6 @@ public class InteractionModule : MonoBehaviour
                 targetObject = spaceship.modules[idxZ, idxX];
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
-            else if (other.gameObject.CompareTag("Building"))
-            {
-                buildingObject = other.gameObject;
-            }
         }
     }
     private Animator playerAnimator;
@@ -68,10 +64,6 @@ public class InteractionModule : MonoBehaviour
 
                 matchObject = null;
                 targetObject = null;
-            }
-            else if (buildingObject != null)
-            {
-                buildingObject = null;
             }
         }
     }
@@ -105,24 +97,11 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);    // 바닥생성
+                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);    // 바닥생성
                     spaceship.MakeWall(targetObject);
                 }
             }
-            else if (buildingObject != null)
-            {
-                switch (buildingObject.name)
-                {
-                    case "Supplier":
-                        Supplier supplier = buildingObject.GetComponent<Supplier>();
-                        supplier.SwitchResource();
-                        break;
-                    case "Engine":
-                        break;
-                    case "Oxygenator":
-                        break;
-                }
-            }
+            
         }
 
         if (playerInput.RepairModule)
@@ -143,7 +122,7 @@ public class InteractionModule : MonoBehaviour
         }
         else
         {
-            playerAnimator.SetBool("Repairing", false);
+            //playerAnimator.SetBool("Repairing", false);
         }
     }
 }

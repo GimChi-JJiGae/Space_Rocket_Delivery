@@ -79,7 +79,7 @@ public class Multiplayer : MonoBehaviour
 
         // 캐릭터 모듈 연결
         player.AddComponent<PlayerInput>();
-        player.AddComponent<PlayerInteraction>();
+        //player.AddComponent<PlayerInteraction>();
         player.AddComponent<PlayerMovement>();
 
         // 카메라 연동

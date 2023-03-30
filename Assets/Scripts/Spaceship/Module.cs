@@ -22,7 +22,8 @@ public class Module : MonoBehaviour
         DefaultTurret,  // 기본터렛
         LaserTurret,    // 레이저터렛
         BasicTurret,     // 제공되는 커다란 기본 터렛
-        ShotgunTurret
+        ShotgunTurret,   // 샷건터렛
+        ShieldTurret
 
     }
     public ModuleType moduleType;   // 모듈타입
@@ -119,6 +120,9 @@ public class Module : MonoBehaviour
                 break;
             case ModuleType.ShotgunTurret:    // 샷건터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShotgunTurret");
+                break;
+            case ModuleType.ShieldTurret:
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShieldTurret");
                 break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
