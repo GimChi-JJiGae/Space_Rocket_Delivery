@@ -164,12 +164,15 @@ public class PlayerPositionController : ReceiveController
 public class CreateRoomController : ReceiveController
 {
     public string text;      // 텍스트
-
+    public string text2;      // 텍스트
+    public string text3;      // 텍스트
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {
             Debug.Log(text);
+            Debug.Log(text2);
+            Debug.Log(text3);
             this.SetAct(false);
         }
     }

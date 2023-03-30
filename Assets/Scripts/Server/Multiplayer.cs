@@ -26,7 +26,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(1);
+        AssignPlayer(0);
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -35,12 +35,12 @@ public class Multiplayer : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.05f); // 0.1초마다 반복
+            yield return new WaitForSeconds(2f); // 0.1초마다 반복
                                                    // 반복해서 호출할 함수 호출
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
             
-            controller.Send(PacketType.MOVE, playerIndex, a.x + 1, a.y, a.z + 1, b.x, b.y, b.z, b.w);
+            controller.Send(PacketType.MOVE, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
         }
     }
 
@@ -62,6 +62,7 @@ public class Multiplayer : MonoBehaviour
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
+        //idx = 3;
         if (idx != playerIndex)
         {
             Vector3 dir = new Vector3(px, py, pz);
