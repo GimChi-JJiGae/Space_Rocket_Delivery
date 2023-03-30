@@ -1,10 +1,14 @@
+using ResourceNamespace;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
+    private Animator playerAnimator;
+    private InteractionObject interactionObject;
 
     private Spaceship spaceship;
     private GameObject player;
@@ -12,7 +16,30 @@ public class InteractionModule : MonoBehaviour
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
-    private bool isRepairing;
+
+    // Resource 변경을 위한 오브젝트
+    private GameObject resourceObject;
+
+    // input
+    private GameObject inputObject;
+
+    // 맞은 모듈 확인
+    private Module struckModule;
+
+    // player 위치
+    private Vector3 playerPosition;
+
+    private void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+        playerAnimator = GetComponent<Animator>();
+        interactionObject = GetComponent<InteractionObject>();
+
+        spaceship = FindAnyObjectByType<Spaceship>();
+
+        player = GameObject.Find("PlayerCharacter");
+        playerPosition = player.GetComponent<Transform>().position;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -45,56 +72,41 @@ public class InteractionModule : MonoBehaviour
                 targetObject = spaceship.modules[idxZ, idxX];
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
-            else if (other.gameObject.CompareTag("Building"))
-            {
-                buildingObject = other.gameObject;
-            }
+        }
+        
+        if (other.gameObject.CompareTag("Change"))
+        {
+            resourceObject = other.gameObject;
+        }
+
+        if (interactionObject.isHoldingObject && other.gameObject.CompareTag("Input"))
+        {
+            inputObject = other.gameObject;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!interactionObject.isHoldingObject)
-        {
-            if (targetObject != null)
-            {
-                Module module = targetObject.GetComponentInParent<Module>();
+        if (!interactionObject.isHoldingObject && targetObject != null)
+        { 
+            Module module = targetObject.GetComponentInParent<Module>();
 
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
-            }
-            else if (buildingObject != null)
+            if (module.moduleType == ModuleType.Blueprint)
             {
-                buildingObject = null;
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
             }
+
+            matchObject = null;
+            targetObject = null;
         }
-    }
-    private Animator playerAnimator;
-    private InteractionObject interactionObject;
-
-    // 맞은 모듈 확인
-    private Module struckModule;
-
-    // player 위치
-    private Vector3 playerPosition;
-
-    private void Start()
-    {
-        playerInput = GetComponent<PlayerInput>();
-        playerAnimator = GetComponent<Animator>();
-        interactionObject = GetComponent<InteractionObject>();
-
-        isRepairing = playerAnimator.GetBool("Repairing");
-
-        spaceship = FindAnyObjectByType<Spaceship>();
-
-        player = GameObject.Find("PlayerCharacter");
-        playerPosition = player.GetComponent<Transform>().position;
+        else if (resourceObject != null)
+        {
+            resourceObject = null;
+        }
+        else if (inputObject != null)
+        {
+            inputObject = null;
+        }
     }
 
     private void Update()
@@ -109,19 +121,18 @@ public class InteractionModule : MonoBehaviour
                     spaceship.MakeWall(targetObject);
                 }
             }
-            else if (buildingObject != null)
+            else if (resourceObject != null)
             {
-                switch (buildingObject.name)
+                resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+                
+                if (resourceObject.GetComponentInParent<Supplier>() != null)
                 {
-                    case "Supplier":
-                        Supplier supplier = buildingObject.GetComponent<Supplier>();
-                        supplier.SwitchResource();
-                        break;
-                    case "Engine":
-                        break;
-                    case "Oxygenator":
-                        break;
+                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
                 }
+            }
+            else if (inputObject != null)
+            {
+
             }
         }
 

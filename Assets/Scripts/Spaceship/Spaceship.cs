@@ -16,13 +16,7 @@ public class Spaceship : MonoBehaviour
         StartCoroutine(SettingModule());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    IEnumerator SettingModule()
+    private IEnumerator SettingModule()
     {
         // 청사진 모듈 생성
         for (int z = 0; z < cols; z++)
