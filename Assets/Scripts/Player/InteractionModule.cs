@@ -1,6 +1,7 @@
 using ResourceNamespace;
 using System;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static Module;
 
@@ -20,8 +21,7 @@ public class InteractionModule : MonoBehaviour
     // Resource 변경을 위한 오브젝트
     private GameObject resourceObject;
 
-    // input
-    private GameObject inputObject;
+    public GameObject inputObject;
 
     // 맞은 모듈 확인
     private Module struckModule;
@@ -77,9 +77,10 @@ public class InteractionModule : MonoBehaviour
         if (other.gameObject.CompareTag("Change"))
         {
             resourceObject = other.gameObject;
+            Debug.Log(1);
         }
 
-        if (interactionObject.isHoldingObject && other.gameObject.CompareTag("Input"))
+        if (other.gameObject.CompareTag("Input"))
         {
             inputObject = other.gameObject;
         }
@@ -99,12 +100,15 @@ public class InteractionModule : MonoBehaviour
             matchObject = null;
             targetObject = null;
         }
-        else if (resourceObject != null)
+        
+        if (resourceObject != null)
         {
             resourceObject = null;
         }
-        else if (inputObject != null)
+
+        if (inputObject != null)
         {
+            Debug.Log(2);
             inputObject = null;
         }
     }
@@ -113,26 +117,37 @@ public class InteractionModule : MonoBehaviour
     {
         if (playerInput.Interact)
         {
-            if (matchObject != null && targetObject != null)
+            if (!interactionObject.isHoldingObject)
             {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                if (matchObject != null && targetObject != null)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
-                    spaceship.MakeWall(targetObject);
+                    if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                    {
+                        targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
+                        spaceship.MakeWall(targetObject);
+                    }
                 }
-            }
-            else if (resourceObject != null)
-            {
-                resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-                
-                if (resourceObject.GetComponentInParent<Supplier>() != null)
+                else if (resourceObject != null)
                 {
-                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
-                }
-            }
-            else if (inputObject != null)
-            {
+                    resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+                    Debug.Log(3);
 
+                    if (resourceObject.GetComponentInParent<Supplier>() != null)
+                    {
+                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    }
+                }
+            }
+            else
+            {
+                if (inputObject != null)
+                {
+                    GameObject insertObject = interactionObject.currentObject;
+                    if (insertObject.name == "Fuel" && inputObject.GetComponentInParent<Oxygenator>())
+                    {
+                        inputObject.GetComponentInParent<Oxygenator>().Increase();
+                    }
+                }
             }
         }
 
