@@ -10,8 +10,8 @@ TagManager:
   - Wall
   - enemy
   - RangedEnemy
-  - Insert
   - Change
+  - Input
   layers:
   - Default
   - TransparentFX

@@ -1,5 +1,6 @@
 using ResourceNamespace;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Module;
 
@@ -8,8 +9,7 @@ public class InteractionModule : MonoBehaviour
     private PlayerInput playerInput;
     private Animator playerAnimator;
     private InteractionObject interactionObject;
-    
-    private ResourceChanger resourceChanger;
+
     private Spaceship spaceship;
     private GameObject player;
 
@@ -19,6 +19,9 @@ public class InteractionModule : MonoBehaviour
 
     // Resource 변경을 위한 오브젝트
     private GameObject resourceObject;
+
+    // input
+    private GameObject inputObject;
 
     // 맞은 모듈 확인
     private Module struckModule;
@@ -40,38 +43,45 @@ public class InteractionModule : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!interactionObject.isHoldingObject && other.gameObject.CompareTag("Edge"))
+        if (!interactionObject.isHoldingObject)
         {
-            matchObject = other.gameObject;
-            Module module = matchObject.GetComponentInParent<Module>();
-
-            int idxZ = module.idxZ;
-            int idxX = module.idxX;
-
-            switch (other.gameObject.name)
+            if (other.gameObject.CompareTag("Edge"))
             {
-                case "EdgeTop":
-                    idxZ += 1;
-                    break;
-                case "EdgeBottom":
-                    idxZ -= 1;
-                    break;
-                case "EdgeRight":
-                    idxX += 1;
-                    break;
-                case "EdgeLeft":
-                    idxX -= 1;
-                    break;
-            }
+                matchObject = other.gameObject;
+                Module module = matchObject.GetComponentInParent<Module>();
 
-            targetObject = spaceship.modules[idxZ, idxX];
-            targetObject.GetComponent<Module>().floorModule.SetActive(true);
+                int idxZ = module.idxZ;
+                int idxX = module.idxX;
+
+                switch (other.gameObject.name)
+                {
+                    case "EdgeTop":
+                        idxZ += 1;
+                        break;
+                    case "EdgeBottom":
+                        idxZ -= 1;
+                        break;
+                    case "EdgeRight":
+                        idxX += 1;
+                        break;
+                    case "EdgeLeft":
+                        idxX -= 1;
+                        break;
+                }
+
+                targetObject = spaceship.modules[idxZ, idxX];
+                targetObject.GetComponent<Module>().floorModule.SetActive(true);
+            }
         }
-        else if (other.gameObject.CompareTag("Change"))
+        
+        if (other.gameObject.CompareTag("Change"))
         {
             resourceObject = other.gameObject;
-            Debug.Log(resourceObject);
-            Debug.Log("업데이트");
+        }
+
+        if (interactionObject.isHoldingObject && other.gameObject.CompareTag("Input"))
+        {
+            inputObject = other.gameObject;
         }
     }
 
@@ -93,7 +103,10 @@ public class InteractionModule : MonoBehaviour
         {
             resourceObject = null;
         }
-        
+        else if (inputObject != null)
+        {
+            inputObject = null;
+        }
     }
 
     private void Update()
@@ -111,6 +124,11 @@ public class InteractionModule : MonoBehaviour
             else if (resourceObject != null)
             {
                 resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+                
+                if (resourceObject.GetComponentInParent<Supplier>() != null)
+                {
+                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                }
             }
         }
 

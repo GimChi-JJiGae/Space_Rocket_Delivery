@@ -4,19 +4,10 @@ using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
-
     public Animator popAnimator;
-
-    public enum ResourceType
-    {
-        Fuel,
-        Ore,
-    }
 
     GameObject fuelObject;
     GameObject oreObject;
-
-    ResourceType resourceType = ResourceType.Fuel;
 
     private GameObject fuelPrefab;
     private GameObject orePrefab;

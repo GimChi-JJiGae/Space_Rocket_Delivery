@@ -13,25 +13,17 @@ namespace ResourceNamespace
         private GameObject fuelObject;
         private GameObject oreObject;
 
-        private GameObject fuelPrefab;
-        private GameObject orePrefab;
-
-        public GameObject currentPrefab;
-
-        ResourceType resourceType = ResourceType.Fuel;
+        public ResourceType resourceType;
 
         // Start is called before the first frame update
         private void Start()
         {
-            fuelObject = transform.Find("Resource").Find("FuelBlueprint").gameObject;
-            oreObject = transform.Find("Resource").Find("OreBlueprint").gameObject;
-
-            fuelPrefab = Resources.Load<GameObject>("Resources/Fuel");
-            orePrefab = Resources.Load<GameObject>("Resources/Ore");
-
-            currentPrefab = fuelPrefab;
+            fuelObject = transform.Find("FuelBlueprint").gameObject;
+            oreObject = transform.Find("OreBlueprint").gameObject;
 
             oreObject.SetActive(false);
+
+            resourceType = ResourceType.Fuel;
         }
 
         public void SwitchResource()
@@ -41,13 +33,11 @@ namespace ResourceNamespace
                 case ResourceType.Fuel:
                     fuelObject.SetActive(false);
                     resourceType = ResourceType.Ore;
-                    currentPrefab = orePrefab;
                     oreObject.SetActive(true);
                     break;
                 case ResourceType.Ore:
                     oreObject.SetActive(false);
                     resourceType = ResourceType.Fuel;
-                    currentPrefab = fuelPrefab;
                     fuelObject.SetActive(true);
                     break;
             }
