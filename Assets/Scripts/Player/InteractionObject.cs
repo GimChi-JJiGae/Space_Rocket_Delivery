@@ -97,6 +97,17 @@ public class InteractionObject : MonoBehaviour
         isHoldingObject = false;
     }
 
+    private void SaveObject(GameObject obj)
+    {
+        Transform saveObject = interactionModule.inputObject.GetComponentInParent<Factory>().transform.Find("Input");
+
+        obj.transform.parent = saveObject;
+
+        obj.SetActive(false);
+        currentObject = null;
+        isHoldingObject = false;
+    }
+
     private void Update()
     {
         if (playerInput.Interact)
@@ -113,6 +124,10 @@ public class InteractionObject : MonoBehaviour
                     {
                         InsertObject(currentObject);
                         currentObject = null;
+                    }
+                    else if (interactionModule.inputObject.GetComponentInParent<Factory>())
+                    {
+                        SaveObject(currentObject);
                     }
                     else
                     {

@@ -23,6 +23,8 @@ public class InteractionModule : MonoBehaviour
 
     public GameObject inputObject;
 
+    private GameObject produceObject;
+
     // 맞은 모듈 확인
     private Module struckModule;
 
@@ -77,12 +79,16 @@ public class InteractionModule : MonoBehaviour
         if (other.gameObject.CompareTag("Change"))
         {
             resourceObject = other.gameObject;
-            Debug.Log(1);
         }
 
         if (other.gameObject.CompareTag("Input"))
         {
             inputObject = other.gameObject;
+        }
+
+        if (other.gameObject.CompareTag("Produce"))
+        {
+            produceObject = other.gameObject;
         }
     }
 
@@ -108,8 +114,12 @@ public class InteractionModule : MonoBehaviour
 
         if (inputObject != null)
         {
-            Debug.Log(2);
             inputObject = null;
+        }
+
+        if (produceObject != null)
+        {
+            produceObject = null;
         }
     }
 
@@ -130,12 +140,15 @@ public class InteractionModule : MonoBehaviour
                 else if (resourceObject != null)
                 {
                     resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-                    Debug.Log(3);
 
                     if (resourceObject.GetComponentInParent<Supplier>() != null)
                     {
                         resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
                     }
+                }
+                else if (produceObject != null)
+                {
+                    produceObject.GetComponent<Factory>().SwitchModule();
                 }
             }
             else
