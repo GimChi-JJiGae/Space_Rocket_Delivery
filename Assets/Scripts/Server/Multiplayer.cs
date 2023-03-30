@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Multiplayer : MonoBehaviour
 {
-    public bool isHost = false;
+    public bool isHost;
+    public bool isMultiplayer;
 
     public int playerIndex;                            // 사용자의 플레이어 인덱스
 
@@ -22,6 +24,8 @@ public class Multiplayer : MonoBehaviour
 
     void Start()
     {
+        isMultiplayer = true;
+        isHost = false;
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
@@ -62,7 +66,7 @@ public class Multiplayer : MonoBehaviour
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
-        //idx = 3;
+        idx = 3;
         if (idx != playerIndex)
         {
             Vector3 dir = new Vector3(px, py, pz);

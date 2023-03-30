@@ -31,4 +31,14 @@ public class MultiSpaceship : MonoBehaviour
         targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType); ;
         spaceship.MakeWall(targetObject);
     }
+
+    IEnumerator SendCreateResource(int xIdx, int zIdx, int moduleType)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10.0f); // 0.1초마다 반복
+                                                    // 반복해서 호출할 함수 호출
+            controller.Send(PacketType.MODULE_CONTROL, xIdx, zIdx, moduleType);
+        }
+    }
 }

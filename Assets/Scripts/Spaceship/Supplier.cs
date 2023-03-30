@@ -8,6 +8,9 @@ using UnityEngine.UIElements;
 
 public class Supplier : MonoBehaviour
 {
+    Multiplayer multiplayer; // 멀티플레이 중인지 확인만 함
+
+
     public Animator popAnimator;
     public enum ResourceType
     {
@@ -41,8 +44,19 @@ public class Supplier : MonoBehaviour
         orePrefab = Resources.Load<GameObject>("Resources/Ore");
 
         popAnimator = GetComponent<Animator>();
-        // 3초마다 연속 생성 명령
-        StartCoroutine(SpawnResource());
+        
+        try
+        {
+            multiplayer = FindAnyObjectByType<Multiplayer>();
+            if (multiplayer.isMultiplayer) {
+                // 3초마다 연속 생성 명령
+                StartCoroutine(SpawnResource());
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
     }
 
     // 자원 변경

@@ -5,7 +5,9 @@ using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
-    public bool isMulti = true;
+    // 멀티를 위한 오브젝트
+    public Multiplayer multiplayer;
+    public MultiSpaceship multiSpaceship;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
@@ -28,8 +30,6 @@ public class InteractionModule : MonoBehaviour
     // player 위치
     private Vector3 playerPosition;
 
-    // 멀티를 위한 오브젝트
-    public MultiSpaceship multiSpaceship;
 
     private void Start()
     {
@@ -40,7 +40,7 @@ public class InteractionModule : MonoBehaviour
         spaceship = FindAnyObjectByType<Spaceship>();
 
         multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
-
+        multiplayer = GameObject.Find("Server").GetComponent<Multiplayer>();
         /*
         player = GameObject.Find("PlayerCharacter");
         playerPosition = player.GetComponent<Transform>().position;
@@ -116,10 +116,10 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
                 {
-                    if (isMulti)
+                    Debug.Log(multiplayer.isMultiplayer);
+                    if (multiplayer.isMultiplayer == true)
                     {
                         Module module = targetObject.GetComponent<Module>();
-                        Debug.Log("space" + module.idxX + " , " + module.idxZ + " , " + (int)ModuleType.LaserTurret);
                         multiSpaceship.SendCreateModule(module.idxX, module.idxZ, (int)ModuleType.LaserTurret);    // 바닥생성
                     }
                     else
@@ -153,7 +153,7 @@ public class InteractionModule : MonoBehaviour
         }
         else
         {
-            playerAnimator.SetBool("Repairing", false);
+            //playerAnimator.SetBool("Repairing", false);
         }
     }
 }

@@ -205,7 +205,7 @@ public class CreateModuleController : ReceiveController
     {
         if (this.GetAct())
         {
-            Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + moduleType);
+            Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
             multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
             this.SetAct(false);
         }
