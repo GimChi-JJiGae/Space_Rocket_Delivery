@@ -25,6 +25,8 @@ public class InteractionModule : MonoBehaviour
 
     private GameObject produceObject;
 
+    public SkillTreeNode skillTree;
+
     // 맞은 모듈 확인
     private Module struckModule;
 
@@ -41,6 +43,8 @@ public class InteractionModule : MonoBehaviour
 
         player = GameObject.Find("PlayerCharacter");
         playerPosition = player.GetComponent<Transform>().position;
+
+        skillTree = GetComponent<SkillTreeNode>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -114,6 +118,14 @@ public class InteractionModule : MonoBehaviour
         }
     }
 
+    private float CalculateRepairSpeed()
+    {
+        float baseRepairSpeed = 0.1f;
+        float repairSpeedLevel = skillTree.GetRepairSpeedLevel();
+        float repairSpeed = baseRepairSpeed + (0.1f * (repairSpeedLevel - 1));
+        return repairSpeed;
+    }
+
     private void Update()
     {
         if (playerInput.Interact)
@@ -162,8 +174,6 @@ public class InteractionModule : MonoBehaviour
 
         if (playerInput.RepairModule)
         {
-            playerAnimator.SetBool("Repairing", true);
-
             playerPosition = player.GetComponent<Transform>().position;
 
             int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
@@ -171,9 +181,13 @@ public class InteractionModule : MonoBehaviour
 
             struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
 
+            playerAnimator.SetBool("Repairing", true);
+
+            float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+
             if (struckModule.hp < 3)
             {
-                struckModule.hp += (0.2f * Time.deltaTime);
+                struckModule.hp += repairAmount;
             }
         }
         else
