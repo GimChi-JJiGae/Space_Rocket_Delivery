@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum PacketType
 {
@@ -28,6 +29,15 @@ public enum PacketType
     TURRET_STATUS,
     BASIC_TURRET,
 };
+
+public class DTOuser    // 유저 방 Enter 이후
+{
+    public string roomName;
+    public int userId;
+    public float x, y, z, r;
+    public string userNickName;
+}
+
 
 public class Controller : MonoBehaviour
 {
@@ -77,13 +87,25 @@ public class Controller : MonoBehaviour
                 case PacketType.CREATE_ROOM:
                     
                     createRoomController.ReceiveDTO(data);
-              
-                    Debug.Log("방생성 수신1");
                     createRoomController.SetAct(true);
-                    Debug.Log("방생성 수신2");
+                    Debug.Log("방생성 수신");
+                    
                     break;
-                case PacketType.PARTICIPATE_USER:
-                    enterRoomController.ReceiveDTO(data);
+                case PacketType.PARTICIPATE_ROOM:
+                    byte[] isSucess = SplitArray(data, 0, 1);
+                    byte[] userCount = SplitArray(data, 1, 4);
+                    int head = 5;
+                    for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
+                    {
+                        DTOuser user = new DTOuser();
+                        enterRoomController.newReceiveDTO(data, user, ref head);
+
+                        Debug.Log(user.userNickName);
+                        Debug.Log(user.userId);
+                        Debug.Log(user.roomName);
+                        Debug.Log("--------");
+                    }
+                    //enterRoomController.ReceiveDTO(data);
                     enterRoomController.SetAct(true);
                     break;
                 case PacketType.MOVE:
@@ -136,9 +158,15 @@ public class Controller : MonoBehaviour
             }
         }
         byte[] byteArray = byteList.ToArray();
-
         // 전송 시작
         socketClient.Send(byteArray);
+    }
+
+    public byte[] SplitArray(byte[] array, int startIndex, int length)
+    {
+        byte[] result = new byte[length];
+        Array.Copy(array, startIndex, result, 0, length);
+        return result;
     }
 }
 
@@ -169,7 +197,7 @@ public class CreateRoomController : ReceiveController
 {
     public string text;      // 텍스트
     public string text2;      // 텍스트
-    public string text3;      // 텍스트
+
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
@@ -177,7 +205,7 @@ public class CreateRoomController : ReceiveController
             // 여기에서 방이름을 로그로만 띄운 후
             Debug.Log(text);
             Debug.Log(text2);
-            Debug.Log(text3);
+
             this.SetAct(false);
         }
     }
@@ -186,13 +214,14 @@ public class CreateRoomController : ReceiveController
 // EnterRoomController
 public class EnterRoomController : ReceiveController
 {
-    public string text;      // 텍스트
+    
 
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {
-            Debug.Log(text);
+            Debug.Log("여기 도착?");
+            
             this.SetAct(false);
         }
     }
@@ -220,6 +249,14 @@ public class CreateModuleController : ReceiveController
 // 컨트롤러 정의
 public class ReceiveController
 {
+
+    static public byte[] SplitArray(byte[] array, int startIndex, int length)
+    {
+        byte[] result = new byte[length];
+        Array.Copy(array, startIndex, result, 0, length);
+        return result;
+    }
+
     private bool isAct = false;     // 활성화 되어있으면 실행시킨다.
 
     public void ReceiveDTO(byte[] data) // 데이터를 받으면 역직렬화 후 Class에 맞는 데이터로 변형시킨다.
@@ -279,6 +316,59 @@ public class ReceiveController
         }
     }
 
+    public void newReceiveDTO<T>(byte[] data, T c, ref int mHead)
+    {
+        Type type = typeof(T);
+        FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+        foreach (FieldInfo field in fields)
+        {
+            Type t = field.FieldType;
+            if (t.Equals(typeof(int)))
+            {
+                //Console.WriteLine("인트형");
+
+                //배열 헤드부터 4바이트 만큼 자름
+                byte[] intByte = SplitArray(data, mHead, 4);
+                field.SetValue(c, BitConverter.ToInt32(intByte));
+
+                //헤드 올림
+                mHead += sizeof(int);
+                //field.SetValue(c, 100);
+            }
+            else if (t.Equals(typeof(float)))
+            {
+                //Console.WriteLine("실수형");
+
+                //배열 헤드부터 4바이트 만큼 자름
+                byte[] floatByte = SplitArray(data, mHead, 4);
+                field.SetValue(c, BitConverter.ToSingle(floatByte));
+
+                //헤드 올림
+                mHead += sizeof(float);
+                //field.SetValue(c, 100);
+            }
+            else if (t.Equals(typeof(string)))
+            {
+                //Console.WriteLine("문자열");
+                //4바이트만큼 자름
+                byte[] intByte = SplitArray(data, mHead, 4);
+                int size = BitConverter.ToInt32(intByte);
+                mHead += sizeof(int);
+
+
+                //앞서 얻은 크기만큼 배열을 자른다.
+
+                byte[] stringByte = SplitArray(data, mHead, size);
+                string stringValue = Encoding.UTF8.GetString(stringByte);
+                field.SetValue(c, stringValue);
+
+                mHead += size;
+            }
+        }
+
+    }
+
+   
     public bool GetAct()
     {
         return isAct;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MultiLandingPage : MonoBehaviour
@@ -35,14 +36,17 @@ public class MultiLandingPage : MonoBehaviour
         QuitGameBtn.onClick.AddListener(OnApplicationQuit);
     }
 
+   
     void OnCreateRoom()
     {
         Debug.Log("OnCreateRoom");
         controller.Send(PacketType.CREATE_ROOM, "111", "222");
+        SceneManager.LoadScene("WaitingRoom");
     }
 
     void OnEnterRoom()
     {
+        controller.Send(PacketType.PARTICIPATE_USER, "닉네임", "meayln");
         Debug.Log("OnEnterRoom: " + enterRoomInput.text);
     }
 
