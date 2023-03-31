@@ -8,8 +8,8 @@ public class Turret : MonoBehaviour
 {
 
     
-    public float spawnRate = 0.2f;              // 0.2초마다 발사되는 안보이는 총알
-    public float timeAfterSpawn = 0f;
+    //public float spawnRate = 0.2f;              // 0.2초마다 발사되는 안보이는 총알
+    //public float timeAfterSpawn = 0f;
 
 
     public ParticleSystem lazerParticle;
