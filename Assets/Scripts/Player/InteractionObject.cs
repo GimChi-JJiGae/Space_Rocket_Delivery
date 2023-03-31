@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class InteractionObject : MonoBehaviour
@@ -67,7 +68,18 @@ public class InteractionObject : MonoBehaviour
     private void PickUpObject(GameObject obj)
     {
         obj.transform.parent = playerHead.transform;
-        obj.transform.SetPositionAndRotation(playerHead.transform.position, playerHead.transform.rotation);
+
+        if (obj.name == "Kit")
+        {
+            Quaternion rotation = playerHead.transform.rotation;
+            rotation.eulerAngles = new Vector3(90f, rotation.eulerAngles.y, rotation.eulerAngles.z);
+
+            obj.transform.SetPositionAndRotation(playerHead.transform.position, rotation);
+        }
+        else
+        {
+            obj.transform.SetPositionAndRotation(playerHead.transform.position, playerHead.transform.rotation);
+        }
 
         obj.GetComponent<Rigidbody>().isKinematic = true;
         obj.GetComponent<MeshCollider>().enabled = false;
@@ -99,13 +111,22 @@ public class InteractionObject : MonoBehaviour
 
     private void SaveObject(GameObject obj)
     {
-        Transform saveObject = interactionModule.inputObject.GetComponentInParent<Factory>().transform.Find("Input");
+        Factory factory = interactionModule.inputObject.GetComponentInParent<Factory>();
+        if (obj.name == "Fuel")
+        {
+            factory.destroyFuel++;
+        }
+        else if (obj.name == "Ore")
+        {
+            factory.destroyOre++;
+        }
 
-        obj.transform.parent = saveObject;
+        Destroy(obj);
 
-        obj.SetActive(false);
         currentObject = null;
         isHoldingObject = false;
+
+        factory.ProduceModule();
     }
 
     private void Update()
@@ -127,7 +148,14 @@ public class InteractionObject : MonoBehaviour
                     }
                     else if (interactionModule.inputObject.GetComponentInParent<Factory>())
                     {
-                        SaveObject(currentObject);
+                        if (currentObject.name == "Fuel" || currentObject.name == "Ore")
+                        {
+                            SaveObject(currentObject);
+                        }
+                        else
+                        {
+                            DropObject(currentObject);
+                        }
                     }
                     else
                     {
