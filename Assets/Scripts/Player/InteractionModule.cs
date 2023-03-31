@@ -22,32 +22,34 @@ public class InteractionModule : MonoBehaviour
     private GameObject resourceObject;
 
     public GameObject inputObject;
+    public SkillTreeNode skillTree;
+
 
     private void OnTriggerExit(Collider other)
     {
         if (!interactionObject.isHoldingObject && targetObject != null)
         {
-                Module module = targetObject.GetComponentInParent<Module>();
+            Module module = targetObject.GetComponentInParent<Module>();
 
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
-            }
-        
-        if (resourceObject != null)
+            if (module.moduleType == ModuleType.Blueprint)
             {
-            resourceObject = null;
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
             }
+
+            matchObject = null;
+            targetObject = null;
+        }
+
+        if (resourceObject != null)
+        {
+            resourceObject = null;
+        }
 
         if (inputObject != null)
         {
-            Debug.Log(2);
             inputObject = null;
         }
+    }
 
     // 맞은 모듈 확인
     private Module struckModule;
@@ -87,17 +89,18 @@ public class InteractionModule : MonoBehaviour
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
         }
-        
+
         if (other.gameObject.CompareTag("Change"))
-            {
+        {
             resourceObject = other.gameObject;
             Debug.Log(1);
-            }
+        }
 
         if (other.gameObject.CompareTag("Input"))
         {
             inputObject = other.gameObject;
         }
+    }
 
     private void Start()
     {
@@ -109,6 +112,16 @@ public class InteractionModule : MonoBehaviour
 
         player = GameObject.Find("PlayerCharacter");
         playerPosition = player.GetComponent<Transform>().position;
+
+        skillTree = GetComponent<SkillTreeNode>();
+
+    }
+    private float CalculateRepairSpeed()
+    {
+        float baseRepairSpeed = 0.1f;
+        float repairSpeedLevel = skillTree.GetRepairSpeedLevel();
+        float repairSpeed = baseRepairSpeed + (0.1f * (repairSpeedLevel - 1));
+        return repairSpeed;
     }
 
     private void Update()
@@ -117,14 +130,14 @@ public class InteractionModule : MonoBehaviour
         {
             if (!interactionObject.isHoldingObject)
             {
-            if (matchObject != null && targetObject != null)
-            {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                if (matchObject != null && targetObject != null)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);    // 바닥생성
-                    spaceship.MakeWall(targetObject);
+                    if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                    {
+                        targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);    // 바닥생성
+                        spaceship.MakeWall(targetObject);
+                    }
                 }
-            }
                 else if (resourceObject != null)
                 {
                     resourceObject.GetComponent<ResourceChanger>().SwitchResource();
@@ -139,14 +152,14 @@ public class InteractionModule : MonoBehaviour
             else
             {
                 if (inputObject != null)
-            {
+                {
                     GameObject insertObject = interactionObject.currentObject;
                     if (insertObject.name == "Fuel" && inputObject.GetComponentInParent<Oxygenator>())
-                {
+                    {
                         inputObject.GetComponentInParent<Oxygenator>().Increase();
+                    }
                 }
             }
-        }
         }
 
         if (playerInput.RepairModule)
@@ -160,9 +173,11 @@ public class InteractionModule : MonoBehaviour
 
             playerAnimator.SetBool("Repairing", true);
 
+
+            float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
             if (struckModule.hp < 3)
             {
-                struckModule.hp += 0.1f;
+                struckModule.hp += repairAmount; // 모듈 수리
             }
         }
         else
