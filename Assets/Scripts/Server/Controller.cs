@@ -75,8 +75,12 @@ public class Controller : MonoBehaviour
             switch (header)
             {
                 case PacketType.CREATE_ROOM:
+                    
                     createRoomController.ReceiveDTO(data);
+              
+                    Debug.Log("방생성 수신1");
                     createRoomController.SetAct(true);
+                    Debug.Log("방생성 수신2");
                     break;
                 case PacketType.PARTICIPATE_USER:
                     enterRoomController.ReceiveDTO(data);
@@ -170,6 +174,7 @@ public class CreateRoomController : ReceiveController
     {
         if (this.GetAct())
         {
+            // 여기에서 방이름을 로그로만 띄운 후
             Debug.Log(text);
             Debug.Log(text2);
             Debug.Log(text3);
@@ -230,6 +235,7 @@ public class ReceiveController
 
             if (type.Equals(typeof(int)))
             {
+
                 byte[] result = new byte[sizeof(int)];
                 Array.Copy(data, n, result, 0, sizeof(int));
                 field.SetValue(this, BitConverter.ToInt32(result));
@@ -251,18 +257,24 @@ public class ReceiveController
             }
             else if (type.Equals(typeof(string))) // 추가된 부분
             {
+                
                 byte[] stringLengthBytes = new byte[sizeof(int)];
                 Array.Copy(data, n, stringLengthBytes, 0, sizeof(int));
                 int stringLength = BitConverter.ToInt32(stringLengthBytes);
                 n += sizeof(int);
 
+                Debug.Log(stringLength);
                 byte[] stringBytes = new byte[stringLength];
                 Array.Copy(data, n, stringBytes, 0, stringLength);
                 
                 n += stringLength;
-
+                
                 string stringValue = Encoding.UTF8.GetString(stringBytes);
                 field.SetValue(this, stringValue);
+
+                Debug.Log(stringValue);
+                
+
             }
         }
     }
