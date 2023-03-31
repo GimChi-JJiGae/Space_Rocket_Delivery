@@ -262,8 +262,8 @@ public class ReceiveController
                 Array.Copy(data, n, stringLengthBytes, 0, sizeof(int));
                 int stringLength = BitConverter.ToInt32(stringLengthBytes);
                 n += sizeof(int);
-
-                Debug.Log(stringLength);
+                
+                Debug.Log("스트링 렝스" + stringLength);
                 byte[] stringBytes = new byte[stringLength];
                 Array.Copy(data, n, stringBytes, 0, stringLength);
                 
