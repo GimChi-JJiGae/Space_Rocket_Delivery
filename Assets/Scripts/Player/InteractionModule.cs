@@ -27,27 +27,27 @@ public class InteractionModule : MonoBehaviour
     {
         if (!interactionObject.isHoldingObject && targetObject != null)
         {
-                Module module = targetObject.GetComponentInParent<Module>();
+            Module module = targetObject.GetComponentInParent<Module>();
 
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
-            }
-        
-        if (resourceObject != null)
+            if (module.moduleType == ModuleType.Blueprint)
             {
-            resourceObject = null;
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
             }
+
+            matchObject = null;
+            targetObject = null;
+        }
+
+        if (resourceObject != null)
+        {
+            resourceObject = null;
+        }
 
         if (inputObject != null)
         {
-            Debug.Log(2);
             inputObject = null;
         }
+    }
 
     // 맞은 모듈 확인
     private Module struckModule;
@@ -87,17 +87,18 @@ public class InteractionModule : MonoBehaviour
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
         }
-        
+
         if (other.gameObject.CompareTag("Change"))
-            {
+        {
             resourceObject = other.gameObject;
             Debug.Log(1);
-            }
+        }
 
         if (other.gameObject.CompareTag("Input"))
         {
             inputObject = other.gameObject;
         }
+    }
 
     private void Start()
     {
