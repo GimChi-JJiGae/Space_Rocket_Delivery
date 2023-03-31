@@ -32,10 +32,10 @@ public class Factory : MonoBehaviour
         currentType = PrintType.Kit;
         currentModule = null;
 
-        kitModule = Resources.Load<GameObject>();
-        shotgunModule = Resources.Load<GameObject>();
-        laserModule = Resources.Load<GameObject>();
-        shieldModule = Resources.Load<GameObject>();
+        kitModule = Resources.Load<GameObject>("");
+        shotgunModule = Resources.Load<GameObject>("");
+        laserModule = Resources.Load<GameObject>("Rosources/Laser");
+        shieldModule = Resources.Load<GameObject>("");
 
         neededOre = 0;
         neededFuel = 0;
