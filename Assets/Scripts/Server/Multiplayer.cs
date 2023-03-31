@@ -56,10 +56,6 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-    }
-
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
@@ -79,7 +75,6 @@ public class Multiplayer : MonoBehaviour
 
         // 캐릭터 모듈 연결
         player.AddComponent<PlayerInput>();
-        //player.AddComponent<PlayerInteraction>();
         player.AddComponent<PlayerMovement>();
 
         // 카메라 연동

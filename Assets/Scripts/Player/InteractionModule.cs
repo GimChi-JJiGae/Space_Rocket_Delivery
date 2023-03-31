@@ -1,10 +1,15 @@
+using ResourceNamespace;
 using System;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
     private PlayerInput playerInput;
+    private Animator playerAnimator;
+    private InteractionObject interactionObject;
     private GameObject player;
 
     private Spaceship spaceship;
@@ -12,7 +17,43 @@ public class InteractionModule : MonoBehaviour
     // Edge 체크를 위한 오브젝트
     private GameObject matchObject;
     private GameObject targetObject;
-    private bool isRepairing;
+
+    // Resource 변경을 위한 오브젝트
+    private GameObject resourceObject;
+
+    public GameObject inputObject;
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!interactionObject.isHoldingObject && targetObject != null)
+        {
+                Module module = targetObject.GetComponentInParent<Module>();
+
+                if (module.moduleType == ModuleType.Blueprint)
+                {
+                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
+                }
+
+                matchObject = null;
+                targetObject = null;
+            }
+        
+        if (resourceObject != null)
+            {
+            resourceObject = null;
+            }
+
+        if (inputObject != null)
+        {
+            Debug.Log(2);
+            inputObject = null;
+        }
+
+    // 맞은 모듈 확인
+    private Module struckModule;
+
+    // player 위치
+    private Vector3 playerPosition;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -46,42 +87,23 @@ public class InteractionModule : MonoBehaviour
                 targetObject.GetComponent<Module>().floorModule.SetActive(true);
             }
         }
-    }
-    private Animator playerAnimator;
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (!interactionObject.isHoldingObject)
-        {
-            if (targetObject != null)
+        
+        if (other.gameObject.CompareTag("Change"))
             {
-                Module module = targetObject.GetComponentInParent<Module>();
-
-                if (module.moduleType == ModuleType.Blueprint)
-                {
-                    targetObject.GetComponent<Module>().floorModule.SetActive(false);
-                }
-
-                matchObject = null;
-                targetObject = null;
+            resourceObject = other.gameObject;
+            Debug.Log(1);
             }
+
+        if (other.gameObject.CompareTag("Input"))
+        {
+            inputObject = other.gameObject;
         }
-    }
-    private InteractionObject interactionObject;
-
-    // 맞은 모듈 확인
-    private Module struckModule;
-
-    // player 위치
-    private Vector3 playerPosition;
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
         interactionObject = GetComponent<InteractionObject>();
-
-        isRepairing = playerAnimator.GetBool("Repairing");
 
         spaceship = FindAnyObjectByType<Spaceship>();
 
@@ -93,6 +115,8 @@ public class InteractionModule : MonoBehaviour
     {
         if (playerInput.Interact)
         {
+            if (!interactionObject.isHoldingObject)
+            {
             if (matchObject != null && targetObject != null)
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
@@ -101,7 +125,28 @@ public class InteractionModule : MonoBehaviour
                     spaceship.MakeWall(targetObject);
                 }
             }
-            
+                else if (resourceObject != null)
+                {
+                    resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+                    Debug.Log(3);
+
+                    if (resourceObject.GetComponentInParent<Supplier>() != null)
+                    {
+                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    }
+                }
+            }
+            else
+            {
+                if (inputObject != null)
+            {
+                    GameObject insertObject = interactionObject.currentObject;
+                    if (insertObject.name == "Fuel" && inputObject.GetComponentInParent<Oxygenator>())
+                {
+                        inputObject.GetComponentInParent<Oxygenator>().Increase();
+                }
+            }
+        }
         }
 
         if (playerInput.RepairModule)
@@ -118,7 +163,7 @@ public class InteractionModule : MonoBehaviour
             if (struckModule.hp < 3)
             {
                 struckModule.hp += 0.1f;
-    }
+            }
         }
         else
         {
