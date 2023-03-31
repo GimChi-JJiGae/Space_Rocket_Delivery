@@ -18,7 +18,6 @@ public class Oxygenator : MonoBehaviour
     private void Decrease()
     {
         oxygen -= decreaseAmount;
-        Debug.Log(oxygen);
     }
 
     public void Increase()
@@ -29,7 +28,5 @@ public class Oxygenator : MonoBehaviour
         {
             oxygen = 100;
         }
-
-        Debug.Log(oxygen);
     }
 }

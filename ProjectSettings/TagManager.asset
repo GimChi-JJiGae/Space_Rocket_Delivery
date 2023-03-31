@@ -12,6 +12,8 @@ TagManager:
   - RangedEnemy
   - Change
   - Input
+  - Insert
+  - Produce
   layers:
   - Default
   - TransparentFX
