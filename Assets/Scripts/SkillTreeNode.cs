@@ -54,7 +54,10 @@ public class SkillTreeNode : MonoBehaviour
         turretDamageLevelText.text = "" + currentTurretDamageLevel;
         Debug.Log('4');
     }
-
+    public int GetCurrentTurretDamageLevel()
+    {
+        return currentTurretDamageLevel;
+    }
     public void UpgradeSupplySpeed()
     {
         currentSupplySpeedLevel++;
