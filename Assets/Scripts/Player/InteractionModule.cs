@@ -151,7 +151,7 @@ public class InteractionModule : MonoBehaviour
             {
                 produceObject.GetComponentInParent<Factory>().SwitchModule();
             }
-            
+
             if (interactionObject.isHoldingObject)
             {
                 if (inputObject != null)
