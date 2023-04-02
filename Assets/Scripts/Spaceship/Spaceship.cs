@@ -173,6 +173,7 @@ public class Spaceship : MonoBehaviour
             rightModule.wallLeft.SetActive(true);
         }
     }
+
 }
 
 

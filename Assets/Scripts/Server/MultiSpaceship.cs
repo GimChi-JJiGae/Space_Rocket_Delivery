@@ -8,11 +8,17 @@ public class MultiSpaceship : MonoBehaviour
     Spaceship spaceship;
     Controller controller;
     InteractionModule interactionModule;
-    
+
+    public GameObject[] resourceList = new GameObject[1000];
+    int resourceCount = 0;
+
+    public delegate void EventResourceSpownHandler();
+    public event EventResourceSpownHandler eventResourceSpown;
+
     void Start()
     {
-        spaceship = GameObject.Find("Spaceship").GetComponent<Spaceship>();
         controller = GetComponent<Controller>();
+        StartCoroutine(SendCreateResource());
     }
 
     void Update()
@@ -32,13 +38,22 @@ public class MultiSpaceship : MonoBehaviour
         spaceship.MakeWall(targetObject);
     }
 
-    IEnumerator SendCreateResource(int xIdx, int zIdx, int moduleType)
+    IEnumerator SendCreateResource()
     {
         while (true)
         {
             yield return new WaitForSeconds(10.0f); // 0.1초마다 반복
                                                     // 반복해서 호출할 함수 호출
-            controller.Send(PacketType.MODULE_CONTROL, xIdx, zIdx, moduleType);
+            controller.Send(PacketType.OBJECT_CONTROL, resourceCount);
+            resourceCount++;
+        }
+    }
+
+    public void ReceiveCreateResource()
+    {
+        if (eventResourceSpown != null)
+        {
+            eventResourceSpown.Invoke();
         }
     }
 }

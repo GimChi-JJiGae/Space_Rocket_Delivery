@@ -16,12 +16,12 @@ public enum PacketType
     PARTICIPATE_USER, // 유저가 방에 입장한다는 것
     DEPARTURE_USER,
     PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
-    MOVE = 200,
+    MOVE,
     MODULE_CONTROL = 222,
     REPLICATION,
 
     OBJECT_MOVE,
-    OBJECT_CONTROL,
+    OBJECT_CONTROL = 212,
     
     MODULE_STATUS,
     CURRENT_POSITION,
@@ -45,6 +45,7 @@ public class Controller : MonoBehaviour
     CreateRoomController createRoomController;      // 방 생성을 위한 컨트롤러
     EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
+    CreateResourceController createResourceController; // 자원 추가를 위한 컨트롤러
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
@@ -63,6 +64,7 @@ public class Controller : MonoBehaviour
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
+        createResourceController = new CreateResourceController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -76,6 +78,7 @@ public class Controller : MonoBehaviour
         enterRoomController.Service();
         playerPositionController.Service(multiplayer);
         createModuleController.Service(multiSpaceship);
+        createResourceController.Service(multiSpaceship);
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -115,6 +118,11 @@ public class Controller : MonoBehaviour
                 case PacketType.MODULE_CONTROL:
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
+                    break;
+                case PacketType.OBJECT_CONTROL:
+                    Debug.Log("CreateResourceController : 자원 생성");
+                    createResourceController.ReceiveDTO(data);
+                    createResourceController.SetAct(true);
                     break;
             }
         }
@@ -241,6 +249,21 @@ public class CreateModuleController : ReceiveController
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
             multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
+            this.SetAct(false);
+        }
+    }
+}
+
+// 모듈 컨트롤러
+public class CreateResourceController : ReceiveController
+{
+    public int rIdx;
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            Debug.Log("CreateResourceController : 자원 생성");
+            multiSpaceship.ReceiveCreateResource();
             this.SetAct(false);
         }
     }
