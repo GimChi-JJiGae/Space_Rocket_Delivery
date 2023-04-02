@@ -88,9 +88,11 @@ public class Controller : MonoBehaviour
                     
                     createRoomController.ReceiveDTO(data);
                     createRoomController.SetAct(true);
+                    PlayerPrefs.SetString("roomCode", createRoomController.Service());
                     Debug.Log("방생성 수신");
                     
                     break;
+
                 case PacketType.PARTICIPATE_ROOM:
                     byte[] isSucess = SplitArray(data, 0, 1);
                     byte[] userCount = SplitArray(data, 1, 4);
@@ -100,6 +102,15 @@ public class Controller : MonoBehaviour
                         DTOuser user = new DTOuser();
                         enterRoomController.newReceiveDTO(data, user, ref head);
 
+                        if (PlayerPrefs.GetString("userNickname").Equals(user.userNickName))
+                        {
+                            Debug.Log("자기 자신의 정보");
+                            //PlayerPrefs.SetString("userNickname", user.userNickName);
+                            PlayerPrefs.SetInt("userId", user.userId);
+                            PlayerPrefs.SetString("roomCode", user.roomName);
+
+                        }
+                        Debug.Log("다른 유저 정보");
                         Debug.Log(user.userNickName);
                         Debug.Log(user.userId);
                         Debug.Log(user.roomName);
@@ -195,19 +206,23 @@ public class PlayerPositionController : ReceiveController
 // CreateRoomController
 public class CreateRoomController : ReceiveController
 {
-    public string text;      // 텍스트
+    public string roomCode;      // 텍스트
     public string text2;      // 텍스트
 
-    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
+    public new String Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {
             // 여기에서 방이름을 로그로만 띄운 후
-            Debug.Log(text);
+            
+            Debug.Log(roomCode);
             Debug.Log(text2);
 
             this.SetAct(false);
+
+            return roomCode;    // 방 코드 리턴
         }
+        return "false";
     }
 }
 
