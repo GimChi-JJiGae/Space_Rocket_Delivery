@@ -25,6 +25,8 @@ public class InteractionModule : MonoBehaviour
 
     public GameObject produceObject;
 
+    public GameObject turretObject;
+
     public SkillTreeNode skillTree;
 
     // 맞은 모듈 확인
@@ -88,6 +90,10 @@ public class InteractionModule : MonoBehaviour
         {
             produceObject = other.gameObject;
         }
+        else if (other.gameObject.CompareTag("Turret"))
+        {
+            turretObject = other.gameObject;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -115,6 +121,10 @@ public class InteractionModule : MonoBehaviour
         else if (other.gameObject.CompareTag("Produce"))
         {
             produceObject = null;
+        }
+        else if (other.gameObject.CompareTag("Turret"))
+        {
+            turretObject = null;
         }
     }
 
@@ -193,6 +203,10 @@ public class InteractionModule : MonoBehaviour
                     {
                         inputObject.GetComponentInParent<Factory>().ProduceModule();
                     }
+                }
+                else if (turretObject != null)
+                {
+                    UpgradeModule();
                 }
             }
         }

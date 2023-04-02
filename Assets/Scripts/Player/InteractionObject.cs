@@ -140,12 +140,13 @@ public class InteractionObject : MonoBehaviour
             {
                 if (interactionModule.targetObject != null)
                 {
-                    if (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield")
-                    {
-                        InsertObject(currentObject);
-                        currentObject = null;
-                    }
-
+                    InsertObject(currentObject);
+                    currentObject = null;
+                }
+                else if (interactionModule.turretObject != null)
+                {
+                    InsertObject(currentObject);
+                    currentObject = null;
                 }
                 else if (interactionModule.inputObject != null)
                 {
