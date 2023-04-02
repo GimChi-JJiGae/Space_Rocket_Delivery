@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   decreaseAmount: 0.834
   increaseAmount: 41.7
+  oxygenBarFilled: {fileID: 0}
 --- !u!1 &7281680284185072155
 GameObject:
   m_ObjectHideFlags: 0
