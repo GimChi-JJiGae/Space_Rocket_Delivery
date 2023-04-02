@@ -8,11 +8,11 @@ public class Spawner : MonoBehaviour
     public int[] enemyHealths;
     public GameObject explosionVFX;
     public float speed = 5f;
-    public AudioClip enemyDestroyedSound;
     public float spawnInterval = 5f;
-    public float difficultyTimeStep = 300f; // 난이도가 증가하는 시간 간격 (초)
     private float nextDifficultyIncreaseTime; // 다음 난이도 증가 시간
+    public float difficultyTimeStep = 300f; // 난이도가 증가하는 시간 간격 (초)
     private int difficultyLevel = 0; // 현재 난이도 레벨
+    public AudioClip enemyDestroyedSound;
     public GameObject[] enemiesTier2; // 레벨 2에 등장하는 적의 프리팹 배열
     public GameObject[] enemiesTier3; // 레벨 3에 등장하는 적의 프리팹 배열
     public int[] enemyHealthsTier2; // 레벨 2 적 체력 배열
@@ -116,11 +116,11 @@ public class Spawner : MonoBehaviour
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
-            collider.size = new Vector3(5, 3, 8); // 원거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // 원거리 적의 경우 적절한 크기로 조정
         }
         else
         {
-            collider.size = new Vector3(3, 2, 3); // 근거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // 근거리 적의 경우 적절한 크기로 조정
         }
 
         Rigidbody rb = enemy.AddComponent<Rigidbody>();
@@ -134,8 +134,6 @@ public class Spawner : MonoBehaviour
 
         enemy.transform.rotation = Quaternion.LookRotation(direction);
     }
-
-
     public GameObject FindClosestWall() // Add this method
     {
         GameObject[] wallObjects;
@@ -177,8 +175,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-
-        if (health == 0)
+        if(health < 0)
         {
             DestroyEnemy();
         }
@@ -236,7 +233,6 @@ public class EnemyController : MonoBehaviour
         }
         Destroy(gameObject);
     }
-
 
     // 공격
     public void Attack(Collision collision)

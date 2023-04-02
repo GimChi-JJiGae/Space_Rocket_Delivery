@@ -8,10 +8,13 @@ TagManager:
   - Edge
   - Spaceship
   - Wall
-  - Building
   - enemy
   - RangedEnemy
+  - Change
+  - Input
   - Insert
+  - Produce
+  - Turret
   layers:
   - Default
   - TransparentFX

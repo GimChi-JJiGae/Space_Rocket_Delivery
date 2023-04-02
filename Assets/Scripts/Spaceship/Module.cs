@@ -13,15 +13,18 @@ public class Module : MonoBehaviour
     public int idxZ; // y순번
     public enum ModuleType
     {
-        Blueprint = 0,      // 청사진
-        Engine = 1,         // 엔진
-        Cargo = 2,          // 화물
-        Factory = 3,        // 제작기
-        Supplier = 4,       // 생성기
-        Oxygenator = 5,     // 산소재생기
-        DefaultTurret = 6,  // 기본터렛
-        LaserTurret = 7,    // 레이저터렛
-        BasicTurret = 8     // 제공되는 커다란 기본 터렛
+        Blueprint,      // 청사진
+        Engine,         // 엔진
+        Cargo,          // 화물
+        Factory,        // 제작기
+        Supplier,       // 생성기
+        Oxygenator,     // 산소재생기
+        DefaultTurret,  // 기본터렛
+        LaserTurret,    // 레이저터렛
+        BasicTurret,     // 제공되는 커다란 기본 터렛
+        ShotgunTurret,   // 샷건터렛
+        ShieldTurret
+
     }
     public ModuleType moduleType;   // 모듈타입
 
@@ -63,12 +66,6 @@ public class Module : MonoBehaviour
         hitArea = transform.Find("HitArea").gameObject;
         hitArea.SetActive(false);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
 
     // 모듈 생성
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
@@ -115,6 +112,12 @@ public class Module : MonoBehaviour
             case ModuleType.BasicTurret:    // 기존 제공 터렛
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BasicTurret");
                 break;
+            case ModuleType.ShotgunTurret:    // 샷건터렛
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShotgunTurret");
+                break;
+            case ModuleType.ShieldTurret:
+                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShieldTurret");
+                break;
             default:
                 floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
                 break;
@@ -138,10 +141,6 @@ public class Module : MonoBehaviour
     }
 
     void UpgradeModule()
-    {
-
-    }
-    void DeleteModule()
     {
 
     }
