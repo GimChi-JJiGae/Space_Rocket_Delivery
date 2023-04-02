@@ -67,12 +67,6 @@ public class Module : MonoBehaviour
         hitArea.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-
     // 모듈 생성
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
@@ -147,10 +141,6 @@ public class Module : MonoBehaviour
     }
 
     void UpgradeModule()
-    {
-
-    }
-    void DeleteModule()
     {
 
     }

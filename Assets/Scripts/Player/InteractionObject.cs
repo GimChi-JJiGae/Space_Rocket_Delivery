@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using static Module;
 
 public class InteractionObject : MonoBehaviour
 {
@@ -97,7 +98,6 @@ public class InteractionObject : MonoBehaviour
         obj.GetComponent<Rigidbody>().isKinematic = false;
         obj.GetComponent<MeshCollider>().enabled = true;
 
-        currentObject = null;
         isHoldingObject = false;
     }
 
@@ -123,7 +123,6 @@ public class InteractionObject : MonoBehaviour
 
         Destroy(obj);
 
-        currentObject = null;
         isHoldingObject = false;
 
         factory.ProduceModule();
@@ -139,7 +138,16 @@ public class InteractionObject : MonoBehaviour
             }
             else if (isHoldingObject)
             {
-                if (interactionModule.inputObject != null)
+                if (interactionModule.targetObject != null)
+                {
+                    if (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield")
+                    {
+                        InsertObject(currentObject);
+                        currentObject = null;
+                    }
+
+                }
+                else if (interactionModule.inputObject != null)
                 {
                     if (currentObject.name == "Fuel" && interactionModule.inputObject.GetComponentInParent<Oxygenator>())
                     {
@@ -151,20 +159,24 @@ public class InteractionObject : MonoBehaviour
                         if (currentObject.name == "Fuel" || currentObject.name == "Ore")
                         {
                             SaveObject(currentObject);
+                            currentObject = null;
                         }
                         else
                         {
                             DropObject(currentObject);
+                            currentObject = null;
                         }
                     }
                     else
                     {
                         DropObject(currentObject);
+                        currentObject = null;
                     }
                 }
                 else
                 {
                     DropObject(currentObject);
+                    currentObject = null;
                 }
             }
         }

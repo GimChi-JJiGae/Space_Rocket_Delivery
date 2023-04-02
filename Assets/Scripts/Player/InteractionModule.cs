@@ -15,15 +15,15 @@ public class InteractionModule : MonoBehaviour
     private GameObject player;
 
     // Edge 체크를 위한 오브젝트
-    private GameObject matchObject;
-    private GameObject targetObject;
+    public GameObject matchObject;
+    public GameObject targetObject;
 
     // Resource 변경을 위한 오브젝트
-    private GameObject resourceObject;
+    public GameObject resourceObject;
 
     public GameObject inputObject;
 
-    private GameObject produceObject;
+    public GameObject produceObject;
 
     public SkillTreeNode skillTree;
 
@@ -126,16 +126,40 @@ public class InteractionModule : MonoBehaviour
         return repairSpeed;
     }
 
+    public void UpgradeModule()
+    {
+
+    }
+
+    public void MakeModule()
+    {
+        if (interactionObject.currentObject.name == "Laser")
+        {
+            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+        }
+        else if (interactionObject.currentObject.name == "Shotgun")
+        {
+            targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+        }
+        else if (interactionObject.currentObject.name == "Shield")
+        {
+            targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+        }
+        spaceship.MakeWall(targetObject);
+    }
+
     private void Update()
     {
         if (playerInput.Interact)
         {
             if (matchObject != null && targetObject != null)
             {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
-                    targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);    // 바닥생성
-                    spaceship.MakeWall(targetObject);
+                    if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
+                    {
+                        MakeModule();
+                    }
                 }
             }
             else if (resourceObject != null)
@@ -150,6 +174,7 @@ public class InteractionModule : MonoBehaviour
             else if (produceObject != null)
             {
                 produceObject.GetComponentInParent<Factory>().SwitchModule();
+                produceObject.GetComponentInParent<Factory>().ProduceModule();
             }
 
             if (interactionObject.isHoldingObject)
