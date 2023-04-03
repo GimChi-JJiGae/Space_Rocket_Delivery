@@ -32,7 +32,6 @@ public class Spawner : MonoBehaviour
         {
             spawnEnemy();
             yield return new WaitForSeconds(spawnInterval);
-            Debug.Log("Enemy spawned at: " + Time.time); // Add this line
         }
     }
 
@@ -120,7 +119,7 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // 근거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(1f, 1f, 1f); // 근거리 적의 경우 적절한 크기로 조정
         }
 
         Rigidbody rb = enemy.AddComponent<Rigidbody>();
@@ -175,7 +174,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        if(health < 0)
+        if (health < 0)
         {
             DestroyEnemy();
         }

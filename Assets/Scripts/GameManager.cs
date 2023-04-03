@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject gameoverText;
     public Text timeText;
     public Text recordText;
     public PlayerInput playerInput;
@@ -13,11 +12,18 @@ public class GameManager : MonoBehaviour
     public GameObject skillTreePrefab;
 
     private float surviveTime;
-    private bool isGameover;
+    public bool isGameover;
     private bool isSkillTreeOpen;
     private float lastSkillTreeOpenTime;
     private GameObject skillTreeInstance;
     private Text gameUITimeText; // 추가된 코드
+    public GameObject gameoverCanvasPrefab;
+
+
+    public bool IsGameOver()
+    {
+        return isGameover;
+    }
 
     private void Start()
     {
@@ -52,9 +58,8 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
+        Debug.Log('9');
         isGameover = true;
-        gameoverText.SetActive(true);
-
         float bestTime = PlayerPrefs.GetFloat("BestTime");
 
         if (surviveTime > bestTime)
@@ -63,8 +68,9 @@ public class GameManager : MonoBehaviour
 
             PlayerPrefs.SetFloat("BestTime", bestTime);
         }
-
-        recordText.text = "Best Time: " + (int)bestTime;
+        Time.timeScale = 0;
+        recordText.text = "Your Score: " + (int)surviveTime;
+        OpenGameOverCanvas();
     }
 
     public void OpenSkillTree()
@@ -91,4 +97,18 @@ public class GameManager : MonoBehaviour
             skillTreeInstance.SetActive(false);
         }
     }
+    public void OpenGameOverCanvas()
+    {
+        if (gameoverCanvasPrefab != null)
+        {
+            GameObject gameoverCanvas = Instantiate(gameoverCanvasPrefab);
+            gameoverCanvas.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Gameover Canvas Prefab is not assigned in the inspector.");
+        }
+    }
+
+
 }
