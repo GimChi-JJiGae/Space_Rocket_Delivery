@@ -20,23 +20,25 @@ public class InteractionModule : MonoBehaviour
     private Spaceship spaceship;
     private GameObject player;
 
-    // Resource 변경을 위한 오브젝트
-    public GameObject resourceObject;
-
     // Edge 체크를 위한 오브젝트
     public GameObject matchObject;
     public GameObject targetObject;
 
+    // Resource 변경을 위한 오브젝트
+    public GameObject resourceObject;
+
     public GameObject inputObject;
 
-    // 맞은 모듈 확인
-    private Module struckModule;
+    public GameObject produceObject;
 
     public GameObject turretObject;
 
+    public GameObject respawnObject;
+
     public SkillTreeNode skillTree;
 
-    public GameObject produceObject;
+    // 맞은 모듈 확인
+    private Module struckModule;
 
     // player 위치
     private Vector3 playerPosition;
@@ -105,6 +107,10 @@ public class InteractionModule : MonoBehaviour
         {
             turretObject = other.gameObject;
         }
+        else if (other.gameObject.CompareTag("Respawn"))
+        {
+            respawnObject = other.gameObject;
+        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -135,6 +141,10 @@ public class InteractionModule : MonoBehaviour
         else if (other.gameObject.CompareTag("Turret"))
         {
             turretObject = null;
+        }
+        else if (other.gameObject.CompareTag("Respawn"))
+        {
+            respawnObject = null;
         }
     }
     private float CalculateRepairSpeed()
@@ -179,7 +189,18 @@ public class InteractionModule : MonoBehaviour
                     {
                         int tIdxX = targetObject.GetComponent<Module>().idxX;
                         int tIdxZ = targetObject.GetComponent<Module>().idxZ;
-                        multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.DefaultTurret);
+                        if (interactionObject.currentObject.name == "Laser")
+                        {
+                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
+                        }
+                        else if (interactionObject.currentObject.name == "Shotgun")
+                        {
+                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
+                        }
+                        else if (interactionObject.currentObject.name == "Shield")
+                        {
+                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
+                        }
                     }
                     else
                     {
@@ -188,9 +209,6 @@ public class InteractionModule : MonoBehaviour
                             MakeModule();
                         }
                     }
-                    /*
-                    
-                    */
                 }
             }
             else if (resourceObject != null)
@@ -208,6 +226,7 @@ public class InteractionModule : MonoBehaviour
                 produceObject.GetComponentInParent<Factory>().ProduceModule();
             }
 
+
             if (interactionObject.isHoldingObject)
             {
                 if (inputObject != null)
@@ -218,51 +237,40 @@ public class InteractionModule : MonoBehaviour
                         if (insertObject.name == "Fuel")
                         {
                             inputObject.GetComponentInParent<Oxygenator>().Increase();
-                            Debug.Log(multiplayer.isMultiplayer);
-                            if (multiplayer.isMultiplayer == true)
-                            {
-                                Module module = targetObject.GetComponent<Module>();
-                                multiSpaceship.SendCreateModule(module.idxX, module.idxZ, (int)ModuleType.LaserTurret);    // 바닥생성
-                            }
-                            else
-                            {
-                                targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
-                                spaceship.MakeWall(targetObject);
-                            }
-                        }
-                        else if (inputObject.GetComponentInParent<Factory>())
-                        {
-                            inputObject.GetComponentInParent<Factory>().ProduceModule();
                         }
                     }
-                    else if (turretObject != null)
+                    else if (inputObject.GetComponentInParent<Factory>())
                     {
-                        UpgradeModule();
+                        inputObject.GetComponentInParent<Factory>().ProduceModule();
                     }
                 }
-
-                if (playerInput.RepairModule)
+                else if (turretObject != null)
                 {
-                    playerPosition = player.GetComponent<Transform>().position;
-
-                    int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
-                    int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
-
-                    struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
-
-                    playerAnimator.SetBool("Repairing", true);
-
-                    float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
-
-                    if (struckModule.hp < 3)
-                    {
-                        struckModule.hp += repairAmount;
-                    }
-                }
-                else
-                {
+                    UpgradeModule();
                 }
             }
+
+        if (playerInput.RepairModule)
+        {
+            playerPosition = player.GetComponent<Transform>().position;
+
+            int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
+            int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
+
+            struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
+
+            playerAnimator.SetBool("Repairing", true);
+
+            float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+
+            if (struckModule.hp < 3)
+            {
+                struckModule.hp += repairAmount;
+            }
+        }
+        else
+        {
+            playerAnimator.SetBool("Repairing", false);
         }
     }
 }

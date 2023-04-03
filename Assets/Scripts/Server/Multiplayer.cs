@@ -54,7 +54,7 @@ public class Multiplayer : MonoBehaviour
         {
             if (targetPosition[i] != null && i != playerIndex)
             {
-                Vector3 v = (targetPosition[i] - players[i].transform.position) * 5.0f * Time.deltaTime;
+                Vector3 v = 5.0f * Time.deltaTime * (targetPosition[i] - players[i].transform.position);
                 players[i].transform.position += v;
                 players[i].transform.rotation = Quaternion.Lerp(targetRotation[i], players[i].transform.rotation, 0.1f * Time.deltaTime);
                 
@@ -69,8 +69,8 @@ public class Multiplayer : MonoBehaviour
         idx = 3;
         if (idx != playerIndex)
         {
-            Vector3 dir = new Vector3(px, py, pz);
-            Quaternion q = new Quaternion(rx, ry, rz, rw);
+            Vector3 dir = new(px, py, pz);
+            Quaternion q = new(rx, ry, rz, rw);
             targetRotation[idx] = q;
             targetPosition[idx] = dir;
         }
