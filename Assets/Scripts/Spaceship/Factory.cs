@@ -1,6 +1,8 @@
+using UnityEngine;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEngine;
+
+
 
 public class Factory : MonoBehaviour
 {
@@ -34,6 +36,11 @@ public class Factory : MonoBehaviour
     public int destroyOre = 0;
     public int destroyFuel = 0;
 
+    public TextMesh oreText;
+    public TextMesh fuelText;
+
+
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -56,6 +63,12 @@ public class Factory : MonoBehaviour
 
         neededOre = 1;
         neededFuel = 1;
+    }
+    // Update is called once per frame
+    private void Update()
+    {
+        oreText.text = "가스: " + destroyOre + " / " + neededOre;
+        fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
     public void SwitchModule()
