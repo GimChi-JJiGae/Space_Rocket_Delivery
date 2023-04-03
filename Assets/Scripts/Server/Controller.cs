@@ -26,7 +26,7 @@ public enum PacketType
     
     MODULE_STATUS,
     CURRENT_POSITION,
-    ENEMY_MOVE,
+    //ENEMY_MOVE,
     TURRET_STATUS,
     BASIC_TURRET,
 
@@ -34,6 +34,9 @@ public enum PacketType
     SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
     SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
     RESOURCE_MOVE = 212, // 리소스 움직임
+
+    ENEMY_CREATE = 220, // 적 생성
+    ENEMY_MOVE = 221, // 적 생성
 };
 
 public class DTOuser    // 유저 방 Enter 이후
@@ -47,6 +50,14 @@ public class DTOuser    // 유저 방 Enter 이후
 public class DTOresourcemove    // 자원 움직임
 {
     public int idxR;
+    public float px, py, pz;
+    public float rx, ry, rz, rw;
+}
+
+public class DTOenemymove    // 적 움직임
+{
+    public int idxE;
+    public int type;
     public float px, py, pz;
     public float rx, ry, rz, rw;
 }
@@ -155,6 +166,30 @@ public class Controller : MonoBehaviour
                         moveResourceController.SetAct(true);
                     }
                     catch(Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
+                    break;
+                case PacketType.ENEMY_MOVE:
+                    Debug.Log("ENEMY_MOVE");
+                    try
+                    {
+                        byte[] enemyCount = SplitArray(data, 0, 4);
+                        DTOenemymove[] enemyList = new DTOenemymove[BitConverter.ToInt32(enemyCount, 0)];
+                        int head2 = 4;
+                        Debug.Log(BitConverter.ToInt32(enemyCount, 0));
+                        /*
+                        for (int i = 0; i < BitConverter.ToInt32(enemyCount, 0); i++)
+                        {
+                            DTOenemymove resource = new DTOenemymove();
+                            moveResourceController.newReceiveDTO(data, resource, ref head2);
+                            enemyList[i] = resource;
+                        }
+                        multiEnemy.ReceiveMoveEnemy(enemyList);
+                        moveResourceController.SetAct(true);
+                        */
+                    }
+                    catch (Exception e)
                     {
                         Debug.LogException(e);
                     }
@@ -357,7 +392,7 @@ public class ChangeResourceController : ReceiveController
     }
 }
 
-// 자원 변경
+// 자원 움직임
 public class MoveResourceController : ReceiveController
 {
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
@@ -366,6 +401,19 @@ public class MoveResourceController : ReceiveController
         {
             Debug.Log("MoveResourceController : 자원 위치 변경");
             multiSpaceship.ReceiveChangeResource();
+            this.SetAct(false);
+        }
+    }
+}
+
+// 적 움직임
+public class MoveEnemyController : ReceiveController
+{
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            //multiSpaceship.ReceiveChangeResource();
             this.SetAct(false);
         }
     }
