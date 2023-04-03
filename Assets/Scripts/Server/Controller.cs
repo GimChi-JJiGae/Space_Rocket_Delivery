@@ -35,8 +35,10 @@ public enum PacketType
     TURRET_STATUS,
     BASIC_TURRET,
 
-    MODULE_CREATE = 200, // 모듈 생성
-    SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
+    OXYGEN_INCREASE,
+
+    RESOURCE_CREATE = 201, // SUPPLIER 오브젝트 생성
+    MODULE_CREATE = 301, // 모듈 생성
     SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
     RESOURCE_MOVE = 212, // 리소스 움직임
 };
@@ -324,7 +326,7 @@ public class CreateModuleController : ReceiveController
         if (GetAct())
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
-            multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
+            multiSpaceship.CreateModule_RECEIVE(xIdx, zIdx, moduleType);
             SetAct(false);
         }
     }

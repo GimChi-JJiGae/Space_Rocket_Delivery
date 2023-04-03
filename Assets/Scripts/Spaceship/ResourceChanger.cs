@@ -38,13 +38,11 @@ namespace ResourceNamespace
                     fuelObject.SetActive(false);
                     resourceType = ResourceType.Ore;
                     oreObject.SetActive(true);
-                    multiSpaceship.ChangeResource((int)resourceType);
                     break;
                 case ResourceType.Ore:
                     oreObject.SetActive(false);
                     resourceType = ResourceType.Fuel;
                     fuelObject.SetActive(true);
-                    multiSpaceship.ChangeResource((int)resourceType);
                     break;
             }
         }

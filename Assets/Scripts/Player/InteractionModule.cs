@@ -163,17 +163,35 @@ public class InteractionModule : MonoBehaviour
 
     public void MakeModule()
     {
+        int tIdxX = targetObject.GetComponent<Module>().idxX;
+        int tIdxZ = targetObject.GetComponent<Module>().idxZ;
+
         if (interactionObject.currentObject.name == "Laser")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+
+            if (multiplayer.isMultiplayer)
+            {
+                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
+            }
         }
         else if (interactionObject.currentObject.name == "Shotgun")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            if (multiplayer.isMultiplayer)
+            {
+                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
+            }
+
         }
         else if (interactionObject.currentObject.name == "Shield")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+
+            if (multiplayer.isMultiplayer)
+            {
+                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
+            }
         }
         spaceship.MakeWall(targetObject);
     }
@@ -186,35 +204,21 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
-                    if (multiplayer.isMultiplayer == true)
+                    if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
                     {
-                        int tIdxX = targetObject.GetComponent<Module>().idxX;
-                        int tIdxZ = targetObject.GetComponent<Module>().idxZ;
-                        if (interactionObject.currentObject.name == "Laser")
-                        {
-                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
-                        }
-                        else if (interactionObject.currentObject.name == "Shotgun")
-                        {
-                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
-                        }
-                        else if (interactionObject.currentObject.name == "Shield")
-                        {
-                            multiSpaceship.SendCreateModule(tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
-                        }
-                    }
-                    else
-                    {
-                        if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
-                        {
-                            MakeModule();
-                        }
+                        MakeModule();
                     }
                 }
             }
             else if (resourceObject != null)
             {
                 resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+
+                if (multiplayer.isMultiplayer)
+                {
+                    // SEND에 GameObject를 넣어서 보낼 수가 있는 건가
+                    multiSpaceship.ChangeResource_SEND();
+                }
 
                 if (resourceObject.GetComponentInParent<Supplier>() != null)
                 {
@@ -225,6 +229,11 @@ public class InteractionModule : MonoBehaviour
             {
                 produceObject.GetComponentInParent<Factory>().SwitchModule();
                 produceObject.GetComponentInParent<Factory>().ProduceModule();
+
+                if (multiplayer.isMultiplayer)
+                {
+                    multiSpaceship.ChangeModule_SEND();
+                }
             }
 
 
@@ -238,11 +247,21 @@ public class InteractionModule : MonoBehaviour
                         if (insertObject.name == "Fuel")
                         {
                             inputObject.GetComponentInParent<Oxygenator>().Increase();
+
+                            if (multiplayer.isMultiplayer)
+                            {
+                                multiSpaceship.IncreaseOxygen_SEND();
+                            }
                         }
                     }
                     else if (inputObject.GetComponentInParent<Factory>())
                     {
                         inputObject.GetComponentInParent<Factory>().ProduceModule();
+                        
+                        if (multiplayer.isMultiplayer)
+                        {
+                            multiSpaceship.ProduceModule_SEND();
+                        }
                     }
                 }
                 else if (turretObject != null)

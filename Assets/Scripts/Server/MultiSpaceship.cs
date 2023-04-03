@@ -1,3 +1,4 @@
+using ResourceNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,31 +54,73 @@ public class MultiSpaceship : MonoBehaviour
     }
 
     // 자원 생성 send corutine
-    public void SendCreateModule(int xIdx, int zIdx, int moduleType)
+    public void CreateModule_SEND(int xIdx, int zIdx, int moduleType)
     {
+        // 인덱스가 없다.
         controller.Send(PacketType.MODULE_CREATE, xIdx, zIdx, moduleType);
     }
 
-    public void ReceiveCreateModule(int xIdx, int zIdx, int moduleType)
+    public void CreateModule_RECEIVE(int xIdx, int zIdx, int moduleType)
     {
+        // 인덱스가 없다.
         GameObject targetObject = spaceship.modules[zIdx, xIdx];
         targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType);
         spaceship.MakeWall(targetObject);
     }
 
-    public void ChangeResource(int resourceType)
+    public void ChangeResource_SEND()
     {
-        controller.Send(PacketType.RESOURCE_CHANGE, resourceType);
+        // Packet 번호가 없다.
+        controller.Send(PacketType.RESOURCE_CHANGE);
     }
 
-    public void ChangeModule(int moduleType, int neededOre, int neededFuel)
+    public void ChangeResource_RECEIVE()
     {
-        controller.Send(PacketType.MODULE_CHANGE, moduleType, neededOre, neededFuel);
+        // 인덱스가 없다.
+        GameObject resourceObject = interactionModule.resourceObject;
+
+        resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+
+        if (resourceObject.GetComponentInParent<Supplier>() != null)
+        {
+            resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+        }
     }
 
-    public void ProduceModule(int moduleType)
+    public void ChangeModule_SEND()
     {
-        controller.Send(PacketType.MODULE_PRODUCE, moduleType);
+        // Packet 번호가 없다.
+        controller.Send(PacketType.MODULE_CHANGE);
+    }
+
+    public void ChangeModule_RECEIVE()
+    {
+        // 변경된 거에 대한 neededOre, neededFuel까지 다 받아서 처리 가능?
+        GameObject produceObject = interactionModule.produceObject;
+        produceObject.GetComponentInParent<Factory>().SwitchModule();
+        produceObject.GetComponentInParent<Factory>().ProduceModule();
+    }
+
+    public void ProduceModule_SEND()
+    {
+        controller.Send(PacketType.MODULE_PRODUCE);
+    }
+
+    public void ProduceModule_RECEIVE()
+    {
+        GameObject inputObject = interactionModule.inputObject;
+        inputObject.GetComponentInParent<Factory>().ProduceModule();
+    }
+
+    public void IncreaseOxygen_SEND()
+    {
+        controller.Send(PacketType.OXYGEN_INCREASE);
+    }
+
+    public void IncreaseOxygen_RECEIVE()
+    {
+        GameObject inputObject = interactionModule.inputObject;
+        inputObject.GetComponentInParent<Oxygenator>().Increase();
     }
 
     IEnumerator SendCreateResource()
@@ -88,7 +131,7 @@ public class MultiSpaceship : MonoBehaviour
                                                     // 반복해서 호출할 함수 호출
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
-                controller.Send(PacketType.SUPPLIER_CREATE, resourceCount);
+                controller.Send(PacketType.RESOURCE_CREATE, resourceCount);
                 resourceCount++;
             }
         }
