@@ -137,14 +137,22 @@ public class Controller : MonoBehaviour
                         DTOuser user = new DTOuser();
                         enterRoomController.newReceiveDTO(data, user, ref head);
 
-                        if (PlayerPrefs.GetString("userNickname").Equals(user.userNickName))
-                        {
-                            Debug.Log("자기 자신의 정보");
-                            //PlayerPrefs.SetString("userNickname", user.userNickName);
-                            PlayerPrefs.SetInt("userId", user.userId);
-                            PlayerPrefs.SetString("roomCode", user.roomName);
 
-                        }
+                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                        {
+                            if (PlayerPrefs.GetString("userNickname").Equals(user.userNickName))
+                            {
+                                Debug.Log("자기 자신의 정보");
+                                //PlayerPrefs.SetString("userNickname", user.userNickName);
+                                PlayerPrefs.SetInt("userId", user.userId);
+                                PlayerPrefs.SetString("roomCode", user.roomName);
+
+                                Debug.Log(PlayerPrefs.GetInt("userId", user.userId));
+                                Debug.Log(PlayerPrefs.GetString("roomCode", user.roomName));
+                            }
+                        });
+
+                        
                         Debug.Log("다른 유저 정보");
                         Debug.Log(user.userNickName);
                         Debug.Log(user.userId);
