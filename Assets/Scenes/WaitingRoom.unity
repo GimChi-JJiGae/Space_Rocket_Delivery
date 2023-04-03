@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHost: 0
-  isMultiplayer: 0
+  isMultiplayer: 1
   playerIndex: 0
   players:
   - {fileID: 1807823960}
