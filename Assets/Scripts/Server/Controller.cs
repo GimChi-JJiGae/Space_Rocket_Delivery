@@ -8,6 +8,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
+
 public enum PacketType
 {
     NONE,
@@ -37,6 +38,14 @@ public class DTOuser    // 유저 방 Enter 이후
     public int userId;
     public float x, y, z, r;
     public string userNickName;
+}
+
+public class DTOcreateRoom
+{
+    public string nickname;
+    public string roomName;
+    public bool active = false;
+    
 }
 
 
@@ -70,6 +79,12 @@ public class Controller : MonoBehaviour
         multiSpaceship = GetComponent<MultiSpaceship>();
     }
 
+    private void Awake()
+    {
+        // UnityMainThreadDispatcher 클래스의 인스턴스 생성
+        
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -87,12 +102,26 @@ public class Controller : MonoBehaviour
             switch (header)
             {
                 case PacketType.CREATE_ROOM:
+
+                    //createRoomController.ReceiveDTO(data);
+                    //createRoomController.SetAct(true);
+                    //Debug.Log(createModuleController.GetAct());
+
+                    byte[] isCreateSucess = SplitArray(data, 0, 1);
+                    int createRoomHead = 0;
+                    DTOcreateRoom createRoom = new DTOcreateRoom();
+                    createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
+                    Debug.Log(createRoom.roomName);
+                    Debug.Log(createRoom.nickname);
+                    createRoom.active = true;
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        PlayerPrefs.SetString("roomCode", createRoom.roomName);
+                    });
                     
-                    createRoomController.ReceiveDTO(data);
-                    createRoomController.SetAct(true);
-                    Debug.Log(createModuleController.GetAct());
+                    //PlayerPrefs.SetString("roomCode", createRoom.roomName);
                     
-                    
+
                     //string roomCode = createRoomController.Service();
                     //PlayerPrefs.SetString("roomCode", roomCode);
                     Debug.Log("방생성 수신");
@@ -410,13 +439,13 @@ public class ReceiveController
     }
 
    
-    public virtual bool GetAct()
+    public bool GetAct()
     {
 
         return isAct;
     }
 
-    public virtual void SetAct(bool b)
+    public void SetAct(bool b)
     {
         this.isAct = b;
         Debug.Log("셋액트 실행");

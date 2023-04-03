@@ -20,7 +20,7 @@ public class MutiplayWaitingRoom : MonoBehaviour
         Debug.Log("여기 열리니?");
         Debug.Log(PlayerPrefs.GetString("roomCode"));
         RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
-        RoomCode.text = "RoomCode:" + PlayerPrefs.GetString("roomCode");
+        
 
         GoBtn = GameObject.Find("GoBtn").GetComponent<Button>();    // 게임 시작
         GoBtn.onClick.AddListener(StartGame);
@@ -32,7 +32,8 @@ public class MutiplayWaitingRoom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(PlayerPrefs.GetString("roomCode"));
+        RoomCode.text = "RoomCode: " + PlayerPrefs.GetString("roomCode"); // 시작한 이후에 업데이트 해줘야 이전 방이 안뜸
     }
 
     void StartGame()
