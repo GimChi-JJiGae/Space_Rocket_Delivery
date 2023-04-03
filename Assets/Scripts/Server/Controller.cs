@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,17 +18,22 @@ public enum PacketType
     DEPARTURE_USER,
     PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
     MOVE,
-    MODULE_CONTROL = 222,
+    MODULE_CONTROL,
     REPLICATION,
 
     OBJECT_MOVE,
-    OBJECT_CONTROL = 212,
+    OBJECT_CONTROL, 
     
     MODULE_STATUS,
     CURRENT_POSITION,
     ENEMY_MOVE,
     TURRET_STATUS,
     BASIC_TURRET,
+
+    MODULE_CREATE = 200, // 모듈 생성
+    SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
+    SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
+    RESOURCE_MOVE = 212, // 리소스 움직임
 };
 
 public class DTOuser    // 유저 방 Enter 이후
@@ -38,6 +44,12 @@ public class DTOuser    // 유저 방 Enter 이후
     public string userNickName;
 }
 
+public class DTOresourcemove    // 자원 움직임
+{
+    public int idxR;
+    public float px, py, pz;
+    public float rx, ry, rz, rw;
+}
 
 public class Controller : MonoBehaviour
 {
@@ -46,6 +58,7 @@ public class Controller : MonoBehaviour
     EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
     CreateResourceController createResourceController; // 자원 추가를 위한 컨트롤러
+    MoveResourceController moveResourceController;  // 자원 위치를 위한 컨트롤러
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
@@ -65,6 +78,7 @@ public class Controller : MonoBehaviour
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
         createResourceController = new CreateResourceController();
+        moveResourceController = new MoveResourceController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -79,6 +93,7 @@ public class Controller : MonoBehaviour
         playerPositionController.Service(multiplayer);
         createModuleController.Service(multiSpaceship);
         createResourceController.Service(multiSpaceship);
+        moveResourceController.Service();
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -115,14 +130,34 @@ public class Controller : MonoBehaviour
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
-                case PacketType.MODULE_CONTROL:
+                case PacketType.MODULE_CREATE:
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
                     break;
-                case PacketType.OBJECT_CONTROL:
+                case PacketType.SUPPLIER_CREATE:
                     Debug.Log("CreateResourceController : 자원 생성");
                     createResourceController.ReceiveDTO(data);
                     createResourceController.SetAct(true);
+                    break;
+                case PacketType.RESOURCE_MOVE:
+                    try
+                    {
+                        byte[] resourceCount = SplitArray(data, 0, 4);
+                        DTOresourcemove[] resourceList = new DTOresourcemove[BitConverter.ToInt32(resourceCount, 0)];
+                        int head2 = 4;
+                        for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
+                        {
+                            DTOresourcemove resource = new DTOresourcemove();
+                            moveResourceController.newReceiveDTO(data, resource, ref head2);
+                            resourceList[i] = resource;
+                        }
+                        multiSpaceship.ReceiveMoveResource(resourceList);
+                        moveResourceController.SetAct(true);
+                    }
+                    catch(Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
                     break;
             }
         }
@@ -159,6 +194,44 @@ public class Controller : MonoBehaviour
                 byteList.AddRange(BitConverter.GetBytes((double)arg));
             }
             else if (type.Equals(typeof(string))) 
+            {
+                byte[] stringBytes = Encoding.UTF8.GetBytes((string)arg); // 문자열을 바이트 배열로 변환
+                byteList.AddRange(BitConverter.GetBytes(stringBytes.Length)); // 문자열 바이트 길이를 먼저 추가
+                byteList.AddRange(stringBytes); // 문자열 바이트 배열 추가
+            }
+        }
+        byte[] byteArray = byteList.ToArray();
+        // 전송 시작
+        socketClient.Send(byteArray);
+    }
+
+    public void ListSend(PacketType header, List<object> args)      // 인자를 object배열로 받아옴
+    {
+        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
+
+
+        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+        byteList.Add((byte)header); // BitConverter.GetBytes()
+
+        // params 직렬화
+        for (int i = 0; i < args.Count; i++)
+        {
+            object arg = args[i];
+            Type type = arg.GetType();
+
+            if (type.Equals(typeof(int)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((int)arg));
+            }
+            else if (type.Equals(typeof(float)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((float)arg));
+            }
+            else if (type.Equals(typeof(double)))
+            {
+                byteList.AddRange(BitConverter.GetBytes((double)arg));
+            }
+            else if (type.Equals(typeof(string)))
             {
                 byte[] stringBytes = Encoding.UTF8.GetBytes((string)arg); // 문자열을 바이트 배열로 변환
                 byteList.AddRange(BitConverter.GetBytes(stringBytes.Length)); // 문자열 바이트 길이를 먼저 추가
@@ -254,7 +327,7 @@ public class CreateModuleController : ReceiveController
     }
 }
 
-// 모듈 컨트롤러
+// 자원 생성
 public class CreateResourceController : ReceiveController
 {
     public int rIdx;
@@ -263,7 +336,36 @@ public class CreateResourceController : ReceiveController
         if (this.GetAct())
         {
             Debug.Log("CreateResourceController : 자원 생성");
-            multiSpaceship.ReceiveCreateResource();
+            multiSpaceship.ReceiveCreateResource(rIdx);
+            this.SetAct(false);
+        }
+    }
+}
+
+// 자원 변경
+public class ChangeResourceController : ReceiveController
+{
+    public int rIdx;
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            Debug.Log("ChangeResourceController : 자원 변경");
+            multiSpaceship.ReceiveChangeResource();
+            this.SetAct(false);
+        }
+    }
+}
+
+// 자원 변경
+public class MoveResourceController : ReceiveController
+{
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            Debug.Log("MoveResourceController : 자원 위치 변경");
+            multiSpaceship.ReceiveChangeResource();
             this.SetAct(false);
         }
     }

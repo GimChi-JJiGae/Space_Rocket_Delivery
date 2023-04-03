@@ -25,7 +25,7 @@ public class Multiplayer : MonoBehaviour
     void Start()
     {
         isMultiplayer = true;
-        isHost = false;
+        isHost = true;
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
@@ -91,6 +91,4 @@ public class Multiplayer : MonoBehaviour
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
-
-
 }

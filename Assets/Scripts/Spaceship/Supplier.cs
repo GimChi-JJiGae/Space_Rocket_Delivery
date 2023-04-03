@@ -37,15 +37,16 @@ public class Supplier : MonoBehaviour
             multiplayer = FindAnyObjectByType<Multiplayer>();
             multiSpaceship = FindAnyObjectByType<MultiSpaceship>();
             multiSpaceship.eventResourceSpown += MultiSpawnResource;
-            if (!multiplayer.isMultiplayer) // ��Ƽ�÷��̰� �ƴ϶�� ���⼭ ����������.
+            
+            if (!multiplayer.isMultiplayer) 
             {
-                Debug.Log("��Ƽ�� �ƴϳ׿�");
-        StartCoroutine(SpawnResource());
-    }
+                Debug.Log("멀티가 아니네요");
+                StartCoroutine(SpawnResource());
+            }
         }
-        catch(Exception e)
+        catch
         {
-            Debug.Log(e);
+
         }
     }
 
@@ -83,7 +84,7 @@ public class Supplier : MonoBehaviour
     }
 
     // 자원 생성
-    public void MultiSpawnResource()
+    public void MultiSpawnResource(int idxR)
     {
         float positionX = transform.position.x;     // 현재 오브젝트의 위치를 가져옴
         float positionZ = transform.position.z;
@@ -91,7 +92,7 @@ public class Supplier : MonoBehaviour
         Vector3 position = new Vector3(positionX, positionY, positionZ - 2); // 앞에 생성
 
         GameObject currentPrefab;
-        switch (resourceType)
+        switch (currentResource)
         {
             case ResourceType.Fuel:
                 currentPrefab = fuelPrefab;
@@ -103,16 +104,14 @@ public class Supplier : MonoBehaviour
                 currentPrefab = null;
                 break;
         }
-        Debug.Log("Supplier: " + resourceType + " 생성");
+        Debug.Log("Supplier: " + currentResource + " 생성");
         GameObject newResource = Instantiate(currentPrefab, position, Quaternion.identity);
 
         // 이름변경
-        newResource.name = resourceType.ToString();
+        newResource.name = currentResource.ToString();
         popAnimator.Play("SupplierPopAnimation");
 
-        /*
-        multiSpaceship.resourceList[resourceCount] = newResource;
+        multiSpaceship.resourceList[idxR] = newResource;
         resourceCount++;
-        */
     }
 }

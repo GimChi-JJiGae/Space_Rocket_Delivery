@@ -9,10 +9,10 @@ public class InteractionObject : MonoBehaviour
 
     public bool isHoldingObject = false;
 
-    private PlayerInput playerInput;
-    private Animator playerAnimator;
+    public PlayerInput playerInput;
+    public Animator playerAnimator;
 
-    private InteractionModule interactionModule;
+    public InteractionModule interactionModule;
 
     private GameObject playerHead;
 
