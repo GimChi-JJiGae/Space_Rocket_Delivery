@@ -48,6 +48,13 @@ public class DTOcreateRoom
     
 }
 
+public class DTObasicTurret
+{
+    public float hx, hy, hz;    // 수평 움직임 로테이션
+    public float vx, vy, vz;    // 수직 움직임 로테이션
+    public int isOn;            // 유저 탑승 상태
+}
+
 
 public class Controller : MonoBehaviour
 {
@@ -57,6 +64,8 @@ public class Controller : MonoBehaviour
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
+
+    BasicTurretController basicTurretController;    // 기본포탑 머리 돌리기
 
     // Player관련 함수
     Multiplayer multiplayer;
@@ -73,6 +82,7 @@ public class Controller : MonoBehaviour
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
+        basicTurretController = new BasicTurretController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -169,6 +179,20 @@ public class Controller : MonoBehaviour
                 case PacketType.MODULE_CONTROL:
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
+                    break;
+
+                case PacketType.BASIC_TURRET:                   // 기본포탑 처리 로직
+                    byte[] isBasicTurretSucess = SplitArray(data, 0, 1);
+                    int basicTurretHead = 0;
+                    DTObasicTurret basicTurret = new DTObasicTurret();
+                    basicTurretController.newReceiveDTO(data, basicTurret, ref basicTurretHead);
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        Vector3 targetHorizonRot = new Vector3(basicTurret.hx, basicTurret.hy, basicTurret.hz);
+                        Vector3 targetVerticalRot = new Vector3(basicTurret.vx, basicTurret.vy, basicTurret.vz);
+
+                        GameObject turret = GameObject.Find("BasicTurret");
+                    });
                     break;
             }
         }
@@ -322,6 +346,11 @@ public class CreateModuleController : ReceiveController
             this.SetAct(false);
         }
     }
+}
+
+public class BasicTurretController : ReceiveController
+{
+
 }
 
 // 컨트롤러 정의
