@@ -19,15 +19,22 @@ public class InteractionObject : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
 
         playerHead = GameObject.Find("PlayerHead");
-
-        GameObject dummyPrefab = GameObject.Find("Dummy");
-
-        foreach (Transform prefab in dummyPrefab.transform)
+        try
         {
-            HoldableObjects.Add(prefab.gameObject.name);
-        }
+            GameObject dummyPrefab = GameObject.Find("Dummy");
 
-        Destroy(dummyPrefab);
+            foreach (Transform prefab in dummyPrefab.transform)
+            {
+                HoldableObjects.Add(prefab.gameObject.name);
+            }
+
+            Destroy(dummyPrefab);
+        }
+        catch
+        {
+            Debug.Log("여긴 필요없어");
+        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)

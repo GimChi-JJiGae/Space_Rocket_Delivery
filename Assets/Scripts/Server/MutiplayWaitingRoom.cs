@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,12 +11,15 @@ public class MutiplayWaitingRoom : MonoBehaviour
 
     private Button GoBtn;
     private Button QuitRoomBtn;
-    private Text RoomCode;
+    private TMP_Text RoomCode;
     
     // Start is called before the first frame update
     void Start()
     {
-        RoomCode = GameObject.Find("RoomCodeText").GetComponent<Text>();
+
+        Debug.Log("여기 열리니?");
+        Debug.Log(PlayerPrefs.GetString("roomCode"));
+        RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
         RoomCode.text = "RoomCode:" + PlayerPrefs.GetString("roomCode");
 
         GoBtn = GameObject.Find("GoBtn").GetComponent<Button>();    // 게임 시작

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 public enum PacketType
@@ -76,6 +77,7 @@ public class Controller : MonoBehaviour
         enterRoomController.Service();
         playerPositionController.Service(multiplayer);
         createModuleController.Service(multiSpaceship);
+        
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -88,7 +90,11 @@ public class Controller : MonoBehaviour
                     
                     createRoomController.ReceiveDTO(data);
                     createRoomController.SetAct(true);
-                    PlayerPrefs.SetString("roomCode", createRoomController.Service());
+                    Debug.Log(createModuleController.GetAct());
+                    
+                    
+                    //string roomCode = createRoomController.Service();
+                    //PlayerPrefs.SetString("roomCode", roomCode);
                     Debug.Log("방생성 수신");
                     
                     break;
@@ -206,23 +212,43 @@ public class PlayerPositionController : ReceiveController
 // CreateRoomController
 public class CreateRoomController : ReceiveController
 {
+    //public new bool isAct = false;
+    //private bool isCreate = false;
     public string roomCode;      // 텍스트
     public string text2;      // 텍스트
+    //public override bool GetAct()
+    //{
+    //    Debug.Log("여기 겟액트임?");
+    //    //return isAct;
+    //    return isCreate;
+    //}
 
-    public new String Service() // isAct가 활성화 되었을 때 실행할 로직
+    //public void SetAct(bool b)
+    //{
+    //    isAct = b;
+    //    //isCreate = true;
+    //    Debug.Log("셋액트 실행");
+    //    Debug.Log(isAct);
+    //    Debug.Log(this.isAct);
+    //}
+
+    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        Debug.Log("서비스");
+        Debug.Log(this.GetAct());
+        if (this.GetAct() == true)
         {
+            Debug.Log("서비스2");
             // 여기에서 방이름을 로그로만 띄운 후
-            
-            Debug.Log(roomCode);
+            PlayerPrefs.SetString("roomCode", roomCode);
+            Debug.Log("방번호" + roomCode);
             Debug.Log(text2);
 
             this.SetAct(false);
 
-            return roomCode;    // 방 코드 리턴
+ //           return roomCode;    // 방 코드 리턴
         }
-        return "false";
+ 
     }
 }
 
@@ -384,14 +410,17 @@ public class ReceiveController
     }
 
    
-    public bool GetAct()
+    public virtual bool GetAct()
     {
+
         return isAct;
     }
 
-    public void SetAct(bool b)
+    public virtual void SetAct(bool b)
     {
-        isAct = b;
+        this.isAct = b;
+        Debug.Log("셋액트 실행");
+        Debug.Log(isAct);
     }
 
     public void Service() { }

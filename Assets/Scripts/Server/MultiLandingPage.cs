@@ -11,8 +11,8 @@ public class MultiLandingPage : MonoBehaviour
 
     // 랜딩페이지의 버튼들
     private GameObject LandingPageCanvas;
-    private InputField nicknameInputField;
-    private InputField roomNumberInputField;
+    private TMP_InputField nicknameInputField;
+    private TMP_InputField roomNumberInputField;
     private string userNicknameInput;
     private string roomNameInput;
 
@@ -41,8 +41,8 @@ public class MultiLandingPage : MonoBehaviour
 
         //enterRoomInput = LandingPageCanvas.transform.Find("EnterRoomInput").GetComponent<TMP_InputField>();   // 방입장 코드
 
-        nicknameInputField = LandingPageCanvas.transform.Find("NicknameInput").GetComponent<InputField>();
-        roomNumberInputField = LandingPageCanvas.transform.Find("EnterRoomInput").GetComponent<InputField>();
+        nicknameInputField = GameObject.Find("NicknameInput").GetComponent<TMP_InputField>();
+        roomNumberInputField = GameObject.Find("EnterRoomInput").GetComponent<TMP_InputField>();
 
         QuitGameBtn = LandingPageCanvas.transform.Find("QuitGameBtn").GetComponent<Button>();        // 방 입장
         QuitGameBtn.onClick.AddListener(OnApplicationQuit);
@@ -50,14 +50,20 @@ public class MultiLandingPage : MonoBehaviour
     
     void inputNickName()
     {
-        if (nicknameInputField != null)
-        {
-            userNicknameInput = nicknameInputField.text;
-        }
+        //if (nicknameInputField != null)
+        //{
+            
+        Debug.Log("눌림");
+        
+        userNicknameInput = nicknameInputField.text;
+       
+
+        //}
     }
    
     void OnCreateRoom()
     {
+   
         Debug.Log("OnCreateRoom");
         controller.Send(PacketType.CREATE_ROOM, userNicknameInput, "더미값");
         PlayerPrefs.SetString("userNickname", userNicknameInput);
