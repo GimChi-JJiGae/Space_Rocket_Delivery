@@ -10,15 +10,13 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
 
-    public GameObject player;
+    private Vector3 initialPosition = new(0, 0, -2);
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
-
-        player = GameObject.Find("PlayerCharacter");
     }
 
     private void FixedUpdate()
@@ -40,5 +38,8 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    
+    public void Respawn()
+    {
+        transform.position = initialPosition;
+    }
 }
