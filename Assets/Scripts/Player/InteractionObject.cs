@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
-using static Module;
 
 public class InteractionObject : MonoBehaviour
 {

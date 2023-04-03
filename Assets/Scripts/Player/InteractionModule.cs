@@ -27,6 +27,8 @@ public class InteractionModule : MonoBehaviour
 
     public GameObject turretObject;
 
+    public GameObject respawnObject;
+
     public SkillTreeNode skillTree;
 
     // 맞은 모듈 확인
@@ -94,6 +96,10 @@ public class InteractionModule : MonoBehaviour
         {
             turretObject = other.gameObject;
         }
+        else if (other.gameObject.CompareTag("Respawn"))
+        {
+            respawnObject = other.gameObject;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -125,6 +131,10 @@ public class InteractionModule : MonoBehaviour
         else if (other.gameObject.CompareTag("Turret"))
         {
             turretObject = null;
+        }
+        else if (other.gameObject.CompareTag("Respawn"))
+        {
+            respawnObject = null;
         }
     }
 
