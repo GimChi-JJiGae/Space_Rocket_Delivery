@@ -193,13 +193,31 @@ public class InteractionModule : MonoBehaviour
                     */
                 }
             }
+            // Supplier 자원 변경
             else if (resourceObject != null)
             {
-                resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-
-                if (resourceObject.GetComponentInParent<Supplier>() != null)
+                if (multiplayer.isMultiplayer == true)
                 {
-                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    ResourceType resourceType = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    switch (resourceType)
+                    {
+                        case ResourceType.Fuel:
+                            resourceType = ResourceType.Ore;
+                            break;
+                        case ResourceType.Ore:
+                            resourceType = ResourceType.Fuel;
+                            break;
+                    }
+                    multiSpaceship.SendChangeSupplier((int)resourceType);
+                }
+                else
+                {
+                    resourceObject.GetComponent<ResourceChanger>().SwitchResource();
+
+                    if (resourceObject.GetComponentInParent<Supplier>() != null)
+                    {
+                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    }
                 }
             }
             else if (produceObject != null)

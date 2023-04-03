@@ -42,16 +42,20 @@ public class MultiSpaceship : MonoBehaviour
 
     void FixedUpdate()
     {
-        for (int i = 0; i < resourceList.Length; i++)
+        if (multiplayer.isHost == false)
         {
-            if (resourceList[i] != null)
+            for (int i = 0; i < resourceList.Length; i++)
             {
-                Vector3 v = (targetPosition[i] - resourceList[i].transform.position) * 5.0f * Time.deltaTime;
-                resourceList[i].transform.position += v;
-                resourceList[i].transform.rotation = Quaternion.Lerp(targetRotation[i], resourceList[i].transform.rotation, 0.1f * Time.deltaTime);
+                if (resourceList[i] != null)
+                {
+                    Vector3 v = (targetPosition[i] - resourceList[i].transform.position) * 5.0f * Time.deltaTime;
+                    resourceList[i].transform.position += v;
+                    resourceList[i].transform.rotation = Quaternion.Lerp(targetRotation[i], resourceList[i].transform.rotation, 0.1f * Time.deltaTime);
 
+                }
             }
         }
+        
     }
 
     // 자원 생성 send corutine
@@ -65,6 +69,17 @@ public class MultiSpaceship : MonoBehaviour
         GameObject targetObject = spaceship.modules[zIdx, xIdx];
         targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType); ;
         spaceship.MakeWall(targetObject);
+    }
+
+    // supplier가 바뀌는 것을 전달
+    public void SendChangeSupplier(int type)
+    {
+        controller.Send(PacketType.SUPPLIER_CHANGE, type);
+    }
+
+    public void ReceiveChangeSupplier()
+    {
+
     }
 
     IEnumerator SendCreateResource()
@@ -102,34 +117,37 @@ public class MultiSpaceship : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
-                                                 // 반복해서 호출할 함수 호출
-            List<object> list = new List<object>();
-            int rCount = 0;
-            for(int i = 0; i < resourceCount; i++)
+                                                   // 반복해서 호출할 함수 호출
+            if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
-                if (resourceList[i] != null)
+                List<object> list = new List<object>();
+                int rCount = 0;
+                for (int i = 0; i < resourceCount; i++)
                 {
-                    rCount++;
+                    if (resourceList[i] != null)
+                    {
+                        rCount++;
+                    }
                 }
-            }
-            list.Add(rCount);
-            for (int i = 0; i < resourceCount; i++)
-            {
-                if (resourceList[i] != null)
+                list.Add(rCount);
+                for (int i = 0; i < resourceCount; i++)
                 {
-                    list.Add(i);
-                    Vector3 a = resourceList[i].transform.position;
-                    list.Add(a.x);
-                    list.Add(a.y);
-                    list.Add(a.z);
-                    Quaternion q = resourceList[i].transform.rotation;
-                    list.Add(q.x);
-                    list.Add(q.y);
-                    list.Add(q.z);
-                    list.Add(q.w);
+                    if (resourceList[i] != null)
+                    {
+                        list.Add(i);
+                        Vector3 a = resourceList[i].transform.position;
+                        list.Add(a.x);
+                        list.Add(a.y);
+                        list.Add(a.z);
+                        Quaternion q = resourceList[i].transform.rotation;
+                        list.Add(q.x);
+                        list.Add(q.y);
+                        list.Add(q.z);
+                        list.Add(q.w);
+                    }
                 }
+                controller.ListSend(PacketType.RESOURCE_MOVE, list);
             }
-            controller.ListSend(PacketType.RESOURCE_MOVE, list);
         }
 
         
@@ -137,7 +155,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ReceiveMoveResource(DTOresourcemove[] DTOresourcemove)
     {
-        if (eventResourceMove != null)
+        if (eventResourceMove != null && multiplayer.isHost != true)
         {
             eventResourceMove.Invoke(DTOresourcemove);
         }
@@ -153,4 +171,6 @@ public class MultiSpaceship : MonoBehaviour
             targetRotation[DTOresourcemove[i].idxR] = q;
         }
     }
+
+    
 }
