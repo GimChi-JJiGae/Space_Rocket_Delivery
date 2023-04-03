@@ -17,7 +17,7 @@ public class BasicTurretDamage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        damage = 1 + skillTreeNode.GetCurrentTurretDamageLevel();
+        //damage = 1 + skillTreeNode.GetCurrentTurretDamageLevel();
     }
 
     private void OnParticleCollision(GameObject other)

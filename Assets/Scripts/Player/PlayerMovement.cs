@@ -39,4 +39,6 @@ public class PlayerMovement : MonoBehaviour {
             playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
         }
     }
+
+    
 }

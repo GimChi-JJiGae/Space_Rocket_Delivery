@@ -1,7 +1,8 @@
-using Palmmedia.ReportGenerator.Core.Common;
+//using Palmmedia.ReportGenerator.Core.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlTypes;
 //using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.VersionControl;
+//using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Profiling.Memory.Experimental;
 
@@ -73,6 +74,7 @@ public class SocketClient : MonoBehaviour
     // 직렬화 후 전송
     public void Send(byte[] byteArray)         
     {
+        Debug.Log("보낸다: " + byteArray[0]);
         // 전송 시작
         socket.BeginSend(byteArray, 0, byteArray.Length, SocketFlags.None, SendCallback, null);
     }
@@ -80,10 +82,10 @@ public class SocketClient : MonoBehaviour
     // 역직렬화
     private void Receive(byte[] buffer)
     {
-        int header = BitConverter.ToInt32(SplitArray(buffer, 0, 4));
-        byte[] data = SplitArray(buffer, 4, buffer.Length - 4);
-
-        controller.Receive(header, data);
+        byte[] header = SplitArray(buffer, 0, 1);
+        //Debug.Log((int)header[0]);
+        byte[] data = SplitArray(buffer, 1, buffer.Length - 1);
+        controller.Receive((PacketType)header[0], data);
     }
 
     private void SendCallback(IAsyncResult result)
@@ -110,3 +112,4 @@ public class SocketClient : MonoBehaviour
     }
 
 }
+
