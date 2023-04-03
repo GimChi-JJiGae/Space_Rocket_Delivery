@@ -13,17 +13,22 @@ public enum PacketType
     NONE,
     HELLO,
     BYE,
-    CREATE_ROOM,
+    CREATE_ROOM, // 방 생성
     PARTICIPATE_USER, // 유저가 방에 입장한다는 것
-    DEPARTURE_USER,
+    DEPARTURE_USER, // 유저가 방 떠남
     PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
-    MOVE,
+
+    MOVE, // 유저 움직임
     MODULE_CONTROL,
     REPLICATION,
 
     OBJECT_MOVE,
-    OBJECT_CONTROL, 
-    
+    OBJECT_CONTROL,
+
+    RESOURCE_CHANGE, // Supplier 자원 변화
+    MODULE_CHANGE, // Factory 모듈 변화
+    MODULE_PRODUCE, // Factory 모듈 제작
+
     MODULE_STATUS,
     CURRENT_POSITION,
     ENEMY_MOVE,
@@ -103,11 +108,9 @@ public class Controller : MonoBehaviour
             switch (header)
             {
                 case PacketType.CREATE_ROOM:
-                    
                     createRoomController.ReceiveDTO(data);
                     createRoomController.SetAct(true);
                     Debug.Log("방생성 수신");
-                    
                     break;
                 case PacketType.PARTICIPATE_ROOM:
                     byte[] isSucess = SplitArray(data, 0, 1);
@@ -115,7 +118,7 @@ public class Controller : MonoBehaviour
                     int head = 5;
                     for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
                     {
-                        DTOuser user = new DTOuser();
+                        DTOuser user = new();
                         enterRoomController.newReceiveDTO(data, user, ref head);
 
                         Debug.Log(user.userNickName);
@@ -147,7 +150,7 @@ public class Controller : MonoBehaviour
                         int head2 = 4;
                         for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
                         {
-                            DTOresourcemove resource = new DTOresourcemove();
+                            DTOresourcemove resource = new();
                             moveResourceController.newReceiveDTO(data, resource, ref head2);
                             resourceList[i] = resource;
                         }
@@ -169,11 +172,11 @@ public class Controller : MonoBehaviour
 
     public void Send(PacketType header, params object[] args)      // 인자를 object배열로 받아옴
     {
-        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
-
-
-        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        byteList.Add((byte)header); // BitConverter.GetBytes()
+        List<byte> byteList = new()
+        {
+            // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+            (byte)header // BitConverter.GetBytes()
+        };             // List를 byte로 받아옴
 
         // params 직렬화
         for (int i = 0; i < args.Length; i++)
@@ -207,11 +210,11 @@ public class Controller : MonoBehaviour
 
     public void ListSend(PacketType header, List<object> args)      // 인자를 object배열로 받아옴
     {
-        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
-
-
-        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        byteList.Add((byte)header); // BitConverter.GetBytes()
+        List<byte> byteList = new()
+        {
+            // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+            (byte)header // BitConverter.GetBytes()
+        };             // List를 byte로 받아옴
 
         // params 직렬화
         for (int i = 0; i < args.Count; i++)
@@ -265,10 +268,10 @@ public class PlayerPositionController : ReceiveController
 
     public void Service(Multiplayer multiplayer) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             multiplayer.MoveOtherPlayer(userId, px, py, pz, rx, ry,rz, rw);
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -281,13 +284,13 @@ public class CreateRoomController : ReceiveController
 
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             // 여기에서 방이름을 로그로만 띄운 후
             Debug.Log(text);
             Debug.Log(text2);
 
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -299,11 +302,11 @@ public class EnterRoomController : ReceiveController
 
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("여기 도착?");
             
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -318,11 +321,11 @@ public class CreateModuleController : ReceiveController
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
             multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -333,11 +336,11 @@ public class CreateResourceController : ReceiveController
     public int rIdx;
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("CreateResourceController : 자원 생성");
             multiSpaceship.ReceiveCreateResource(rIdx);
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -348,11 +351,11 @@ public class ChangeResourceController : ReceiveController
     public int rIdx;
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("ChangeResourceController : 자원 변경");
             multiSpaceship.ReceiveChangeResource();
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -362,11 +365,11 @@ public class MoveResourceController : ReceiveController
 {
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("MoveResourceController : 자원 위치 변경");
             multiSpaceship.ReceiveChangeResource();
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
@@ -386,18 +389,16 @@ public class ReceiveController
 
     public void ReceiveDTO(byte[] data) // 데이터를 받으면 역직렬화 후 Class에 맞는 데이터로 변형시킨다.
     {
-        Type typeClass = this.GetType();
+        Type typeClass = GetType();
         FieldInfo[] fields = typeClass.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance); // 이 클래스를 참조하여 필요한 필드를 찾는다.
 
         int n = 0;
         foreach (FieldInfo field in fields) // 필드별로 돌며 역직렬화 한다.
         {
-
             Type type = field.FieldType;
 
             if (type.Equals(typeof(int)))
             {
-
                 byte[] result = new byte[sizeof(int)];
                 Array.Copy(data, n, result, 0, sizeof(int));
                 field.SetValue(this, BitConverter.ToInt32(result));
@@ -435,8 +436,6 @@ public class ReceiveController
                 field.SetValue(this, stringValue);
 
                 Debug.Log(stringValue);
-                
-
             }
         }
     }

@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using static Module;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MultiSpaceship : MonoBehaviour
 {
@@ -63,8 +61,23 @@ public class MultiSpaceship : MonoBehaviour
     public void ReceiveCreateModule(int xIdx, int zIdx, int moduleType)
     {
         GameObject targetObject = spaceship.modules[zIdx, xIdx];
-        targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType); ;
+        targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType);
         spaceship.MakeWall(targetObject);
+    }
+
+    public void ChangeResource(int resourceType)
+    {
+        controller.Send(PacketType.RESOURCE_CHANGE, resourceType);
+    }
+
+    public void ChangeModule(int moduleType, int neededOre, int neededFuel)
+    {
+        controller.Send(PacketType.MODULE_CHANGE, moduleType, neededOre, neededFuel);
+    }
+
+    public void ProduceModule(int moduleType)
+    {
+        controller.Send(PacketType.MODULE_PRODUCE, moduleType);
     }
 
     IEnumerator SendCreateResource()
@@ -83,18 +96,12 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ReceiveCreateResource(int idxR)
     {
-        if (eventResourceSpown != null)
-        {
-            eventResourceSpown.Invoke(idxR);
-        }
+        eventResourceSpown?.Invoke(idxR);
     }
 
     public void ReceiveChangeResource()
     {
-        if (eventResourceChange != null)
-        {
-            eventResourceChange.Invoke();
-        }
+        eventResourceChange?.Invoke();
     }
 
     IEnumerator SendPositionResource()
@@ -103,7 +110,7 @@ public class MultiSpaceship : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
                                                  // 반복해서 호출할 함수 호출
-            List<object> list = new List<object>();
+            List<object> list = new();
             int rCount = 0;
             for(int i = 0; i < resourceCount; i++)
             {

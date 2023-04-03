@@ -1,11 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Multiplayer : MonoBehaviour
 {
@@ -16,7 +10,7 @@ public class Multiplayer : MonoBehaviour
 
     public GameObject[] players = new GameObject[4];   // 참조를 쉽게 하기 위해 오브젝트 저장
 
-    GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
+    private GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
     private Controller controller;
 
     Vector3[] targetPosition = new Vector3[4];

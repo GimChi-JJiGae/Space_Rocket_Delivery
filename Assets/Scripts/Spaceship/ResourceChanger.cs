@@ -10,6 +10,8 @@ namespace ResourceNamespace
 
     public class ResourceChanger : MonoBehaviour
     {
+        MultiSpaceship multiSpaceship;
+        
         private GameObject fuelObject;
         private GameObject oreObject;
 
@@ -18,6 +20,8 @@ namespace ResourceNamespace
         // Start is called before the first frame update
         private void Start()
         {
+            multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
             fuelObject = transform.Find("FuelBlueprint").gameObject;
             oreObject = transform.Find("OreBlueprint").gameObject;
 
@@ -34,11 +38,13 @@ namespace ResourceNamespace
                     fuelObject.SetActive(false);
                     resourceType = ResourceType.Ore;
                     oreObject.SetActive(true);
+                    multiSpaceship.ChangeResource((int)resourceType);
                     break;
                 case ResourceType.Ore:
                     oreObject.SetActive(false);
                     resourceType = ResourceType.Fuel;
                     fuelObject.SetActive(true);
+                    multiSpaceship.ChangeResource((int)resourceType);
                     break;
             }
         }

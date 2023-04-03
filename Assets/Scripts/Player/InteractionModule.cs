@@ -112,6 +112,7 @@ public class InteractionModule : MonoBehaviour
             respawnObject = other.gameObject;
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Edge") && targetObject != null)
@@ -183,7 +184,7 @@ public class InteractionModule : MonoBehaviour
         {
             if (matchObject != null && targetObject != null)
             {
-                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject) //
+                if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
                     if (multiplayer.isMultiplayer == true)
                     {
@@ -249,6 +250,7 @@ public class InteractionModule : MonoBehaviour
                     UpgradeModule();
                 }
             }
+        }
 
         if (playerInput.RepairModule)
         {

@@ -1,7 +1,6 @@
 using System.Collections;
 using ResourceNamespace;
 using UnityEngine;
-using static MultiSpaceship;
 
 public class Supplier : MonoBehaviour
 {
@@ -89,21 +88,14 @@ public class Supplier : MonoBehaviour
         float positionX = transform.position.x;     // 현재 오브젝트의 위치를 가져옴
         float positionZ = transform.position.z;
         float positionY = transform.position.y;
-        Vector3 position = new Vector3(positionX, positionY, positionZ - 2); // 앞에 생성
+        Vector3 position = new(positionX, positionY, positionZ - 2); // 앞에 생성
 
-        GameObject currentPrefab;
-        switch (currentResource)
+        GameObject currentPrefab = currentResource switch
         {
-            case ResourceType.Fuel:
-                currentPrefab = fuelPrefab;
-                break;
-            case ResourceType.Ore:
-                currentPrefab = orePrefab;
-                break;
-            default:
-                currentPrefab = null;
-                break;
-        }
+            ResourceType.Fuel => fuelPrefab,
+            ResourceType.Ore => orePrefab,
+            _ => null,
+        };
         Debug.Log("Supplier: " + currentResource + " 생성");
         GameObject newResource = Instantiate(currentPrefab, position, Quaternion.identity);
 
