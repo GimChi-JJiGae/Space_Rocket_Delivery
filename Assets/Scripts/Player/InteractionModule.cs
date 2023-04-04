@@ -54,10 +54,10 @@ public class InteractionModule : MonoBehaviour
 
         multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
         multiplayer = GameObject.Find("Server").GetComponent<Multiplayer>();
-        /*
-        player = GameObject.Find("PlayerCharacter");
+
+        player = GameObject.Find("Player" + PlayerPrefs.GetInt("userId"));
         playerPosition = player.GetComponent<Transform>().position;
-        */
+
 
         skillTree = GetComponent<SkillTreeNode>();
     }
@@ -172,7 +172,8 @@ public class InteractionModule : MonoBehaviour
 
             if (multiplayer.isMultiplayer)
             {
-                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
             }
         }
         else if (interactionObject.currentObject.name == "Shotgun")
@@ -180,7 +181,8 @@ public class InteractionModule : MonoBehaviour
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
             if (multiplayer.isMultiplayer)
             {
-                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
             }
 
         }
@@ -190,7 +192,8 @@ public class InteractionModule : MonoBehaviour
 
             if (multiplayer.isMultiplayer)
             {
-                multiSpaceship.CreateModule_SEND(tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
             }
         }
         spaceship.MakeWall(targetObject);
@@ -216,8 +219,8 @@ public class InteractionModule : MonoBehaviour
 
                 if (multiplayer.isMultiplayer)
                 {
-                    // SEND에 GameObject를 넣어서 보낼 수가 있는 건가
-                    multiSpaceship.ChangeResource_SEND();
+                    int playerId = PlayerPrefs.GetInt("userId");
+                    multiSpaceship.ChangeResource_SEND(playerId, (int)ModuleType.Supplier);
                 }
 
                 if (resourceObject.GetComponentInParent<Supplier>() != null)
@@ -232,7 +235,8 @@ public class InteractionModule : MonoBehaviour
 
                 if (multiplayer.isMultiplayer)
                 {
-                    multiSpaceship.ChangeModule_SEND();
+                    int playerId = PlayerPrefs.GetInt("userId");
+                    multiSpaceship.ChangeModule_SEND(playerId, (int)ModuleType.Factory);
                 }
             }
 
@@ -250,7 +254,8 @@ public class InteractionModule : MonoBehaviour
 
                             if (multiplayer.isMultiplayer)
                             {
-                                multiSpaceship.IncreaseOxygen_SEND();
+                                int playerId = PlayerPrefs.GetInt("userId");
+                                multiSpaceship.IncreaseOxygen_SEND(playerId, (int)ModuleType.Oxygenator);
                             }
                         }
                     }
@@ -260,7 +265,8 @@ public class InteractionModule : MonoBehaviour
                         
                         if (multiplayer.isMultiplayer)
                         {
-                            multiSpaceship.ProduceModule_SEND();
+                            int playerId = PlayerPrefs.GetInt("userId");
+                            multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
                         }
                     }
                 }

@@ -26,9 +26,7 @@ public enum PacketType
     OBJECT_MOVE,
     OBJECT_CONTROL,
 
-    RESOURCE_CHANGE, // Supplier 자원 변화
-    MODULE_CHANGE, // Factory 모듈 변화
-    MODULE_PRODUCE, // Factory 모듈 제작
+    MODULE_INTERACTION,
 
     MODULE_STATUS,
     CURRENT_POSITION,
@@ -85,7 +83,9 @@ public class Controller : MonoBehaviour
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
-    BasicTurretController basicTurretController;    // 기본포탑 머리 돌리기
+    BasicTurretReceiveController basicTurretController;    // 기본포탑 머리 돌리기
+
+    InteractionModuleController interactionModuleController;
 
     // Player관련 함수
     Multiplayer multiplayer;
@@ -102,9 +102,10 @@ public class Controller : MonoBehaviour
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
-        basicTurretController = new BasicTurretController();
+        basicTurretController = new BasicTurretReceiveController();
         createResourceController = new CreateResourceController();
         moveResourceController = new MoveResourceController();
+        interactionModuleController = new InteractionModuleController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -126,6 +127,7 @@ public class Controller : MonoBehaviour
         createModuleController.Service(multiSpaceship);
         createResourceController.Service(multiSpaceship);
         moveResourceController.Service();
+        interactionModuleController.Service();
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -215,7 +217,7 @@ public class Controller : MonoBehaviour
                         GameObject turret = GameObject.Find("BasicTurret");
                     });
                     break;
-                case PacketType.SUPPLIER_CREATE:
+                case PacketType.RESOURCE_CREATE:
                     Debug.Log("CreateResourceController : 자원 생성");
                     createResourceController.ReceiveDTO(data);
                     createResourceController.SetAct(true);
@@ -239,6 +241,10 @@ public class Controller : MonoBehaviour
                     {
                         Debug.LogException(e);
                     }
+                    break;
+                case PacketType.MODULE_INTERACTION:
+                    interactionModuleController.ReceiveDTO(data);
+                    interactionModuleController.SetAct(true);
                     break;
             }
         }
@@ -416,6 +422,7 @@ public class EnterRoomController : ReceiveController
 // 모듈 컨트롤러
 public class CreateModuleController : ReceiveController
 {
+    private readonly int id;
     public int xIdx;           // 위치
     public int zIdx;
 
@@ -426,7 +433,7 @@ public class CreateModuleController : ReceiveController
         if (GetAct())
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
-            multiSpaceship.CreateModule_RECEIVE(xIdx, zIdx, moduleType);
+            multiSpaceship.CreateModule_RECEIVE(id, xIdx, zIdx, moduleType);
             SetAct(false);
         }
     }
@@ -450,13 +457,16 @@ public class CreateResourceController : ReceiveController
 // 자원 변경
 public class ChangeResourceController : ReceiveController
 {
-    public int rIdx;
+    private readonly int id;
+    public int moduleType;
+    public int activeNum;
+
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
         if (GetAct())
         {
             Debug.Log("ChangeResourceController : 자원 변경");
-            multiSpaceship.ReceiveChangeResource();
+            multiSpaceship.ChangeResource_RECEIVE(id);
             SetAct(false);
         }
     }
@@ -470,13 +480,45 @@ public class MoveResourceController : ReceiveController
         if (GetAct())
         {
             Debug.Log("MoveResourceController : 자원 위치 변경");
-            multiSpaceship.ReceiveChangeResource();
             SetAct(false);
         }
     }
 }
 
-public class BasicTurretController : ReceiveController
+public class InteractionModuleController : ReceiveController
+{
+    public int id;
+    public int moduleType;
+    public int activeNum;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("InteractionModule : 상호작용");
+            
+            switch(activeNum)
+            {
+                case 0:
+                    multiSpaceship.ChangeResource_RECEIVE(id);
+                    break;
+                case 1:
+                    multiSpaceship.ChangeModule_RECEIVE(id);
+                    break;
+                case 2:
+                    multiSpaceship.ProduceModule_RECEIVE(id);
+                    break;
+                case 3:
+                    multiSpaceship.IncreaseOxygen_RECEIVE(id);
+                    break;
+            }
+
+            SetAct(false);
+        }
+    }
+}
+
+public class BasicTurretReceiveController : ReceiveController
 {
 
 }
@@ -484,7 +526,6 @@ public class BasicTurretController : ReceiveController
 // 컨트롤러 정의
 public class ReceiveController
 {
-
     static public byte[] SplitArray(byte[] array, int startIndex, int length)
     {
         byte[] result = new byte[length];

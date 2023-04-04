@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
-    public Animator popAnimator;
     private MultiSpaceship multiSpaceship;
 
     public enum PrintType
@@ -83,7 +82,6 @@ public class Factory : MonoBehaviour
                 neededFuel = 1;
                 destroyOre = 0;
                 destroyFuel = 0;
-                multiSpaceship.ChangeModule((int)currentType, neededOre, neededFuel);
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);

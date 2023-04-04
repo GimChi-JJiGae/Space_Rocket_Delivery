@@ -6,6 +6,14 @@ using static Module;
 
 public class MultiSpaceship : MonoBehaviour
 {
+    public enum ActiveNum
+    {
+        RESOURCE_CHANGE,
+        FACTORY_CHANGE,
+        FACTORY_PRODUCE,
+        INCREASE_OXYGEN,
+    }
+
     Multiplayer multiplayer; // 멀티플레이인지 확인하는 변수
 
     Spaceship spaceship;
@@ -54,73 +62,97 @@ public class MultiSpaceship : MonoBehaviour
     }
 
     // 자원 생성 send corutine
-    public void CreateModule_SEND(int xIdx, int zIdx, int moduleType)
+    public void CreateModule_SEND(int id, int xIdx, int zIdx, int moduleType)
     {
-        // 인덱스가 없다.
-        controller.Send(PacketType.MODULE_CREATE, xIdx, zIdx, moduleType);
+        controller.Send(PacketType.MODULE_CREATE, id, xIdx, zIdx, moduleType);
     }
 
-    public void CreateModule_RECEIVE(int xIdx, int zIdx, int moduleType)
+    public void CreateModule_RECEIVE(int id, int xIdx, int zIdx, int moduleType)
     {
-        // 인덱스가 없다.
-        GameObject targetObject = spaceship.modules[zIdx, xIdx];
-        targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType);
-        spaceship.MakeWall(targetObject);
-    }
-
-    public void ChangeResource_SEND()
-    {
-        // Packet 번호가 없다.
-        controller.Send(PacketType.RESOURCE_CHANGE);
-    }
-
-    public void ChangeResource_RECEIVE()
-    {
-        // 인덱스가 없다.
-        GameObject resourceObject = interactionModule.resourceObject;
-
-        resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-
-        if (resourceObject.GetComponentInParent<Supplier>() != null)
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
-        }
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject targetObject = spaceship.modules[zIdx, xIdx];
+                targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType);
+                spaceship.MakeWall(targetObject);
+            }
+        });
     }
 
-    public void ChangeModule_SEND()
+    public void ChangeResource_SEND(int id, int moduleType)
     {
         // Packet 번호가 없다.
-        controller.Send(PacketType.MODULE_CHANGE);
+        controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, (int)ActiveNum.RESOURCE_CHANGE);
     }
 
-    public void ChangeModule_RECEIVE()
+    public void ChangeResource_RECEIVE(int id)
+    {
+        // 인덱스가 없다.
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject supplier = spaceship.modules[10, 10];
+
+                supplier.GetComponent<ResourceChanger>().SwitchResource();
+                supplier.GetComponent<Supplier>().currentResource = supplier.GetComponent<ResourceChanger>().resourceType;
+            }
+        });
+    }
+
+    public void ChangeModule_SEND(int id, int moduleType)
+    {
+        // Packet 번호가 없다.
+        controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.FACTORY_CHANGE);
+    }
+
+    public void ChangeModule_RECEIVE(int id)
     {
         // 변경된 거에 대한 neededOre, neededFuel까지 다 받아서 처리 가능?
-        GameObject produceObject = interactionModule.produceObject;
-        produceObject.GetComponentInParent<Factory>().SwitchModule();
-        produceObject.GetComponentInParent<Factory>().ProduceModule();
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject factory = spaceship.modules[10, 9];
+                factory.GetComponent<Factory>().SwitchModule();
+                factory.GetComponent<Factory>().ProduceModule();
+            }
+        });
     }
 
-    public void ProduceModule_SEND()
+    public void ProduceModule_SEND(int id, int moduleType)
     {
-        controller.Send(PacketType.MODULE_PRODUCE);
+        controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.FACTORY_PRODUCE);
     }
 
-    public void ProduceModule_RECEIVE()
+    public void ProduceModule_RECEIVE(int id)
     {
-        GameObject inputObject = interactionModule.inputObject;
-        inputObject.GetComponentInParent<Factory>().ProduceModule();
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject factory = spaceship.modules[10, 9];
+                factory.GetComponent<Factory>().ProduceModule();
+            }
+        });
     }
 
-    public void IncreaseOxygen_SEND()
+    public void IncreaseOxygen_SEND(int id, int moduleType)
     {
-        controller.Send(PacketType.OXYGEN_INCREASE);
+        controller.Send(PacketType.OXYGEN_INCREASE, id, moduleType, ActiveNum.INCREASE_OXYGEN);
     }
 
-    public void IncreaseOxygen_RECEIVE()
+    public void IncreaseOxygen_RECEIVE(int id)
     {
-        GameObject inputObject = interactionModule.inputObject;
-        inputObject.GetComponentInParent<Oxygenator>().Increase();
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject oxygenator = spaceship.modules[10, 11];
+                oxygenator.GetComponent<Oxygenator>().Increase();
+            }
+        });
     }
 
     IEnumerator SendCreateResource()
@@ -140,11 +172,6 @@ public class MultiSpaceship : MonoBehaviour
     public void ReceiveCreateResource(int idxR)
     {
         eventResourceSpown?.Invoke(idxR);
-    }
-
-    public void ReceiveChangeResource()
-    {
-        eventResourceChange?.Invoke();
     }
 
     IEnumerator SendPositionResource()
