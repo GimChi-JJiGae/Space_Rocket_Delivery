@@ -41,6 +41,14 @@ public enum PacketType
     
 };
 
+
+public class DTOcreateRoom
+{
+    public string nickname;
+    public string roomName;
+    public bool active = false;
+
+}
 public class DTOuser    // 유저 방 Enter 이후
 {
     public string roomName;
@@ -125,10 +133,22 @@ public class Controller : MonoBehaviour
                 
                 case PacketType.CREATE_ROOM:
                     
-                    createRoomController.ReceiveDTO(data);
-                    createRoomController.SetAct(true);
-                    UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                        
+                    //createRoomController.ReceiveDTO(data);
+                    //createRoomController.SetAct(true);
+                    byte[] isCreateSucess = SplitArray(data, 0, 1);
+                    int createRoomHead = 0;
+                    DTOcreateRoom createRoom = new DTOcreateRoom();
+                    createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
+                    Debug.Log("방은 생성되었다.");
+                    Debug.Log(createRoom.roomName);
+                    Debug.Log(createRoom.nickname);
+                    createRoom.active = true;
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        Debug.Log("과연 방코드가");
+
+                        PlayerPrefs.SetString("roomCode", createRoom.roomName);
+                        Debug.Log(PlayerPrefs.GetString("roomCode"));
                     });
                     Debug.Log("방생성 수신");
                     
