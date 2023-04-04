@@ -21,8 +21,7 @@ public class GameOverController : MonoBehaviour
     {
         if (!gameManager.IsGameOver())
         {
-            Debug.Log('7');
-
+            //Debug.Log('7');
         }
     }
 }

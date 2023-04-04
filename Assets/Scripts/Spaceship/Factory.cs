@@ -5,8 +5,6 @@ using Unity.VisualScripting;
 
 public class Factory : MonoBehaviour
 {
-    private MultiSpaceship multiSpaceship;
-
     public enum PrintType
     {
         Kit,

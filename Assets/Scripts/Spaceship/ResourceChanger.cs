@@ -10,8 +10,6 @@ namespace ResourceNamespace
 
     public class ResourceChanger : MonoBehaviour
     {
-        MultiSpaceship multiSpaceship;
-
         private GameObject fuelObject;
         private GameObject oreObject;
 

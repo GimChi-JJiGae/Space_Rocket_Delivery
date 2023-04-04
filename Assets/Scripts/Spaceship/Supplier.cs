@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Supplier : MonoBehaviour
 {
-    Multiplayer multiplayer; // 멀티플레이 중인지 확인만 함
-    MultiSpaceship multiSpaceship; // 자원을 여기다가 저장함
-    int resourceCount = 0;
-
     public Animator popAnimator;
 
     public GameObject currentPrefab;
