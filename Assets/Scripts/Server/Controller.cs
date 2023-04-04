@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -126,6 +127,9 @@ public class Controller : MonoBehaviour
                     
                     createRoomController.ReceiveDTO(data);
                     createRoomController.SetAct(true);
+                    UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                        
+                    });
                     Debug.Log("방생성 수신");
                     
                     break;
