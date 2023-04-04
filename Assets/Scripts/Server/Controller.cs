@@ -15,30 +15,51 @@ public enum PacketType
     HELLO,
     BYE,
     CREATE_ROOM,
-    PARTICIPATE_USER, // 유저가 방에 입장한다는 것
-    DEPARTURE_USER,
-    PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
+    PARTICIPATE_USER,
+    OUT_USER,   // 패킷,   받을 때는 패킷
+    PARTICIPATE_ROOM,
     MOVE,
-    MODULE_CONTROL,
+    START_GAME, // 보낼때는 패킷, 방번호 받을때는 패킷만
+
     REPLICATION,
 
     OBJECT_MOVE,
-    OBJECT_CONTROL, 
-    
+    OBJECT_CONTROL,
+    MODULE_CONTROL,
     MODULE_STATUS,
     CURRENT_POSITION,
-    //ENEMY_MOVE,
+    ENEMY_MOVE,
     TURRET_STATUS,
     BASIC_TURRET,
 
-    ENEMY_MOVE = 199, // 적 생성
-    MODULE_CREATE = 200, // 모듈 생성
-    SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
-    SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
-    RESOURCE_MOVE = 212, // 리소스 움직임
+    //NONE,
+    //HELLO,
+    //BYE,
+    //CREATE_ROOM,
+    //PARTICIPATE_USER, // 유저가 방에 입장한다는 것
+    //DEPARTURE_USER,
+    //PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
+    //MOVE,
+    //MODULE_CONTROL,
+    //REPLICATION,
 
-    ENEMY_CREATE = 220, // 적 생성
-    
+    //OBJECT_MOVE,
+    //OBJECT_CONTROL, 
+
+    //MODULE_STATUS,
+    //CURRENT_POSITION,
+    ////ENEMY_MOVE,
+    //TURRET_STATUS,
+    //BASIC_TURRET,
+
+    //ENEMY_MOVE = 199, // 적 생성
+    //MODULE_CREATE = 200, // 모듈 생성
+    //SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
+    //SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
+    //RESOURCE_MOVE = 212, // 리소스 움직임
+
+    //ENEMY_CREATE = 220, // 적 생성
+
 };
 
 
@@ -175,34 +196,34 @@ public class Controller : MonoBehaviour
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
-                case PacketType.MODULE_CREATE:
-                    createModuleController.ReceiveDTO(data);
-                    createModuleController.SetAct(true);
-                    break;
-                case PacketType.SUPPLIER_CREATE:
-                    createResourceController.ReceiveDTO(data);
-                    createResourceController.SetAct(true);
-                    break;
-                case PacketType.RESOURCE_MOVE:
-                    try
-                    {
-                        byte[] resourceCount = SplitArray(data, 0, 4);
-                        DTOresourcemove[] resourceList = new DTOresourcemove[BitConverter.ToInt32(resourceCount, 0)];
-                        int head2 = 4;
-                        for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
-                        {
-                            DTOresourcemove resource = new DTOresourcemove();
-                            moveResourceController.newReceiveDTO(data, resource, ref head2);
-                            resourceList[i] = resource;
-                        }
-                        multiSpaceship.ReceiveMoveResource(resourceList);
-                        moveResourceController.SetAct(true);
-                    }
-                    catch(Exception e)
-                    {
-                        Debug.LogException(e);
-                    }
-                    break;
+                //case PacketType.MODULE_CREATE:
+                //    createModuleController.ReceiveDTO(data);
+                //    createModuleController.SetAct(true);
+                //    break;
+                //case PacketType.SUPPLIER_CREATE:
+                //    createResourceController.ReceiveDTO(data);
+                //    createResourceController.SetAct(true);
+                //    break;
+                //case PacketType.RESOURCE_MOVE:
+                //    try
+                //    {
+                //        byte[] resourceCount = SplitArray(data, 0, 4);
+                //        DTOresourcemove[] resourceList = new DTOresourcemove[BitConverter.ToInt32(resourceCount, 0)];
+                //        int head2 = 4;
+                //        for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
+                //        {
+                //            DTOresourcemove resource = new DTOresourcemove();
+                //            moveResourceController.newReceiveDTO(data, resource, ref head2);
+                //            resourceList[i] = resource;
+                //        }
+                //        multiSpaceship.ReceiveMoveResource(resourceList);
+                //        moveResourceController.SetAct(true);
+                //    }
+                    //catch(Exception e)
+                    //{
+                    //    Debug.LogException(e);
+                    //}
+                    //break;
                 case PacketType.ENEMY_MOVE:
                     Debug.Log("ENEMY_MOVE");
                     if (true)//multiplayer.isHost == false

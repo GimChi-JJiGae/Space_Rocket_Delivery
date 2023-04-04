@@ -29,6 +29,7 @@ public class MultiLandingPage : MonoBehaviour
 
         LandingPageCanvas = GameObject.Find("LandingPageCanvas");   // 캔버스 찾기
 
+
         nicknameBtn = LandingPageCanvas.transform.Find("NickNameBtn").GetComponent<Button>();
         nicknameBtn.onClick.AddListener(inputNickName);
 
