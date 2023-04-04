@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 public enum PacketType
@@ -58,6 +59,21 @@ public class DTOresourcemove    // 자원 움직임
     public float rx, ry, rz, rw;
 }
 
+public class DTOcreateRoom
+{
+    public string nickname;
+    public string roomName;
+    public bool active = false;
+    
+}
+
+public class DTObasicTurret
+{
+    public float hx, hy, hz;    // 수평 움직임 로테이션
+    public float vx, vy, vz;    // 수직 움직임 로테이션
+    public int isOn;            // 유저 탑승 상태
+}
+
 public class Controller : MonoBehaviour
 {
     
@@ -68,6 +84,8 @@ public class Controller : MonoBehaviour
     MoveResourceController moveResourceController;  // 자원 위치를 위한 컨트롤러
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
+
+    BasicTurretController basicTurretController;    // 기본포탑 머리 돌리기
 
     // Player관련 함수
     Multiplayer multiplayer;
@@ -84,12 +102,19 @@ public class Controller : MonoBehaviour
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
+        basicTurretController = new BasicTurretController();
         createResourceController = new CreateResourceController();
         moveResourceController = new MoveResourceController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
         multiSpaceship = GetComponent<MultiSpaceship>();
+    }
+
+    private void Awake()
+    {
+        // UnityMainThreadDispatcher 클래스의 인스턴스 생성
+        
     }
 
     // Update is called once per frame
@@ -110,10 +135,30 @@ public class Controller : MonoBehaviour
             switch (header)
             {
                 case PacketType.CREATE_ROOM:
-                    createRoomController.ReceiveDTO(data);
-                    createRoomController.SetAct(true);
+                    //createRoomController.ReceiveDTO(data);
+                    //createRoomController.SetAct(true);
+                    //Debug.Log(createModuleController.GetAct());
+
+                    byte[] isCreateSucess = SplitArray(data, 0, 1);
+                    int createRoomHead = 0;
+                    DTOcreateRoom createRoom = new DTOcreateRoom();
+                    createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
+                    Debug.Log(createRoom.roomName);
+                    Debug.Log(createRoom.nickname);
+                    createRoom.active = true;
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        PlayerPrefs.SetString("roomCode", createRoom.roomName);
+                    });
+                    
+                    //PlayerPrefs.SetString("roomCode", createRoom.roomName);
+                    
+
+                    //string roomCode = createRoomController.Service();
+                    //PlayerPrefs.SetString("roomCode", roomCode);
                     Debug.Log("방생성 수신");
                     break;
+
                 case PacketType.PARTICIPATE_ROOM:
                     byte[] isSucess = SplitArray(data, 0, 1);
                     byte[] userCount = SplitArray(data, 1, 4);
@@ -123,6 +168,23 @@ public class Controller : MonoBehaviour
                         DTOuser user = new();
                         enterRoomController.newReceiveDTO(data, user, ref head);
 
+
+                        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                        {
+                            if (PlayerPrefs.GetString("userNickname").Equals(user.userNickName))
+                            {
+                                Debug.Log("자기 자신의 정보");
+                                //PlayerPrefs.SetString("userNickname", user.userNickName);
+                                PlayerPrefs.SetInt("userId", user.userId);
+                                PlayerPrefs.SetString("roomCode", user.roomName);
+
+                                Debug.Log(PlayerPrefs.GetInt("userId", user.userId));
+                                Debug.Log(PlayerPrefs.GetString("roomCode", user.roomName));
+                            }
+                        });
+
+                        
+                        Debug.Log("다른 유저 정보");
                         Debug.Log(user.userNickName);
                         Debug.Log(user.userId);
                         Debug.Log(user.roomName);
@@ -138,6 +200,20 @@ public class Controller : MonoBehaviour
                 case PacketType.MODULE_CREATE:
                     createModuleController.ReceiveDTO(data);
                     createModuleController.SetAct(true);
+                    break;
+
+                case PacketType.BASIC_TURRET:                   // 기본포탑 처리 로직
+                    byte[] isBasicTurretSucess = SplitArray(data, 0, 1);
+                    int basicTurretHead = 0;
+                    DTObasicTurret basicTurret = new DTObasicTurret();
+                    basicTurretController.newReceiveDTO(data, basicTurret, ref basicTurretHead);
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        Vector3 targetHorizonRot = new Vector3(basicTurret.hx, basicTurret.hy, basicTurret.hz);
+                        Vector3 targetVerticalRot = new Vector3(basicTurret.vx, basicTurret.vy, basicTurret.vz);
+
+                        GameObject turret = GameObject.Find("BasicTurret");
+                    });
                     break;
                 case PacketType.SUPPLIER_CREATE:
                     Debug.Log("CreateResourceController : 자원 생성");
@@ -155,10 +231,10 @@ public class Controller : MonoBehaviour
                             DTOresourcemove resource = new();
                             moveResourceController.newReceiveDTO(data, resource, ref head2);
                             resourceList[i] = resource;
-                        }
+            }
                         multiSpaceship.ReceiveMoveResource(resourceList);
                         moveResourceController.SetAct(true);
-                    }
+        }
                     catch(Exception e)
                     {
                         Debug.LogException(e);
@@ -281,19 +357,43 @@ public class PlayerPositionController : ReceiveController
 // CreateRoomController
 public class CreateRoomController : ReceiveController
 {
-    public string text;      // 텍스트
+    //public new bool isAct = false;
+    //private bool isCreate = false;
+    public string roomCode;      // 텍스트
     public string text2;      // 텍스트
+    //public override bool GetAct()
+    //{
+    //    Debug.Log("여기 겟액트임?");
+    //    //return isAct;
+    //    return isCreate;
+    //}
+
+    //public void SetAct(bool b)
+    //{
+    //    isAct = b;
+    //    //isCreate = true;
+    //    Debug.Log("셋액트 실행");
+    //    Debug.Log(isAct);
+    //    Debug.Log(this.isAct);
+    //}
 
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (GetAct())
+        Debug.Log("서비스");
+        Debug.Log(this.GetAct());
+        if (this.GetAct() == true)
         {
+            Debug.Log("서비스2");
             // 여기에서 방이름을 로그로만 띄운 후
-            Debug.Log(text);
+            PlayerPrefs.SetString("roomCode", roomCode);
+            Debug.Log("방번호" + roomCode);
             Debug.Log(text2);
 
-            SetAct(false);
+            this.SetAct(false);
+
+ //           return roomCode;    // 방 코드 리턴
         }
+ 
     }
 }
 
@@ -374,6 +474,11 @@ public class MoveResourceController : ReceiveController
             SetAct(false);
         }
     }
+}
+
+public class BasicTurretController : ReceiveController
+{
+
 }
 
 // 컨트롤러 정의
@@ -502,7 +607,9 @@ public class ReceiveController
 
     public void SetAct(bool b)
     {
-        isAct = b;
+        this.isAct = b;
+        Debug.Log("셋액트 실행");
+        Debug.Log(isAct);
     }
 
     public void Service() { }

@@ -24,7 +24,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(0);
+        AssignPlayer(PlayerPrefs.GetInt("userId"));
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -60,7 +60,7 @@ public class Multiplayer : MonoBehaviour
 
     public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
-        idx = 3;
+        //idx = 3;
         if (idx != playerIndex)
         {
             Vector3 dir = new(px, py, pz);

@@ -27,7 +27,8 @@ public class InteractionObject : MonoBehaviour
         interactionModule = GetComponent<InteractionModule>();
 
         playerHead = GameObject.Find("PlayerHead");
-
+        try
+        {
         GameObject dummyPrefab = GameObject.Find("Dummy");
 
         foreach (Transform prefab in dummyPrefab.transform)
@@ -36,6 +37,12 @@ public class InteractionObject : MonoBehaviour
         }
 
         Destroy(dummyPrefab);
+    }
+        catch
+        {
+            Debug.Log("여긴 필요없어");
+        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)
