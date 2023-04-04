@@ -7,10 +7,6 @@ using static Module;
 
 public class InteractionModule : MonoBehaviour
 {
-    // 멀티를 위한 오브젝트
-    public Multiplayer multiplayer;
-    public MultiSpaceship multiSpaceship;
-
     private PlayerInput playerInput;
     private Animator playerAnimator;
     private InteractionObject interactionObject;
@@ -51,10 +47,7 @@ public class InteractionModule : MonoBehaviour
 
         spaceship = FindAnyObjectByType<Spaceship>();
 
-        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
-        multiplayer = GameObject.Find("Server").GetComponent<Multiplayer>();
-
-        player = GameObject.Find("Player" + PlayerPrefs.GetInt("userId"));
+        player = gameObject;
         playerPosition = player.GetComponent<Transform>().position;
 
 
@@ -168,32 +161,14 @@ public class InteractionModule : MonoBehaviour
         if (interactionObject.currentObject.name == "Laser")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
-
-            if (multiplayer.isMultiplayer)
-            {
-                int playerId = PlayerPrefs.GetInt("userId");
-                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
-            }
         }
         else if (interactionObject.currentObject.name == "Shotgun")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
-            if (multiplayer.isMultiplayer)
-            {
-                int playerId = PlayerPrefs.GetInt("userId");
-                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
-            }
-
         }
         else if (interactionObject.currentObject.name == "Shield")
         {
             targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
-
-            if (multiplayer.isMultiplayer)
-            {
-                int playerId = PlayerPrefs.GetInt("userId");
-                multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
-            }
         }
         spaceship.MakeWall(targetObject);
     }
@@ -216,13 +191,6 @@ public class InteractionModule : MonoBehaviour
             else if (resourceObject != null)
             {
                 resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-
-                if (multiplayer.isMultiplayer)
-                {
-                    int playerId = PlayerPrefs.GetInt("userId");
-                    multiSpaceship.ChangeResource_SEND(playerId, (int)ModuleType.Supplier);
-                }
-
                 if (resourceObject.GetComponentInParent<Supplier>() != null)
                 {
                     resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
@@ -232,12 +200,6 @@ public class InteractionModule : MonoBehaviour
             {
                 produceObject.GetComponentInParent<Factory>().SwitchModule();
                 produceObject.GetComponentInParent<Factory>().ProduceModule();
-
-                if (multiplayer.isMultiplayer)
-                {
-                    int playerId = PlayerPrefs.GetInt("userId");
-                    multiSpaceship.ChangeModule_SEND(playerId, (int)ModuleType.Factory);
-                }
             }
 
 
@@ -251,22 +213,10 @@ public class InteractionModule : MonoBehaviour
                         if (insertObject.name == "Fuel")
                         {
                             inputObject.GetComponentInParent<Oxygenator>().Increase();
-
-                            if (multiplayer.isMultiplayer)
-                            {
-                                int playerId = PlayerPrefs.GetInt("userId");
-                                multiSpaceship.IncreaseOxygen_SEND(playerId, (int)ModuleType.Oxygenator);
-                            }
                         }
                         else if (inputObject.GetComponentInParent<Factory>())
                         {
                             inputObject.GetComponentInParent<Factory>().ProduceModule();
-
-                            if (multiplayer.isMultiplayer)
-                            {
-                                int playerId = PlayerPrefs.GetInt("userId");
-                                multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
-                            }
                         }
                         else if (turretObject != null)
                         {
@@ -293,11 +243,6 @@ public class InteractionModule : MonoBehaviour
             if (struckModule.hp < 3)
             {
                 struckModule.hp += repairAmount;
-                if (multiplayer.isMultiplayer)
-                {
-                    int playerId = PlayerPrefs.GetInt("userId");
-                    multiSpaceship.Repair_SEND(playerId, playerX, playerZ);
-                }
             }
         }
         else

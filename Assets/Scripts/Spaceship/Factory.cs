@@ -41,8 +41,6 @@ public class Factory : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
-
         kitObject = transform.Find("KitBlueprint").gameObject;
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;

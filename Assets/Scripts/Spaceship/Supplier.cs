@@ -31,22 +31,7 @@ public class Supplier : MonoBehaviour
         currentPrefab = null;
 
         popAnimator = GetComponent<Animator>();
-        try
-        {
-            multiplayer = FindAnyObjectByType<Multiplayer>();
-            multiSpaceship = FindAnyObjectByType<MultiSpaceship>();
-            multiSpaceship.eventResourceSpown += MultiSpawnResource;
-            
-            if (!multiplayer.isMultiplayer) 
-            {
-                Debug.Log("멀티가 아니네요");
-                StartCoroutine(SpawnResource());
-            }
-        }
-        catch
-        {
-
-        }
+        StartCoroutine(SpawnResource());
     }
     public void SetRespawnTime(float newRespawnTime)
     {
@@ -84,30 +69,5 @@ public class Supplier : MonoBehaviour
 
             yield return new WaitForSeconds(respawnTime);
         }
-    }
-
-    // 자원 생성
-    public void MultiSpawnResource(int idxR)
-    {
-        float positionX = transform.position.x;     // 현재 오브젝트의 위치를 가져옴
-        float positionZ = transform.position.z;
-        float positionY = transform.position.y;
-        Vector3 position = new(positionX, positionY, positionZ - 2); // 앞에 생성
-
-        GameObject currentPrefab = currentResource switch
-        {
-            ResourceType.Fuel => fuelPrefab,
-            ResourceType.Ore => orePrefab,
-            _ => null,
-        };
-        Debug.Log("Supplier: " + currentResource + " 생성");
-        GameObject newResource = Instantiate(currentPrefab, position, Quaternion.identity);
-
-        // 이름변경
-        newResource.name = currentResource.ToString();
-        popAnimator.Play("SupplierPopAnimation");
-
-        multiSpaceship.resourceList[idxR] = newResource;
-        resourceCount++;
     }
 }
