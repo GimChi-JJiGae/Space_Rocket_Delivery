@@ -88,23 +88,30 @@ public class MultiEnemy : MonoBehaviour
     {
 
         Debug.Log("받았다 이것을");
-        for (int i = 0; i < DTOenemymove.Length; i++)
+        try
         {
-            if (enemyeList[DTOenemymove[i].idxE] == null)   // null 개체면
+            for (int i = 0; i < DTOenemymove.Length; i++)
             {
-                spawnEnemy(DTOenemymove[i]);
-                Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
-                Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
-                targetPosition[DTOenemymove[i].idxE] = v;
-                targetRotation[DTOenemymove[i].idxE] = q;
+                if (enemyeList[DTOenemymove[i].idxE] == null)   // null 개체면
+                {
+                    spawnEnemy(DTOenemymove[i]);
+                    Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
+                    Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
+                    targetPosition[DTOenemymove[i].idxE] = v;
+                    targetRotation[DTOenemymove[i].idxE] = q;
+                }
+                else                                            // 존재하면
+                {
+                    Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
+                    Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
+                    targetPosition[DTOenemymove[i].idxE] = v;
+                    targetRotation[DTOenemymove[i].idxE] = q;
+                }
             }
-            else                                            // 존재하면
-            {
-                Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
-                Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
-                targetPosition[DTOenemymove[i].idxE] = v;
-                targetRotation[DTOenemymove[i].idxE] = q;
-            }
+        }
+        catch
+        {
+            Debug.Log("에러인가..");
         }
     }
 
@@ -145,7 +152,7 @@ public class MultiEnemy : MonoBehaviour
         Vector3 v = new Vector3(DTOenemymove.px, DTOenemymove.py, DTOenemymove.pz);
         Quaternion q = new Quaternion(DTOenemymove.rx, DTOenemymove.ry, DTOenemymove.rz, DTOenemymove.rw);
         enemy = Instantiate(enemies[0], v, q);
-
+        enemy.name = "적이다구리";
         /*
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {

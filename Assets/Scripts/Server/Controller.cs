@@ -177,7 +177,7 @@ public class Controller : MonoBehaviour
                     break;
                 case PacketType.ENEMY_MOVE:
                     Debug.Log("ENEMY_MOVE");
-                    if (multiplayer.isHost == false)
+                    if (true)//multiplayer.isHost == false
                     {
                         try
                         {
