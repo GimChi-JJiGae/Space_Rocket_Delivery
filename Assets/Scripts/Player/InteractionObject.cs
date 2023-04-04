@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using static Module;
 
 public class InteractionObject : MonoBehaviour
 {
@@ -8,10 +9,10 @@ public class InteractionObject : MonoBehaviour
 
     public bool isHoldingObject = false;
 
-    private PlayerInput playerInput;
-    private Animator playerAnimator;
+    public PlayerInput playerInput;
+    public Animator playerAnimator;
 
-    private InteractionModule interactionModule;
+    public InteractionModule interactionModule;
 
     private GameObject playerHead;
 
@@ -26,7 +27,8 @@ public class InteractionObject : MonoBehaviour
         interactionModule = GetComponent<InteractionModule>();
 
         playerHead = GameObject.Find("PlayerHead");
-
+        try
+        {
         GameObject dummyPrefab = GameObject.Find("Dummy");
 
         foreach (Transform prefab in dummyPrefab.transform)
@@ -35,6 +37,12 @@ public class InteractionObject : MonoBehaviour
         }
 
         Destroy(dummyPrefab);
+    }
+        catch
+        {
+            Debug.Log("여긴 필요없어");
+        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -97,7 +105,6 @@ public class InteractionObject : MonoBehaviour
         obj.GetComponent<Rigidbody>().isKinematic = false;
         obj.GetComponent<MeshCollider>().enabled = true;
 
-        currentObject = null;
         isHoldingObject = false;
     }
 
@@ -123,7 +130,6 @@ public class InteractionObject : MonoBehaviour
 
         Destroy(obj);
 
-        currentObject = null;
         isHoldingObject = false;
 
         factory.ProduceModule();
@@ -139,7 +145,17 @@ public class InteractionObject : MonoBehaviour
             }
             else if (isHoldingObject)
             {
-                if (interactionModule.inputObject != null)
+                if (interactionModule.targetObject != null)
+                {
+                    InsertObject(currentObject);
+                    currentObject = null;
+                }
+                else if (interactionModule.turretObject != null)
+                {
+                    InsertObject(currentObject);
+                    currentObject = null;
+                }
+                else if (interactionModule.inputObject != null)
                 {
                     if (currentObject.name == "Fuel" && interactionModule.inputObject.GetComponentInParent<Oxygenator>())
                     {
@@ -151,20 +167,24 @@ public class InteractionObject : MonoBehaviour
                         if (currentObject.name == "Fuel" || currentObject.name == "Ore")
                         {
                             SaveObject(currentObject);
+                            currentObject = null;
                         }
                         else
                         {
                             DropObject(currentObject);
+                            currentObject = null;
                         }
                     }
                     else
                     {
                         DropObject(currentObject);
+                        currentObject = null;
                     }
                 }
                 else
                 {
                     DropObject(currentObject);
+                    currentObject = null;
                 }
             }
         }

@@ -107,9 +107,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6062614165495437177}
   - component: {fileID: 5296951604348872574}
+  - component: {fileID: 8020155068427856836}
   m_Layer: 0
   m_Name: ShieldTurret
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,6 +157,20 @@ MonoBehaviour:
   shieldReload: 20
   afterShieldDestroyed: 0
   shieldOn: 0
+--- !u!136 &8020155068427856836
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072663154818053666}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.7
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &3021238466177156327
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Linq;
+using Unity.Profiling.Editor;
 using Unity.VisualScripting;
-
-
 
 public class Factory : MonoBehaviour
 {
-    public Animator popAnimator;
+    private MultiSpaceship multiSpaceship;
 
     public enum PrintType
     {
@@ -39,11 +38,11 @@ public class Factory : MonoBehaviour
     public TextMesh oreText;
     public TextMesh fuelText;
 
-
-
     // Start is called before the first frame update
     private void Start()
     {
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
         kitObject = transform.Find("KitBlueprint").gameObject;
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
@@ -81,6 +80,8 @@ public class Factory : MonoBehaviour
                 shotgunObject.SetActive(true);
                 neededOre = 1;
                 neededFuel = 2;
+                destroyOre = 0;
+                destroyFuel = 0;
                 break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
@@ -88,6 +89,8 @@ public class Factory : MonoBehaviour
                 laserObject.SetActive(true);
                 neededOre = 2;
                 neededFuel = 1;
+                destroyOre = 0;
+                destroyFuel = 0;
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);
@@ -95,6 +98,8 @@ public class Factory : MonoBehaviour
                 shieldObject.SetActive(true);
                 neededOre = 0;
                 neededFuel = 3;
+                destroyOre = 0;
+                destroyFuel = 0;
                 break;
             case PrintType.Shield:
                 shieldObject.SetActive(false);
@@ -102,6 +107,8 @@ public class Factory : MonoBehaviour
                 kitObject.SetActive(true);
                 neededOre = 1;
                 neededFuel = 1;
+                destroyOre = 0;
+                destroyFuel = 0;
                 break;
         }
     }
@@ -115,39 +122,39 @@ public class Factory : MonoBehaviour
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = kitModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
+                    destroyOre = 0;
+                    destroyFuel = 0;
                 }
                 break;
             case PrintType.Shotgun:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = shotgunModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
+                    destroyOre = 0;
+                    destroyFuel = 0;
                 }
                 break;
             case PrintType.Laser:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = laserModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
+                    destroyOre = 0;
+                    destroyFuel = 0;
                 }
                 break;
             case PrintType.Shield:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = shieldModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
+                    destroyOre = 0;
+                    destroyFuel = 0;
                 }
                 break;
         }
 
         float positionX = gameObject.transform.position.x;
-        float positionZ = gameObject.transform.position.z;
         float positionY = gameObject.transform.position.y;
+        float positionZ = gameObject.transform.position.z;
 
         Vector3 position = new(positionX, positionY, positionZ - 2);
 
@@ -156,7 +163,6 @@ public class Factory : MonoBehaviour
             GameObject newModule = Instantiate(currentModule, position, Quaternion.identity);
 
             newModule.name = currentType.ToString();
-            //popAnimator.Play("FactoryPopAnimation");
         }
         currentModule = null;
     }

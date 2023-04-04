@@ -43,6 +43,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "SM_Bld_Floor_09_\uD22C\uBA85"
       objectReference: {fileID: 0}
+    - target: {fileID: 1038443014498638, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
+      propertyPath: m_TagString
+      value: Respawn
+      objectReference: {fileID: 0}
     - target: {fileID: 4718072007889550, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -86,6 +90,18 @@ PrefabInstance:
     - target: {fileID: 4718072007889550, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 65348614747139642, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 65348614747139642, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 65348614747139642, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6961ac7bac998e94fb1f4a4f400beee2, type: 3}
