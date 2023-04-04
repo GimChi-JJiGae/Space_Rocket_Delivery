@@ -48,6 +48,13 @@ public class DTOcreateRoom
     
 }
 
+public class DTOuserMove
+{
+    public string roomName;
+    public int userId;
+    public float x, y, z, rx, ry, rz, rw; 
+}
+
 public class DTObasicTurret
 {
     public float hx, hy, hz;    // 수평 움직임 로테이션
@@ -65,16 +72,21 @@ public class Controller : MonoBehaviour
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
+    UserMoveController userMoveController;          // 유저 움직임 컨트롤러
     BasicTurretController basicTurretController;    // 기본포탑 머리 돌리기
 
     // Player관련 함수
+    
     Multiplayer multiplayer;
+    
     MultiSpaceship multiSpaceship;
 
     SocketClient socketClient;
 
     void Start()
     {
+        GameObject serverObject = GameObject.Find("Server");
+        multiplayer = serverObject.GetComponent<Multiplayer>();
         socketClient = GetComponent<SocketClient>();
 
         // 필요한 컨트롤러 인스턴스 생성.
@@ -82,10 +94,12 @@ public class Controller : MonoBehaviour
         enterRoomController = new EnterRoomController();
         playerPositionController = new PlayerPositionController();
         createModuleController = new CreateModuleController();
+
+        userMoveController = new UserMoveController();
         basicTurretController = new BasicTurretController();
 
         // 멀티플레이 관련 로직 
-        multiplayer = GetComponent<Multiplayer>();
+        //multiplayer = GetComponent<Multiplayer>();
         multiSpaceship = GetComponent<MultiSpaceship>();
     }
 
@@ -100,7 +114,7 @@ public class Controller : MonoBehaviour
     {
         createRoomController.Service();
         enterRoomController.Service();
-        playerPositionController.Service(multiplayer);
+        //playerPositionController.Service(multiplayer);
         createModuleController.Service(multiSpaceship);
         
     }
@@ -121,12 +135,16 @@ public class Controller : MonoBehaviour
                     int createRoomHead = 0;
                     DTOcreateRoom createRoom = new DTOcreateRoom();
                     createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
+                    Debug.Log("방은 생성되었다.");
                     Debug.Log(createRoom.roomName);
                     Debug.Log(createRoom.nickname);
                     createRoom.active = true;
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
+                        Debug.Log("과연 방코드가");
+                        
                         PlayerPrefs.SetString("roomCode", createRoom.roomName);
+                        Debug.Log(PlayerPrefs.GetString("roomCode"));
                     });
                     
                     //PlayerPrefs.SetString("roomCode", createRoom.roomName);
@@ -134,7 +152,7 @@ public class Controller : MonoBehaviour
 
                     //string roomCode = createRoomController.Service();
                     //PlayerPrefs.SetString("roomCode", roomCode);
-                    Debug.Log("방생성 수신");
+                    
                     
                     break;
 
@@ -178,8 +196,26 @@ public class Controller : MonoBehaviour
                     break;
                 case PacketType.MOVE:
                     Debug.Log("움직임 받는다!");
-                    playerPositionController.ReceiveDTO(data);
-                    playerPositionController.SetAct(true);
+                    //playerPositionController.ReceiveDTO(data);
+                    //playerPositionController.SetAct(true);
+                    //byte[] isUserMoveSucess = SplitArray(data, 0, 1);
+
+                    int userMoveHead = 0;
+                    DTOuserMove userMove = new DTOuserMove();
+                    userMoveController.newReceiveDTO(data, userMove, ref userMoveHead);
+                    Debug.Log("어떤새끼가 범인이야");
+                    Debug.Log(userMove.roomName);
+                    Debug.Log(userMove.userId);
+                    Debug.Log(userMove.x);
+                    Debug.Log(userMove.y);
+                    Debug.Log(userMove.z);
+                    Debug.Log(userMove.rx);
+                    Debug.Log(userMove.ry);
+                    Debug.Log(userMove.rz);
+                    Debug.Log(userMove.rw);
+                    
+                    multiplayer.MoveOtherPlayer(userMove.roomName, userMove.userId, userMove.x, userMove.y, userMove.z, userMove.rx, userMove.ry, userMove.rz, userMove.rw);
+                    
 
                     break;
                 case PacketType.MODULE_CONTROL:
@@ -353,6 +389,12 @@ public class CreateModuleController : ReceiveController
         }
     }
 }
+
+public class UserMoveController : ReceiveController
+{
+
+}
+
 
 public class BasicTurretController : ReceiveController
 {

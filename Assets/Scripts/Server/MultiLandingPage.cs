@@ -56,15 +56,15 @@ public class MultiLandingPage : MonoBehaviour
         Debug.Log("눌림");
         
         userNicknameInput = nicknameInputField.text;
-       
+        
 
         //}
     }
+
+    
    
     void OnCreateRoom()
     {
-   
-        Debug.Log("OnCreateRoom");
         controller.Send(PacketType.CREATE_ROOM, userNicknameInput, "더미값");
         PlayerPrefs.SetString("userNickname", userNicknameInput);
         SceneManager.LoadScene("WaitingRoom");

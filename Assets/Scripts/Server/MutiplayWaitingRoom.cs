@@ -17,8 +17,7 @@ public class MutiplayWaitingRoom : MonoBehaviour
     void Start()
     {
 
-        Debug.Log("여기 열리니?");
-        Debug.Log(PlayerPrefs.GetString("roomCode"));
+        
         RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
         
 

@@ -24,8 +24,7 @@ public class Multiplayer : MonoBehaviour
 
     void Start()
     {
-        playerIndex = PlayerPrefs.GetInt("userId");
-        roomCode = PlayerPrefs.GetString("roomCode");
+        
         isMultiplayer = true;
         isHost = false;
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
@@ -39,10 +38,11 @@ public class Multiplayer : MonoBehaviour
 
     IEnumerator CallFunctionRepeatedly()
     {
+        yield return new WaitForSeconds(1f);
         while (true)
         {
             yield return new WaitForSeconds(0.5f); // 0.1초마다 반복
-                                                 // 반복해서 호출할 함수 호출
+                                                   // 반복해서 호출할 함수 호출
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
 
@@ -52,6 +52,9 @@ public class Multiplayer : MonoBehaviour
 
     void FixedUpdate()
     {
+        playerIndex = PlayerPrefs.GetInt("userId");
+        roomCode = PlayerPrefs.GetString("roomCode");
+
         for (int i = 0; i < players.Length - 1; i++)
         {
             if (targetPosition[i] != null && i != playerIndex)
@@ -66,8 +69,9 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
-    public void MoveOtherPlayer(string roomcode,  int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
+    public void MoveOtherPlayer(string roomcode, int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
+        Debug.Log("니가 범인임?");
         //idx = 3;
         if (idx != playerIndex)
         {

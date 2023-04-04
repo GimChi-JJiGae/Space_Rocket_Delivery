@@ -59,7 +59,7 @@ public class SocketClient : MonoBehaviour
                 // 수신한 데이터 역직렬화
                 Receive(buffer);
             }catch { }
-
+            Debug.Log("여기서대기한다2");
             // 다시 데이터 수신 대기
             socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
         }
