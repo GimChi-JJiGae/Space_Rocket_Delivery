@@ -970,7 +970,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e8498fac04eeb4a91a0082c980fe73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popAnimator: {fileID: 0}
   currentType: 0
   currentModule: {fileID: 0}
   neededOre: 0
