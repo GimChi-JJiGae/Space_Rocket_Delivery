@@ -59,7 +59,7 @@ public class MultiSpaceship : MonoBehaviour
     // 자원 생성 send corutine
     public void SendCreateModule(int xIdx, int zIdx, int moduleType)
     {
-        controller.Send(PacketType.MODULE_CREATE, xIdx, zIdx, moduleType);
+        //controller.Send(PacketType.MODULE_CREATE, xIdx, zIdx, moduleType);
     }
 
     public void ReceiveCreateModule(int xIdx, int zIdx, int moduleType)
@@ -72,7 +72,7 @@ public class MultiSpaceship : MonoBehaviour
     // supplier가 바뀌는 것을 전달
     public void SendChangeSupplier(int type)
     {
-        controller.Send(PacketType.SUPPLIER_CHANGE, type);
+        //controller.Send(PacketType.SUPPLIER_CHANGE, type);
     }
 
     public void ReceiveChangeSupplier()
@@ -88,7 +88,7 @@ public class MultiSpaceship : MonoBehaviour
                                                     // 반복해서 호출할 함수 호출
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
-                controller.Send(PacketType.SUPPLIER_CREATE, resourceCount);
+                //controller.Send(PacketType.SUPPLIER_CREATE, resourceCount);
                 resourceCount++;
             }
         }
@@ -144,7 +144,7 @@ public class MultiSpaceship : MonoBehaviour
                         list.Add(q.w);
                     }
                 }
-                controller.ListSend(PacketType.RESOURCE_MOVE, list);
+                //controller.ListSend(PacketType.RESOURCE_MOVE, list);
             }
         }
 

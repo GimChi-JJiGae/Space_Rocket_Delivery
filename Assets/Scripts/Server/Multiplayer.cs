@@ -30,7 +30,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(1);
+        AssignPlayer(0);
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -44,7 +44,7 @@ public class Multiplayer : MonoBehaviour
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
             
-            controller.Send(PacketType.MOVE, playerIndex, a.x+1, a.y, a.z, b.x, b.y, b.z, b.w);
+            controller.Send(PacketType.MOVE, "phqghu", playerIndex, a.x+1, a.y, a.z, b.x, b.y, b.z, b.w);
         }
     }
 
@@ -64,8 +64,9 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
-    public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
+    public void MoveOtherPlayer(string roomCode, int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
+        idx = 3;
         if (idx != playerIndex)
         {
             Vector3 dir = new Vector3(px, py, pz);

@@ -73,7 +73,7 @@ public class MultiEnemy : MonoBehaviour
                     List<object> sendList = new List<object>();
                     sendList.Add((int)count);
                     sendList.AddRange(list);
-                    controller.ListSend(PacketType.ENEMY_MOVE, sendList);
+                    //controller.ListSend(PacketType.ENEMY_MOVE, sendList);
                 }
             }
             catch

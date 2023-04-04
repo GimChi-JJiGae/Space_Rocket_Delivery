@@ -115,10 +115,13 @@ public class Controller : MonoBehaviour
 
     public void Receive(PacketType header, byte[] data)
     {
+        
         try
         {
+            Debug.Log("받았당~");// + (PacketType)header);
             switch (header)
             {
+                
                 case PacketType.CREATE_ROOM:
                     
                     createRoomController.ReceiveDTO(data);
@@ -144,6 +147,7 @@ public class Controller : MonoBehaviour
                     enterRoomController.SetAct(true);
                     break;
                 case PacketType.MOVE:
+                    
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
@@ -243,6 +247,7 @@ public class Controller : MonoBehaviour
         }
         byte[] byteArray = byteList.ToArray();
         // 전송 시작
+        Debug.Log("보낸당~");
         socketClient.Send(byteArray);
     }
 
@@ -296,6 +301,7 @@ public class Controller : MonoBehaviour
 // 유저 움직임
 public class PlayerPositionController : ReceiveController
 {
+    public string roomCode;
     public int userId;
     public float px;
     public float py;
@@ -309,7 +315,7 @@ public class PlayerPositionController : ReceiveController
     {
         if (this.GetAct())
         {
-            multiplayer.MoveOtherPlayer(userId, px, py, pz, rx, ry,rz, rw);
+            multiplayer.MoveOtherPlayer(roomCode, userId, px, py, pz, rx, ry,rz, rw);
             this.SetAct(false);
         }
     }
