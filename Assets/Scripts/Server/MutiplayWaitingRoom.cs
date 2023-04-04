@@ -26,6 +26,9 @@ public class MutiplayWaitingRoom : MonoBehaviour
 
         QuitRoomBtn = GameObject.Find("QuitRoomBtn").GetComponent<Button>();      // 방 나가기
         QuitRoomBtn.onClick.AddListener(QuitRoom);
+
+        
+        
     }
 
     // Update is called once per frame

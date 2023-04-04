@@ -46,30 +46,30 @@ public class SocketClient : MonoBehaviour
         Debug.Log("Connected to server");
 
         // 연결된 소켓으로부터 데이터 수신 대기
-        socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
+      //  socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
     }
 
-    private void ReceiveCallback(IAsyncResult result)
-    {
-        // 데이터 수신 완료
-        int bytesRead = socket.EndReceive(result);
-        if (bytesRead > 0)
-        {
-            try{
-                // 수신한 데이터 역직렬화
-                Receive(buffer);
-            }catch { }
-            Debug.Log("여기서대기한다2");
-            // 다시 데이터 수신 대기
-            socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
-        }
-        else
-        {
-            // 연결이 끊어졌을 때 처리
-            Debug.Log("Disconnected from server");
-            socket.Close();
-        }
-    }
+    //private void ReceiveCallback(IAsyncResult result)
+    //{
+    //    // 데이터 수신 완료
+    //    int bytesRead = socket.EndReceive(result);
+    //    if (bytesRead > 0)
+    //    {
+    //        try{
+    //            // 수신한 데이터 역직렬화
+    //            Receive(buffer);
+    //        }catch { }
+    //        Debug.Log("여기서대기한다2");
+    //        // 다시 데이터 수신 대기
+    //        socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, ReceiveCallback, null);
+    //    }
+    //    else
+    //    {
+    //        // 연결이 끊어졌을 때 처리
+    //        Debug.Log("Disconnected from server");
+    //        socket.Close();
+    //    }
+    //}
 
     // 직렬화 후 전송
     public void Send(byte[] byteArray)         
@@ -84,9 +84,12 @@ public class SocketClient : MonoBehaviour
     {
         Debug.Log("여기서 한번만 받나?");
         byte[] header = SplitArray(buffer, 0, 1);
+        Debug.Log("리스브 테스트1");
         //Debug.Log((int)header[0]);
         byte[] data = SplitArray(buffer, 1, buffer.Length - 1);
+        Debug.Log("리스브 테스트2");
         controller.Receive((PacketType)header[0], data);
+        Debug.Log("리스브 테스트3");
     }
 
     private void SendCallback(IAsyncResult result)

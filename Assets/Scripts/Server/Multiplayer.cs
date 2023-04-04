@@ -11,6 +11,7 @@ public class Multiplayer : MonoBehaviour
 {
     public bool isHost;
     public bool isMultiplayer;
+    public bool check_user = false;
 
     public int playerIndex;                            // 사용자의 플레이어 인덱스
     public string roomCode;
@@ -31,7 +32,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(PlayerPrefs.GetInt("userId"));
+        
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -52,9 +53,17 @@ public class Multiplayer : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(!check_user)
+        {
+            AssignPlayer(PlayerPrefs.GetInt("userId"));
+            check_user = true;
+        }
+
+
         playerIndex = PlayerPrefs.GetInt("userId");
         roomCode = PlayerPrefs.GetString("roomCode");
-
+       
+        
         for (int i = 0; i < players.Length - 1; i++)
         {
             if (targetPosition[i] != null && i != playerIndex)

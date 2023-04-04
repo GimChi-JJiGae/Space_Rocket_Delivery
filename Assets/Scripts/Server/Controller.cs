@@ -65,7 +65,7 @@ public class DTObasicTurret
 
 public class Controller : MonoBehaviour
 {
-    
+    public bool isWait = false;
     CreateRoomController createRoomController;      // 방 생성을 위한 컨트롤러
     EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
@@ -76,17 +76,20 @@ public class Controller : MonoBehaviour
     BasicTurretController basicTurretController;    // 기본포탑 머리 돌리기
 
     // Player관련 함수
-    
-    Multiplayer multiplayer;
+    public GameObject serverObject;
+
+    Multiplayer multiplayer ;
     
     MultiSpaceship multiSpaceship;
 
     SocketClient socketClient;
 
+
     void Start()
     {
-        GameObject serverObject = GameObject.Find("Server");
-        multiplayer = serverObject.GetComponent<Multiplayer>();
+        Debug.Log("컨트롤러 실행");
+
+        multiSpaceship = GetComponent<MultiSpaceship>();
         socketClient = GetComponent<SocketClient>();
 
         // 필요한 컨트롤러 인스턴스 생성.
@@ -98,9 +101,9 @@ public class Controller : MonoBehaviour
         userMoveController = new UserMoveController();
         basicTurretController = new BasicTurretController();
 
-        // 멀티플레이 관련 로직 
-        //multiplayer = GetComponent<Multiplayer>();
-        multiSpaceship = GetComponent<MultiSpaceship>();
+        serverObject = GameObject.Find("Server");
+        multiplayer = serverObject.GetComponent<Multiplayer>();
+       
     }
 
     private void Awake()
@@ -112,9 +115,15 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        createRoomController.Service();
+        //if (!isWait)
+        //{
+        //    multiplayer = serverObject.GetComponent<Multiplayer>();
+        //    isWait = true;
+        //}
+
+        //createRoomController.Service();
         enterRoomController.Service();
-        //playerPositionController.Service(multiplayer);
+        playerPositionController.Service(multiplayer);
         createModuleController.Service(multiSpaceship);
         
     }
@@ -213,8 +222,22 @@ public class Controller : MonoBehaviour
                     Debug.Log(userMove.ry);
                     Debug.Log(userMove.rz);
                     Debug.Log(userMove.rw);
+
+                    playerPositionController.px = userMove.x;
+                    playerPositionController.py = userMove.y;
+                    playerPositionController.pz = userMove.z;
+                    playerPositionController.rx = userMove.rx;
+                    playerPositionController.ry = userMove.ry;
+                    playerPositionController.rz = userMove.rz;
+                    playerPositionController.rw = userMove.rw;
+                    Debug.Log("22222");
+                    playerPositionController.SetAct(true);
+                    Debug.Log("33333");
+                    //playerPositionController.Service();
+
+                    Debug.Log("44444");
                     
-                    multiplayer.MoveOtherPlayer(userMove.roomName, userMove.userId, userMove.x, userMove.y, userMove.z, userMove.rx, userMove.ry, userMove.rz, userMove.rw);
+                    //multiplayer.MoveOtherPlayer(userMove.roomName, userMove.userId, userMove.x, userMove.y, userMove.z, userMove.rx, userMove.ry, userMove.rz, userMove.rw);
                     
 
                     break;
