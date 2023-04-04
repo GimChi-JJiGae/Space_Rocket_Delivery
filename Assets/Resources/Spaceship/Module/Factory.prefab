@@ -926,7 +926,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1199357586426418149}
   - component: {fileID: 5390243429692022457}
-  - component: {fileID: 3950128590443922932}
   m_Layer: 0
   m_Name: Factory
   m_TagString: Produce
@@ -970,7 +969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38e8498fac04eeb4a91a0082c980fe73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popAnimator: {fileID: 0}
   currentType: 0
   currentModule: {fileID: 0}
   neededOre: 0
@@ -979,19 +977,6 @@ MonoBehaviour:
   destroyFuel: 0
   oreText: {fileID: 3579219986808533329}
   fuelText: {fileID: 314950624227860760}
---- !u!65 &3950128590443922932
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199357586426418146}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 2.1, z: 4.2}
-  m_Center: {x: -0.55, y: 0.54999995, z: 0.20000005}
 --- !u!1 &1199357586569729771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1099,6 +1084,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1199357586865489791}
+  - component: {fileID: 3559994412456138627}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -1131,6 +1117,19 @@ Transform:
   m_Father: {fileID: 1199357586426418149}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3559994412456138627
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199357586865489788}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 2.1, z: 4.2}
+  m_Center: {x: -0.25, y: 0.54999995, z: 0.2}
 --- !u!1 &1199357587007346202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,6 +1779,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1199357586426418149}
     m_Modifications:
+    - target: {fileID: 647690181026033245, guid: 5317b62bcec364846801bf26668ac725, type: 3}
+      propertyPath: m_Size.x
+      value: 1.849383
+      objectReference: {fileID: 0}
+    - target: {fileID: 647690181026033245, guid: 5317b62bcec364846801bf26668ac725, type: 3}
+      propertyPath: m_Center.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 647690181026033245, guid: 5317b62bcec364846801bf26668ac725, type: 3}
+      propertyPath: m_Center.y
+      value: 0.39999998
+      objectReference: {fileID: 0}
     - target: {fileID: 4281733548038937342, guid: 5317b62bcec364846801bf26668ac725, type: 3}
       propertyPath: m_Name
       value: Input

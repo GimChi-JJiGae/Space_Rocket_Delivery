@@ -27,8 +27,6 @@ public class Module : MonoBehaviour
 
     public InteractionModule interactionModule;
 
-    public GameObject[] players;
-
     public ModuleType moduleType;   // 모듈타입
 
     public GameObject wallTop;      // 벽 모듈
@@ -76,12 +74,12 @@ public class Module : MonoBehaviour
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
     {
-        moduleType = t;                 
+        moduleType = t;
 
         // 예외처리
         if (transform.Find("Floor"))    //바닥이 존재하면 부수고 새로 생성
         {
-            GameObject beforeFloor = transform.Find("Floor").gameObject;
+            GameObject beforeFloor = transform.Find("Floor").gameObject; 
             Destroy(beforeFloor);
         }
 
@@ -159,14 +157,6 @@ public class Module : MonoBehaviour
 
         // 바닥 재생성 (청사진)
         CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
-
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponent<InteractionModule>().respawnObject != null)
-            {
-                player.GetComponent<PlayerMovement>().Respawn();
-            }
-        }
 
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);

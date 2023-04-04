@@ -1,7 +1,9 @@
 using ResourceNamespace;
 using System;
+using System.Net;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static Module;
 using static MultiSpaceship;
@@ -158,7 +160,46 @@ public class InteractionModule : MonoBehaviour
 
     public void UpgradeModule()
     {
+        if (turretObject.transform.GetComponentInChildren<ParticleController>())
+        {
+            float deal = turretObject.transform.GetComponentInChildren<ParticleController>().damage;
+            if (deal == 1f)
+            {
+                deal = 1.5f;
+            }
+            else if (deal == 1.5f)
+            {
+                deal = 3f;
+            }
 
+            if (multiplayer.isMultiplayer)
+            {
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.ModuleUpgrade_SEND(playerId, (int)ActiveNum.UPGRADE);
+            }
+        }
+        else if (turretObject.transform.GetComponentInChildren<ShotgunBullet>())
+        {
+            float deal = turretObject.transform.GetComponentInChildren<ShotgunBullet>().damage;
+            if (deal == 1f)
+            {
+                deal = 1.5f;
+            }
+            else if (deal == 1.5f)
+            {
+                deal = 3f;
+            }
+
+            if (multiplayer.isMultiplayer)
+            {
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.ModuleUpgrade_SEND(playerId, (int)ActiveNum.UPGRADE);
+            }
+        }
+        else if (turretObject.transform.GetComponentInChildren<ShieldTurret>())
+        {
+            float health = turretObject.transform.GetComponentInChildren<ShieldTurret>().shieldHealth;
+        }
     }
 
     public void MakeModule()
@@ -259,21 +300,21 @@ public class InteractionModule : MonoBehaviour
                                 multiSpaceship.IncreaseOxygen_SEND(playerId, (int)ModuleType.Oxygenator);
                             }
                         }
-                        else if (inputObject.GetComponentInParent<Factory>())
-                        {
-                            inputObject.GetComponentInParent<Factory>().ProduceModule();
+                    }
+                    else if (inputObject.GetComponentInParent<Factory>())
+                    {
+                        inputObject.GetComponentInParent<Factory>().ProduceModule();
 
-                            if (multiplayer.isMultiplayer)
-                            {
-                                int playerId = PlayerPrefs.GetInt("userId");
-                                multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
-                            }
-                        }
-                        else if (turretObject != null)
+                        if (multiplayer.isMultiplayer)
                         {
-                            UpgradeModule();
+                            int playerId = PlayerPrefs.GetInt("userId");
+                            multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
                         }
                     }
+                }
+                else if (turretObject != null)
+                {
+                    UpgradeModule();
                 }
             }
         }

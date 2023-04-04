@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class ParticleController : MonoBehaviour
 {
-
-  
-
     private ParticleSystem lazerParticleSystem;
 
     public float delay = 0.2f; // 딜레이 시간
     public float interval = 7f; // 반복 주기
     public float miniInterval = 0.5f;
+    public float damage = 1f;
 
 
     public float damageInterval = 0.2f;
@@ -43,7 +41,7 @@ public class ParticleController : MonoBehaviour
             {
                 if (timeAfterDamaged > damageInterval)
                 {
-                    controller.health -= 1;
+                    controller.health -= damage;
                     timeAfterDamaged = 0;
                 }
                 else
@@ -58,7 +56,7 @@ public class ParticleController : MonoBehaviour
 
                 if (timeAfterDamaged > damageInterval)
                 {
-                    Rangedcontroller.health -= 1;
+                    Rangedcontroller.health -= damage;
                     timeAfterDamaged = 0;
                 }
                 else

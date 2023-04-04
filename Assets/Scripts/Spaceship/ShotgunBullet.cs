@@ -6,6 +6,7 @@ public class ShotgunBullet : MonoBehaviour
 {
     private Rigidbody rb;
     public float speed = 20f;
+    public float damage = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,14 +28,14 @@ public class ShotgunBullet : MonoBehaviour
             if (controller != null)
             {
                
-                controller.health -= 1;
+                controller.health -= damage;
             
             }
             else
             {
                 RangedEnemyController Rangedcontroller = other.GetComponent<RangedEnemyController>();   // 원거리 적일 경우
 
-                Rangedcontroller.health -= 1;
+                Rangedcontroller.health -= damage;
                 
             }
 
