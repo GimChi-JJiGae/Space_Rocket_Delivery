@@ -236,9 +236,9 @@ public class Controller : MonoBehaviour
                     //playerPositionController.Service();
 
                     Debug.Log("44444");
-                    
-                    //multiplayer.MoveOtherPlayer(userMove.roomName, userMove.userId, userMove.x, userMove.y, userMove.z, userMove.rx, userMove.ry, userMove.rz, userMove.rw);
-                    
+
+                    multiplayer.MoveOtherPlayer(userMove.roomName, userMove.userId, userMove.x, userMove.y, userMove.z, userMove.rx, userMove.ry, userMove.rz, userMove.rw);
+
 
                     break;
                 case PacketType.MODULE_CONTROL:

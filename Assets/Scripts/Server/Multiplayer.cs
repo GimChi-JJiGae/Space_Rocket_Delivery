@@ -34,22 +34,22 @@ public class Multiplayer : MonoBehaviour
 
         
 
-        StartCoroutine(CallFunctionRepeatedly());
+        //StartCoroutine(CallFunctionRepeatedly());
     }
 
-    IEnumerator CallFunctionRepeatedly()
-    {
-        yield return new WaitForSeconds(1f);
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f); // 0.1초마다 반복
-                                                   // 반복해서 호출할 함수 호출
-            Vector3 a = players[playerIndex].transform.position;
-            Quaternion b = players[playerIndex].transform.rotation;
+    //IEnumerator CallFunctionRepeatedly()
+    //{
+    //    yield return new WaitForSeconds(1f);
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(0.5f); // 0.1초마다 반복
+    //                                               // 반복해서 호출할 함수 호출
+    //        Vector3 a = players[playerIndex].transform.position;
+    //        Quaternion b = players[playerIndex].transform.rotation;
 
-            controller.Send(PacketType.MOVE, roomCode, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
-        }
-    }
+    //        controller.Send(PacketType.MOVE, roomCode, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
+    //    }
+    //}
 
     void FixedUpdate()
     {
