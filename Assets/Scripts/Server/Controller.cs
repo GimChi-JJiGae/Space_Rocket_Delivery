@@ -18,7 +18,7 @@ public enum PacketType
     PARTICIPATE_USER, // 유저가 방에 입장한다는 것
     DEPARTURE_USER,
     PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
-    MOVE = 200,
+    MOVE,
     MODULE_CONTROL = 222,
     REPLICATION,
 
