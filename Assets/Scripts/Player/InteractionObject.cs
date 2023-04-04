@@ -26,7 +26,7 @@ public class InteractionObject : MonoBehaviour
 
         interactionModule = GetComponent<InteractionModule>();
 
-        playerHead = GameObject.Find("PlayerHead");
+        playerHead = transform.Find("PlayerHead").gameObject;
 
         GameObject dummyPrefab = GameObject.Find("Dummy");
 
