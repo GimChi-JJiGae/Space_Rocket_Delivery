@@ -13,7 +13,7 @@ public class Multiplayer : MonoBehaviour
     public bool isMultiplayer;
 
     public int playerIndex;                            // 사용자의 플레이어 인덱스
-
+    public string roomCode;
     public GameObject[] players = new GameObject[4];   // 참조를 쉽게 하기 위해 오브젝트 저장
 
     GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
@@ -24,6 +24,8 @@ public class Multiplayer : MonoBehaviour
 
     void Start()
     {
+        playerIndex = PlayerPrefs.GetInt("userId");
+        roomCode = PlayerPrefs.GetString("roomCode");
         isMultiplayer = true;
         isHost = false;
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
@@ -39,12 +41,12 @@ public class Multiplayer : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(2f); // 0.1초마다 반복
+            yield return new WaitForSeconds(0.5f); // 0.1초마다 반복
                                                  // 반복해서 호출할 함수 호출
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
 
-            controller.Send(PacketType.MOVE, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
+            controller.Send(PacketType.MOVE, roomCode, playerIndex, a.x, a.y, a.z, b.x, b.y, b.z, b.w);
         }
     }
 
