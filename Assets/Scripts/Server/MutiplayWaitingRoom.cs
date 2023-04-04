@@ -40,14 +40,18 @@ public class MutiplayWaitingRoom : MonoBehaviour
 
     void StartGame()
     {
-//        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
-        
-//        SceneManager.LoadScene("Multiplay");
+        //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
+        controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
+        SceneManager.LoadScene("Multiplay");
+        //        SceneManager.LoadScene("Multiplay");
     }
 
     void QuitRoom()
     {
-                //controller.Send(PacketType.DEPARTURE_USER, PlayerPrefs.GetString("roomCode"), PlayerPrefs.GetInt("userId"));
+        controller.Send(PacketType.OUT_USER);
+        SceneManager.LoadScene("LandingPage");
+
+        //controller.Send(PacketType.DEPARTURE_USER, PlayerPrefs.GetString("roomCode"), PlayerPrefs.GetInt("userId"));
 
         //        SceneManager.LoadScene("LandingPage");
     }

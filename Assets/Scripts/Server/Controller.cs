@@ -191,6 +191,13 @@ public class Controller : MonoBehaviour
                     //enterRoomController.ReceiveDTO(data);
                     enterRoomController.SetAct(true);
                     break;
+                case PacketType.START_GAME:
+                    Debug.Log("게임시작");
+                    break;
+
+                case PacketType.OUT_USER:
+                    Debug.Log("방 나가기");
+                    break;
                 case PacketType.MOVE:
                     
                     playerPositionController.ReceiveDTO(data);
@@ -249,7 +256,9 @@ public class Controller : MonoBehaviour
                         }
                     }
                     break;
+            
             }
+
         }
         catch (Exception ex)
         {
