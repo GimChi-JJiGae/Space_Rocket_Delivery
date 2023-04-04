@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public Text timeText;
-    public Text recordText;
+    public GameObject recordTextObject;
     public PlayerInput playerInput;
     public float timeIntervalForSkillTree;
     public GameObject skillTreePrefab;
@@ -62,14 +62,29 @@ public class GameManager : MonoBehaviour
         isGameover = true;
         float bestTime = PlayerPrefs.GetFloat("BestTime");
 
-        if (surviveTime > bestTime)
-        {
-            bestTime = surviveTime;
+        bestTime = surviveTime;
 
-            PlayerPrefs.SetFloat("BestTime", bestTime);
-        }
+        PlayerPrefs.SetFloat("BestTime", bestTime);
         Time.timeScale = 0;
-        recordText.text = "Your Score: " + (int)surviveTime;
+
+        // Find the Text component and update the score
+        if (recordTextObject != null)
+        {
+            Text recordText = recordTextObject.GetComponent<Text>();
+            if (recordText != null)
+            {
+                recordText.text = "Your Score: " + (int)bestTime;
+            }
+            else
+            {
+                Debug.LogError("No Text component found on the recordTextObject.");
+            }
+        }
+        else
+        {
+            Debug.LogError("recordTextObject is not assigned in the inspector.");
+        }
+
         OpenGameOverCanvas();
     }
 
@@ -103,12 +118,33 @@ public class GameManager : MonoBehaviour
         {
             GameObject gameoverCanvas = Instantiate(gameoverCanvasPrefab);
             gameoverCanvas.SetActive(true);
+
+            // Find the Text component in the instantiated Game Over Canvas
+            recordTextObject = gameoverCanvas.transform.Find("RecordTime").gameObject;
+
+            if (recordTextObject != null)
+            {
+                Text recordText = recordTextObject.GetComponent<Text>();
+                if (recordText != null)
+                {
+                    recordText.text = "Your Score: " + (int)PlayerPrefs.GetFloat("BestTime");
+                }
+                else
+                {
+                    Debug.LogError("No Text component found on the recordTextObject.");
+                }
+            }
+            else
+            {
+                Debug.LogError("Cannot find the specified Text object in the Game Over Canvas.");
+            }
         }
         else
         {
             Debug.LogError("Gameover Canvas Prefab is not assigned in the inspector.");
         }
     }
+
 
 
 }

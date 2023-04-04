@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 0}
-  recordText: {fileID: 1178933051908429078, guid: 00c66b6f5eb3e53449cd373ade2f0aff, type: 3}
+  recordTextObject: {fileID: 0}
   playerInput: {fileID: 0}
   timeIntervalForSkillTree: 30
   skillTreePrefab: {fileID: 2741588902093746195, guid: 3e1ff992b8ff9db4c9b961c06bb579f1, type: 3}
-  gameoverCanvasPrefab: {fileID: 5837143053947989462, guid: 3225015481e47d64e90cce68ad617dfe, type: 3}
+  isGameover: 0
+  gameoverCanvasPrefab: {fileID: 1348642700998373175, guid: 3225015481e47d64e90cce68ad617dfe, type: 3}
