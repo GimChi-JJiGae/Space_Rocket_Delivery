@@ -184,8 +184,6 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-            
-        
         cameraShake = Camera.main.GetComponent<CameraShake>(); // Add this line
     }
     void Update()

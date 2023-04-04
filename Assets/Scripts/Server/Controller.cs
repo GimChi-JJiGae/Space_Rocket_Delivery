@@ -30,13 +30,14 @@ public enum PacketType
     TURRET_STATUS,
     BASIC_TURRET,
 
+    ENEMY_MOVE = 199, // 적 생성
     MODULE_CREATE = 200, // 모듈 생성
     SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
     SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
     RESOURCE_MOVE = 212, // 리소스 움직임
 
     ENEMY_CREATE = 220, // 적 생성
-    ENEMY_MOVE = 221, // 적 생성
+    
 };
 
 public class DTOuser    // 유저 방 Enter 이후
@@ -70,12 +71,14 @@ public class Controller : MonoBehaviour
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
     CreateResourceController createResourceController; // 자원 추가를 위한 컨트롤러
     MoveResourceController moveResourceController;  // 자원 위치를 위한 컨트롤러
+    MoveEnemyController moveEnemyController;
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
     // Player관련 함수
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
+    MultiEnemy multiEnemy;
 
     SocketClient socketClient;
 
@@ -90,10 +93,12 @@ public class Controller : MonoBehaviour
         createModuleController = new CreateModuleController();
         createResourceController = new CreateResourceController();
         moveResourceController = new MoveResourceController();
+        moveEnemyController = new MoveEnemyController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
         multiSpaceship = GetComponent<MultiSpaceship>();
+        multiEnemy = GetComponent<MultiEnemy>();
     }
 
     // Update is called once per frame
@@ -105,6 +110,7 @@ public class Controller : MonoBehaviour
         createModuleController.Service(multiSpaceship);
         createResourceController.Service(multiSpaceship);
         moveResourceController.Service();
+        moveEnemyController.Service();
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -146,7 +152,6 @@ public class Controller : MonoBehaviour
                     createModuleController.SetAct(true);
                     break;
                 case PacketType.SUPPLIER_CREATE:
-                    Debug.Log("CreateResourceController : 자원 생성");
                     createResourceController.ReceiveDTO(data);
                     createResourceController.SetAct(true);
                     break;
@@ -172,26 +177,27 @@ public class Controller : MonoBehaviour
                     break;
                 case PacketType.ENEMY_MOVE:
                     Debug.Log("ENEMY_MOVE");
-                    try
+                    if (multiplayer.isHost == false)
                     {
-                        byte[] enemyCount = SplitArray(data, 0, 4);
-                        DTOenemymove[] enemyList = new DTOenemymove[BitConverter.ToInt32(enemyCount, 0)];
-                        int head2 = 4;
-                        Debug.Log(BitConverter.ToInt32(enemyCount, 0));
-                        /*
-                        for (int i = 0; i < BitConverter.ToInt32(enemyCount, 0); i++)
+                        try
                         {
-                            DTOenemymove resource = new DTOenemymove();
-                            moveResourceController.newReceiveDTO(data, resource, ref head2);
-                            enemyList[i] = resource;
+                            byte[] enemyCount = SplitArray(data, 0, 4);
+                            DTOenemymove[] enemyList = new DTOenemymove[BitConverter.ToInt32(enemyCount, 0)];
+                            int head3 = 4;
+                            Debug.Log(BitConverter.ToInt32(enemyCount, 0));
+                            for (int i = 0; i < BitConverter.ToInt32(enemyCount, 0); i++)
+                            {
+                                DTOenemymove resource = new DTOenemymove();
+                                moveEnemyController.newReceiveDTO(data, resource, ref head3);
+                                enemyList[i] = resource;
+                            }
+                            multiEnemy.ReceiveMoveEnemy(enemyList);
+                            moveEnemyController.SetAct(true);
                         }
-                        multiEnemy.ReceiveMoveEnemy(enemyList);
-                        moveResourceController.SetAct(true);
-                        */
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogException(e);
+                        catch (Exception e)
+                        {
+                            Debug.LogException(e);
+                        }
                     }
                     break;
             }
@@ -275,6 +281,7 @@ public class Controller : MonoBehaviour
         }
         byte[] byteArray = byteList.ToArray();
         // 전송 시작
+        //Debug.Log("보낸다: " + header);
         socketClient.Send(byteArray);
     }
 
@@ -409,7 +416,7 @@ public class MoveResourceController : ReceiveController
 // 적 움직임
 public class MoveEnemyController : ReceiveController
 {
-    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
         {

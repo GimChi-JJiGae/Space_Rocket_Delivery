@@ -12295,6 +12295,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   enemyCount: 0
+  enemies:
+  - {fileID: 7630159245973665912, guid: c376d2b745c3efa4e9eb270daf92582e, type: 3}
 --- !u!1001 &1898407471
 PrefabInstance:
   m_ObjectHideFlags: 0

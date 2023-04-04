@@ -169,6 +169,4 @@ public class MultiSpaceship : MonoBehaviour
             targetRotation[DTOresourcemove[i].idxR] = q;
         }
     }
-
-    
 }
