@@ -53,7 +53,7 @@ public class Factory : MonoBehaviour
 
         kitModule = Resources.Load<GameObject>("Resources/Kit");
         shotgunModule = Resources.Load<GameObject>("Resources/Shotgun");
-        laserModule = Resources.Load<GameObject>("Rosources/Laser");
+        laserModule = Resources.Load<GameObject>("Resources/Laser");
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
 
         neededOre = 1;
@@ -62,7 +62,7 @@ public class Factory : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        oreText.text = "가스: " + destroyOre + " / " + neededOre;
+        oreText.text = "광석: " + destroyOre + " / " + neededOre;
         fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
@@ -76,8 +76,6 @@ public class Factory : MonoBehaviour
                 shotgunObject.SetActive(true);
                 neededOre = 1;
                 neededFuel = 2;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
@@ -85,8 +83,6 @@ public class Factory : MonoBehaviour
                 laserObject.SetActive(true);
                 neededOre = 2;
                 neededFuel = 1;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);
@@ -94,8 +90,6 @@ public class Factory : MonoBehaviour
                 shieldObject.SetActive(true);
                 neededOre = 0;
                 neededFuel = 3;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
             case PrintType.Shield:
                 shieldObject.SetActive(false);
@@ -103,8 +97,6 @@ public class Factory : MonoBehaviour
                 kitObject.SetActive(true);
                 neededOre = 1;
                 neededFuel = 1;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
         }
     }
@@ -118,32 +110,32 @@ public class Factory : MonoBehaviour
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = kitModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
+                    destroyOre -= neededOre;
+                    destroyFuel -= neededFuel;
                 }
                 break;
             case PrintType.Shotgun:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = shotgunModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
+                    destroyOre -= neededOre;
+                    destroyFuel -= neededFuel;
                 }
                 break;
             case PrintType.Laser:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = laserModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
+                    destroyOre -= neededOre;
+                    destroyFuel -= neededFuel;
                 }
                 break;
             case PrintType.Shield:
                 if (destroyOre >= neededOre && destroyFuel >= neededFuel)
                 {
                     currentModule = shieldModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
+                    destroyOre -= neededOre;
+                    destroyFuel -= neededFuel;
                 }
                 break;
         }
@@ -159,7 +151,8 @@ public class Factory : MonoBehaviour
             GameObject newModule = Instantiate(currentModule, position, Quaternion.identity);
 
             newModule.name = currentType.ToString();
+
+            currentModule = null;
         }
-        currentModule = null;
     }
 }

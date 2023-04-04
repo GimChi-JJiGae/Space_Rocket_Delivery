@@ -50,7 +50,6 @@ public class InteractionModule : MonoBehaviour
         player = gameObject;
         playerPosition = player.GetComponent<Transform>().position;
 
-
         skillTree = GetComponent<SkillTreeNode>();
     }
 
@@ -214,15 +213,15 @@ public class InteractionModule : MonoBehaviour
                         {
                             inputObject.GetComponentInParent<Oxygenator>().Increase();
                         }
-                        else if (inputObject.GetComponentInParent<Factory>())
-                        {
-                            inputObject.GetComponentInParent<Factory>().ProduceModule();
-                        }
-                        else if (turretObject != null)
-                        {
-                            UpgradeModule();
-                        }
                     }
+                    else if (inputObject.GetComponentInParent<Factory>())
+                    {
+                        inputObject.GetComponentInParent<Factory>().ProduceModule();
+                    }
+                }
+                else if (turretObject != null)
+                {
+                    UpgradeModule();
                 }
             }
         }

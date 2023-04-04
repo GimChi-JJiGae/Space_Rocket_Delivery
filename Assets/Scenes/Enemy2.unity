@@ -5118,7 +5118,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 467018541}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 267dec23dcae19644a37384dd5161c1f, type: 3}
   m_Name: 
@@ -5127,6 +5127,18 @@ MonoBehaviour:
   decreaseAmount: 0.834
   increaseAmount: 41.7
   oxygenBarFilled: {fileID: 1503479904}
+--- !u!114 &1503479910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467018541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a65dbbb476facd0429ff508e2a4c9366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1520533942
 PrefabInstance:
   m_ObjectHideFlags: 0
