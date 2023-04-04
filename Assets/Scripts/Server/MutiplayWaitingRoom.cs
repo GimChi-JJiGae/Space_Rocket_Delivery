@@ -16,13 +16,13 @@ public class MutiplayWaitingRoom : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        controller = GetComponent<Controller>();                   // 컨트롤러 연결하기
 
-        
         RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
         
 
         GoBtn = GameObject.Find("GoBtn").GetComponent<Button>();    // 게임 시작
-        GoBtn.onClick.AddListener(StartGame);
+        GoBtn.onClick.AddListener(StartNewGame);
 
         QuitRoomBtn = GameObject.Find("QuitRoomBtn").GetComponent<Button>();      // 방 나가기
         QuitRoomBtn.onClick.AddListener(QuitRoom);
@@ -38,7 +38,7 @@ public class MutiplayWaitingRoom : MonoBehaviour
         RoomCode.text = "RoomCode: " + PlayerPrefs.GetString("roomCode"); // 시작한 이후에 업데이트 해줘야 이전 방이 안뜸
     }
 
-    void StartGame()
+    void StartNewGame()
     {
         //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
         controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
@@ -48,6 +48,7 @@ public class MutiplayWaitingRoom : MonoBehaviour
 
     void QuitRoom()
     {
+        Debug.Log(controller);
         controller.Send(PacketType.OUT_USER);
         SceneManager.LoadScene("LandingPage");
 
