@@ -4848,7 +4848,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   lifeTime: 5
-  raycastDistance: 1
   projectileDestroyedSound: {fileID: 0}
   rangedEnemyController: {fileID: 0}
 --- !u!199 &595662277253136242
