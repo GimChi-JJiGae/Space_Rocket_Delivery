@@ -12,6 +12,7 @@ public class MultiSpaceship : MonoBehaviour
         FACTORY_CHANGE,
         FACTORY_PRODUCE,
         INCREASE_OXYGEN,
+        RESPAWN,
     }
 
     Multiplayer multiplayer; // 멀티플레이인지 확인하는 변수
@@ -179,6 +180,22 @@ public class MultiSpaceship : MonoBehaviour
                 float repairAmount = interactionModule.CalculateRepairSpeed();
 
                 struckModule.hp += repairAmount;
+            }
+        });
+    }
+
+    public void Respawn_SEND(int id, int activeNum)
+    {
+        controller.Send(PacketType.MODULE_INTERACTION, id, activeNum);
+    }
+
+    public void Respawn_RECEIVE(int id)
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                GameObject.Find("Player" + id).transform.position = new Vector3(0, 0, -2);
             }
         });
     }

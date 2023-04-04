@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static Module;
+using static MultiSpaceship;
 
 public class InteractionModule : MonoBehaviour
 {
@@ -303,6 +304,17 @@ public class InteractionModule : MonoBehaviour
         else
         {
             playerAnimator.SetBool("Repairing", false);
+        }
+
+        if (respawnObject != null)
+        {
+            transform.GetComponent<PlayerMovement>().Respawn();
+
+            if (multiplayer.isMultiplayer)
+            {
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.Respawn_SEND(playerId, (int)ActiveNum.RESPAWN);
+            }
         }
     }
 }

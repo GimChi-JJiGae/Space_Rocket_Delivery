@@ -19,6 +19,7 @@ public enum PacketType
     PARTICIPATE_USER, // 유저가 방에 입장한다는 것
     DEPARTURE_USER, // 유저가 방 떠남
     PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
+    RESPAWN,
 
     MOVE, // 유저 움직임
     MODULE_CONTROL,
@@ -103,6 +104,8 @@ public class Controller : MonoBehaviour
 
     RepairController repairController;
 
+    RespawnController respawnController;
+
     // Player관련 함수
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
@@ -125,6 +128,7 @@ public class Controller : MonoBehaviour
         moveEnemyController = new MoveEnemyController();
         interactionModuleController = new InteractionModuleController();
         repairController = new RepairController();
+        respawnController = new RespawnController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -295,6 +299,10 @@ public class Controller : MonoBehaviour
                 case PacketType.MODULE_REPAIR:
                     repairController.ReceiveDTO(data);
                     repairController.SetAct(true);
+                    break;
+                case PacketType.RESPAWN:
+                    respawnController.ReceiveDTO(data);
+                    respawnController.SetAct(true);
                     break;
             }
         }
@@ -562,6 +570,24 @@ public class RepairController : ReceiveController
             Debug.Log("InteractionModule : 상호작용");
 
             multiSpaceship.Repair_RECEIVE(id, xIdx, zIdx);
+
+            SetAct(false);
+        }
+    }
+}
+
+public class RespawnController : ReceiveController
+{
+    public int id;
+    public int activeNum;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("InteractionModule : 상호작용");
+
+            multiSpaceship.Respawn_RECEIVE(id);
 
             SetAct(false);
         }

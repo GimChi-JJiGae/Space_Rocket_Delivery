@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MultiSpaceship;
 
 public class PlayerMovement : MonoBehaviour {
     public float moveSpeed = 3f;
     public float rotateSpeed = 10f;
-
+    
     private PlayerInput playerInput;
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
+    private MultiSpaceship multiSpaceship;
 
     private Vector3 initialPosition = new(0, 0, -2);
 
@@ -17,6 +19,8 @@ public class PlayerMovement : MonoBehaviour {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
+
+        multiSpaceship = FindAnyObjectByType<MultiSpaceship>();
     }
 
     private void FixedUpdate()
