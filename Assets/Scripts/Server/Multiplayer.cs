@@ -66,7 +66,7 @@ public class Multiplayer : MonoBehaviour
         }
     }
 
-    public void MoveOtherPlayer(int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
+    public void MoveOtherPlayer(string roomcode,  int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
         //idx = 3;
         if (idx != playerIndex)

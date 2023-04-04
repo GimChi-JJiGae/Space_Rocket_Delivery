@@ -160,21 +160,27 @@ public class Controller : MonoBehaviour
                                 Debug.Log(PlayerPrefs.GetInt("userId", user.userId));
                                 Debug.Log(PlayerPrefs.GetString("roomCode", user.roomName));
                             }
+                            else
+                            {
+                                Debug.Log("다른 유저 정보");
+                                Debug.Log(user.userNickName);
+                                Debug.Log(user.userId);
+                                Debug.Log(user.roomName);
+                                Debug.Log("--------");
+                            }
                         });
 
                         
-                        Debug.Log("다른 유저 정보");
-                        Debug.Log(user.userNickName);
-                        Debug.Log(user.userId);
-                        Debug.Log(user.roomName);
-                        Debug.Log("--------");
+                        
                     }
                     //enterRoomController.ReceiveDTO(data);
                     enterRoomController.SetAct(true);
                     break;
                 case PacketType.MOVE:
+                    Debug.Log("움직임 받는다!");
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
+
                     break;
                 case PacketType.MODULE_CONTROL:
                     createModuleController.ReceiveDTO(data);
@@ -251,6 +257,7 @@ public class Controller : MonoBehaviour
 // 유저 움직임
 public class PlayerPositionController : ReceiveController
 {
+    public string roomcode;
     public int userId;
     public float px;
     public float py;
@@ -264,7 +271,7 @@ public class PlayerPositionController : ReceiveController
     {
         if (this.GetAct())
         {
-            multiplayer.MoveOtherPlayer(userId, px, py, pz, rx, ry,rz, rw);
+            multiplayer.MoveOtherPlayer(roomcode, userId, px, py, pz, rx, ry,rz, rw);
             this.SetAct(false);
         }
     }
@@ -295,8 +302,7 @@ public class CreateRoomController : ReceiveController
 
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
-        Debug.Log("서비스");
-        Debug.Log(this.GetAct());
+     
         if (this.GetAct() == true)
         {
             Debug.Log("서비스2");

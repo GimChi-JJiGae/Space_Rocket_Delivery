@@ -32,7 +32,7 @@ public class MutiplayWaitingRoom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(PlayerPrefs.GetString("roomCode"));
+       
         RoomCode.text = "RoomCode: " + PlayerPrefs.GetString("roomCode"); // 시작한 이후에 업데이트 해줘야 이전 방이 안뜸
     }
 

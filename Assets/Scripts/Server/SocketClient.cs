@@ -82,6 +82,7 @@ public class SocketClient : MonoBehaviour
     // 역직렬화
     private void Receive(byte[] buffer)
     {
+        Debug.Log("여기서 한번만 받나?");
         byte[] header = SplitArray(buffer, 0, 1);
         //Debug.Log((int)header[0]);
         byte[] data = SplitArray(buffer, 1, buffer.Length - 1);
