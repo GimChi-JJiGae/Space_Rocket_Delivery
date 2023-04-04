@@ -39,11 +39,10 @@ public class Spawner : MonoBehaviour
         {
             if (multiplayer.isHost == true)//
             {
-                spawnEnemy();
+            spawnEnemy();
                 Debug.Log("Enemy spawned at: " + Time.time); // Add this line
             }
             yield return new WaitForSeconds(spawnInterval);
-            
         }
     }
 
@@ -129,7 +128,7 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // 근거리 적의 경우 적절한 크기로 조정
+            collider.size = new Vector3(1f, 1f, 1f); // 근거리 적의 경우 적절한 크기로 조정
         }
 
         Rigidbody rb = enemy.AddComponent<Rigidbody>();

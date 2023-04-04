@@ -146,13 +146,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7281680282997869032}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 267dec23dcae19644a37384dd5161c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   decreaseAmount: 0.834
   increaseAmount: 41.7
+  oxygenBarFilled: {fileID: 0}
 --- !u!1 &7281680284185072155
 GameObject:
   m_ObjectHideFlags: 0

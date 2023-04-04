@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BasicTurretDamage : MonoBehaviour
 {
-    private int damage = 1; // 기본 데미지 값
+    public int damage = 1; // 기본 데미지 값
     private SkillTreeNode skillTreeNode;
 
     // Start is called before the first frame update
@@ -17,7 +17,6 @@ public class BasicTurretDamage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //damage = 1 + skillTreeNode.GetCurrentTurretDamageLevel();
     }
 
     private void OnParticleCollision(GameObject other)

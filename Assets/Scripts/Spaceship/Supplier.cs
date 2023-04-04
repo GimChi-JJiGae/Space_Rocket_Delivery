@@ -18,7 +18,7 @@ public class Supplier : MonoBehaviour
     private GameObject orePrefab;
 
     // 생성주기
-    readonly private float respawnTime = 10f;
+    public float respawnTime = 10f;
 
     //Start is called before the first frame update
     void Start()
@@ -47,6 +47,10 @@ public class Supplier : MonoBehaviour
         {
 
         }
+    }
+    public void SetRespawnTime(float newRespawnTime)
+    {
+        respawnTime = newRespawnTime;
     }
 
     // 자원 생성

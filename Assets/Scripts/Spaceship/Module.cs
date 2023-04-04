@@ -42,6 +42,7 @@ public class Module : MonoBehaviour
     public GameObject broken2;
 
     public GameObject hitArea;      // 데미지 받는 범위
+    public GameManager gameManager;
 
     public float hp = 0;
 
@@ -68,6 +69,7 @@ public class Module : MonoBehaviour
 
         hitArea = transform.Find("HitArea").gameObject;
         hitArea.SetActive(false);
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // 모듈 생성
@@ -131,7 +133,9 @@ public class Module : MonoBehaviour
         hp -= 1;
         if (hp <= 0)
         {
+            CheckGameOverCondition(); // 모듈 파괴 후 게임 오버 조건 확인
             ResetModule();
+            Debug.Log('6');
         }
         else if (hp <= 1)
         {
@@ -141,7 +145,6 @@ public class Module : MonoBehaviour
         {
             broken1.SetActive(true);
         }
-        
     }
 
     // 모듈 초기화시키기
@@ -172,5 +175,32 @@ public class Module : MonoBehaviour
     public static implicit operator Module(GameObject v)
     {
         throw new NotImplementedException();
+    }
+    private void OnDestroy()
+    {
+        gameObject.SetActive(false);
+    }
+    private void CheckGameOverCondition()
+    {
+        Debug.Log('5');
+        switch (moduleType)
+        {
+            case ModuleType.Engine:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Supplier:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Oxygenator:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Factory:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+        }
     }
 }
