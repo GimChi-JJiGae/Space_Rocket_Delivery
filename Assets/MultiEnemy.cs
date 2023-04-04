@@ -41,40 +41,33 @@ public class MultiEnemy : MonoBehaviour
 
     IEnumerator SendPositionEnemy()
     {
-        yield return new WaitForSeconds(0.1f);
-        
         while (true)
         {
             yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
                                                    // 반복해서 호출할 함수 호출
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
-            List<object> list = new List<object>();
-            list.Add(enemyCount);
-            for (int i = 0; i < enemyCount; i++)
-            {
-                if (enemyeList[i] != null)
+                List<object> list = new List<object>();
+                list.Add(enemyCount);
+                for (int i = 0; i < enemyCount; i++)
                 {
-                    list.Add(i);
-                    list.Add(0);
-                    Vector3 a = enemyeList[i].transform.position;
-                    list.Add(a.x);
-                    list.Add(a.y);
-                    list.Add(a.z);
-                    Quaternion q = enemyeList[i].transform.rotation;
-                    list.Add(q.x);
-                    list.Add(q.y);
-                    list.Add(q.z);
-                    list.Add(q.w);
+                    if (enemyeList[i] != null)
+                    {
+                        list.Add(i);
+                        list.Add(0);
+                        Vector3 a = enemyeList[i].transform.position;
+                        list.Add(a.x);
+                        list.Add(a.y);
+                        list.Add(a.z);
+                        Quaternion q = enemyeList[i].transform.rotation;
+                        list.Add(q.x);
+                        list.Add(q.y);
+                        list.Add(q.z);
+                        list.Add(q.w);
+                    }
                 }
+                controller.ListSend(PacketType.ENEMY_MOVE, list);
             }
-            controller.ListSend(PacketType.ENEMY_MOVE, list);
-
-            }
-           
         }
-
-        
     }
-
 }

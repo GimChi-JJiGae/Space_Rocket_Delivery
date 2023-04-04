@@ -30,7 +30,7 @@ public class Multiplayer : MonoBehaviour
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
 
-        AssignPlayer(0);
+        AssignPlayer(1);
 
         StartCoroutine(CallFunctionRepeatedly());
     }

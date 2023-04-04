@@ -51,11 +51,9 @@ public class MultiSpaceship : MonoBehaviour
                     Vector3 v = (targetPosition[i] - resourceList[i].transform.position) * 5.0f * Time.deltaTime;
                     resourceList[i].transform.position += v;
                     resourceList[i].transform.rotation = Quaternion.Lerp(targetRotation[i], resourceList[i].transform.rotation, 0.1f * Time.deltaTime);
-
                 }
             }
         }
-        
     }
 
     // 자원 생성 send corutine
