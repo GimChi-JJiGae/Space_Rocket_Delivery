@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    Multiplayer multiplayer; // 멀티플레이 중인지 확인만 함
+    MultiEnemy multiEnemy;
+
     public GameObject[] enemies;
     public int[] enemyHealths;
     public GameObject explosionVFX;
@@ -22,7 +25,11 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
+        multiplayer = FindAnyObjectByType<Multiplayer>();
+        multiEnemy = FindAnyObjectByType<MultiEnemy>();
+        
         StartCoroutine(SpawnEnemyRoutine());
+        
         nextDifficultyIncreaseTime = Time.time + difficultyTimeStep;
     }
 
@@ -30,9 +37,13 @@ public class Spawner : MonoBehaviour
     {
         while (true)
         {
-            spawnEnemy();
+            if (multiplayer.isHost == true)//
+            {
+                spawnEnemy();
+                Debug.Log("Enemy spawned at: " + Time.time); // Add this line
+            }
             yield return new WaitForSeconds(spawnInterval);
-            Debug.Log("Enemy spawned at: " + Time.time); // Add this line
+            
         }
     }
 
@@ -50,7 +61,6 @@ public class Spawner : MonoBehaviour
 
     public void spawnEnemy()
     {
-
         float minDistance = 80;
         float maxDistance = 100;
 
@@ -112,7 +122,6 @@ public class Spawner : MonoBehaviour
             controller.enemyDestroyedSound = enemyDestroyedSound;
         }
 
-
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
@@ -133,7 +142,11 @@ public class Spawner : MonoBehaviour
         rb.freezeRotation = true;
 
         enemy.transform.rotation = Quaternion.LookRotation(direction);
+
+        multiEnemy.enemyeList[multiEnemy.enemyCount] = enemy;
+        multiEnemy.enemyCount++;
     }
+
     public GameObject FindClosestWall() // Add this method
     {
         GameObject[] wallObjects;

@@ -24,22 +24,24 @@ public enum PacketType
     REPLICATION,
 
     OBJECT_MOVE,
-    OBJECT_CONTROL,
-
+    OBJECT_CONTROL, 
+    
     MODULE_INTERACTION,
 
     MODULE_STATUS,
     CURRENT_POSITION,
-    ENEMY_MOVE,
+    //ENEMY_MOVE,
     TURRET_STATUS,
     BASIC_TURRET,
 
-    OXYGEN_INCREASE,
-
+    ENEMY_MOVE = 199, // 적 생성
     RESOURCE_CREATE = 201, // SUPPLIER 오브젝트 생성
     MODULE_CREATE = 301, // 모듈 생성
-    SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
-    RESOURCE_MOVE = 212, // 리소스 움직임
+    RESOURCE_CHANGE = 210, // SUPPLIER 오브젝트 변경
+    RESOURCE_MOVE = 211, // 리소스 움직임
+
+    ENEMY_CREATE = 220, // 적 생성
+    
 };
 
 public class DTOuser    // 유저 방 Enter 이후
@@ -53,6 +55,14 @@ public class DTOuser    // 유저 방 Enter 이후
 public class DTOresourcemove    // 자원 움직임
 {
     public int idxR;
+    public float px, py, pz;
+    public float rx, ry, rz, rw;
+}
+
+public class DTOenemymove    // 적 움직임
+{
+    public int idxE;
+    public int type;
     public float px, py, pz;
     public float rx, ry, rz, rw;
 }
@@ -80,6 +90,7 @@ public class Controller : MonoBehaviour
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
     CreateResourceController createResourceController; // 자원 추가를 위한 컨트롤러
     MoveResourceController moveResourceController;  // 자원 위치를 위한 컨트롤러
+    MoveEnemyController moveEnemyController;
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
@@ -90,6 +101,7 @@ public class Controller : MonoBehaviour
     // Player관련 함수
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
+    MultiEnemy multiEnemy;
 
     SocketClient socketClient;
 
@@ -105,11 +117,13 @@ public class Controller : MonoBehaviour
         basicTurretController = new BasicTurretReceiveController();
         createResourceController = new CreateResourceController();
         moveResourceController = new MoveResourceController();
+        moveEnemyController = new MoveEnemyController();
         interactionModuleController = new InteractionModuleController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
         multiSpaceship = GetComponent<MultiSpaceship>();
+        multiEnemy = GetComponent<MultiEnemy>();
     }
 
     private void Awake()
@@ -127,6 +141,7 @@ public class Controller : MonoBehaviour
         createModuleController.Service(multiSpaceship);
         createResourceController.Service(multiSpaceship);
         moveResourceController.Service();
+        moveEnemyController.Service();
         interactionModuleController.Service();
     }
 
@@ -140,7 +155,7 @@ public class Controller : MonoBehaviour
                     //createRoomController.ReceiveDTO(data);
                     //createRoomController.SetAct(true);
                     //Debug.Log(createModuleController.GetAct());
-
+                    
                     byte[] isCreateSucess = SplitArray(data, 0, 1);
                     int createRoomHead = 0;
                     DTOcreateRoom createRoom = new DTOcreateRoom();
@@ -233,18 +248,43 @@ public class Controller : MonoBehaviour
                             DTOresourcemove resource = new();
                             moveResourceController.newReceiveDTO(data, resource, ref head2);
                             resourceList[i] = resource;
-            }
+                        }
                         multiSpaceship.ReceiveMoveResource(resourceList);
                         moveResourceController.SetAct(true);
-        }
+                    }
                     catch(Exception e)
                     {
                         Debug.LogException(e);
                     }
                     break;
+                case PacketType.ENEMY_MOVE:
+                    Debug.Log("ENEMY_MOVE");
+                    if (multiplayer.isHost == false)
+                    {
+                        try
+                        {
+                            byte[] enemyCount = SplitArray(data, 0, 4);
+                            DTOenemymove[] enemyList = new DTOenemymove[BitConverter.ToInt32(enemyCount, 0)];
+                            int head3 = 4;
+                            Debug.Log(BitConverter.ToInt32(enemyCount, 0));
+                            for (int i = 0; i < BitConverter.ToInt32(enemyCount, 0); i++)
+                            {
+                                DTOenemymove resource = new DTOenemymove();
+                                moveEnemyController.newReceiveDTO(data, resource, ref head3);
+                                enemyList[i] = resource;
                 case PacketType.MODULE_INTERACTION:
                     interactionModuleController.ReceiveDTO(data);
                     interactionModuleController.SetAct(true);
+                    break;
+            }
+                            multiEnemy.ReceiveMoveEnemy(enemyList);
+                            moveEnemyController.SetAct(true);
+        }
+                        catch (Exception e)
+                        {
+                            Debug.LogException(e);
+                        }
+                    }
                     break;
             }
         }
@@ -296,7 +336,7 @@ public class Controller : MonoBehaviour
     {
         List<byte> byteList = new()
         {
-            // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
             (byte)header // BitConverter.GetBytes()
         };             // List를 byte로 받아옴
 
@@ -327,6 +367,7 @@ public class Controller : MonoBehaviour
         }
         byte[] byteArray = byteList.ToArray();
         // 전송 시작
+        //Debug.Log("보낸다: " + header);
         socketClient.Send(byteArray);
     }
 
@@ -472,7 +513,7 @@ public class ChangeResourceController : ReceiveController
     }
 }
 
-// 자원 변경
+// 자원 움직임
 public class MoveResourceController : ReceiveController
 {
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
@@ -521,6 +562,19 @@ public class InteractionModuleController : ReceiveController
 public class BasicTurretReceiveController : ReceiveController
 {
 
+}
+
+// 적 움직임
+public class MoveEnemyController : ReceiveController
+{
+    public new void Service() // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (this.GetAct())
+        {
+            //multiSpaceship.ReceiveChangeResource();
+            this.SetAct(false);
+        }
+    }
 }
 
 // 컨트롤러 정의

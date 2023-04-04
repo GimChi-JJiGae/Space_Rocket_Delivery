@@ -207,12 +207,14 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
-                    if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
-                    {
-                        MakeModule();
+                        if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
+                        {
+                            MakeModule();
+                        }
                     }
                 }
             }
+            // Supplier 자원 변경
             else if (resourceObject != null)
             {
                 resourceObject.GetComponent<ResourceChanger>().SwitchResource();
@@ -237,7 +239,6 @@ public class InteractionModule : MonoBehaviour
                 {
                     int playerId = PlayerPrefs.GetInt("userId");
                     multiSpaceship.ChangeModule_SEND(playerId, (int)ModuleType.Factory);
-                }
             }
 
 
@@ -258,10 +259,9 @@ public class InteractionModule : MonoBehaviour
                                 multiSpaceship.IncreaseOxygen_SEND(playerId, (int)ModuleType.Oxygenator);
                             }
                         }
-                    }
-                    else if (inputObject.GetComponentInParent<Factory>())
-                    {
-                        inputObject.GetComponentInParent<Factory>().ProduceModule();
+                        else if (inputObject.GetComponentInParent<Factory>())
+                        {
+                            inputObject.GetComponentInParent<Factory>().ProduceModule();
                         
                         if (multiplayer.isMultiplayer)
                         {
@@ -269,12 +269,11 @@ public class InteractionModule : MonoBehaviour
                             multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
                         }
                     }
+                    else if (turretObject != null)
+                    {
+                        UpgradeModule();
+                    }
                 }
-                else if (turretObject != null)
-                {
-                    UpgradeModule();
-                }
-            }
         }
 
         if (playerInput.RepairModule)
@@ -297,7 +296,7 @@ public class InteractionModule : MonoBehaviour
         }
         else
         {
-            playerAnimator.SetBool("Repairing", false);
+    		playerAnimator.SetBool("Repairing", false);
         }
     }
 }
