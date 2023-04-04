@@ -45,39 +45,49 @@ public class MultiEnemy : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
                                                    // 반복해서 호출할 함수 호출
-            if (multiplayer.isMultiplayer && multiplayer.isHost == true)
+            try
             {
-                List<object> list = new List<object>();
-                
-                int count = 0;
-                for (int i = 0; i < enemyCount; i++)
+                if (multiplayer.isMultiplayer && multiplayer.isHost == true)
                 {
-                    if (enemyeList[i] != null)
+                    List<object> list = new List<object>();
+
+                    int count = 0;
+                    for (int i = 0; i < enemyCount; i++)
                     {
-                        count++;
-                        list.Add(i);
-                        list.Add(0); // 타입을 여기 저장시킬 것임
-                        Vector3 a = enemyeList[i].transform.position;
-                        list.Add(a.x);
-                        list.Add(a.y);
-                        list.Add(a.z);
-                        Quaternion q = enemyeList[i].transform.rotation;
-                        list.Add(q.x);
-                        list.Add(q.y);
-                        list.Add(q.z);
-                        list.Add(q.w);
+                        if (enemyeList[i] != null)
+                        {
+                            count++;
+                            list.Add((int)i);
+                            list.Add((int)0); // 타입을 여기 저장시킬 것임
+                            Vector3 a = enemyeList[i].transform.position;
+                            list.Add((float)a.x);
+                            list.Add((float)a.y);
+                            list.Add((float)a.z);
+                            Quaternion q = enemyeList[i].transform.rotation;
+                            list.Add((float)q.x);
+                            list.Add((float)q.y);
+                            list.Add((float)q.z);
+                            list.Add((float)q.w);
+                        }
                     }
+                    List<object> sendList = new List<object>();
+                    sendList.Add((int)count);
+                    sendList.AddRange(list);
+                    controller.ListSend(PacketType.ENEMY_MOVE, sendList);
                 }
-                List<object> sendList = new List<object>();
-                sendList.Add(count);
-                sendList.AddRange(list);
-                controller.ListSend(PacketType.ENEMY_MOVE, list);
             }
+            catch
+            {
+
+            }
+            
         }
     }
 
     public void ReceiveMoveEnemy(DTOenemymove[] DTOenemymove)
     {
+
+        Debug.Log("받았다 이것을");
         for (int i = 0; i < DTOenemymove.Length; i++)
         {
             if (enemyeList[DTOenemymove[i].idxE] == null)   // null 개체면

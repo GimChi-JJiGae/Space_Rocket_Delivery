@@ -74,7 +74,7 @@ public class SocketClient : MonoBehaviour
     // 직렬화 후 전송
     public void Send(byte[] byteArray)         
     {
-        Debug.Log("보낸다: " + byteArray[0]);
+        //Debug.Log("보낸다: " + byteArray[0]);
         // 전송 시작
         socket.BeginSend(byteArray, 0, byteArray.Length, SocketFlags.None, SendCallback, null);
     }
