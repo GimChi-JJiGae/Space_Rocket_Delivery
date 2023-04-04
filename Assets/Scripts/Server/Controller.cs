@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using static MultiSpaceship;
 
 public enum PacketType
 {
@@ -37,6 +38,8 @@ public enum PacketType
     ENEMY_MOVE = 199, // 적 생성
     RESOURCE_CREATE = 201, // SUPPLIER 오브젝트 생성
     MODULE_CREATE = 301, // 모듈 생성
+    MODULE_REPAIR = 302, // 모듈 수리
+
     RESOURCE_CHANGE = 210, // SUPPLIER 오브젝트 변경
     RESOURCE_MOVE = 211, // 리소스 움직임
 
@@ -98,6 +101,8 @@ public class Controller : MonoBehaviour
 
     InteractionModuleController interactionModuleController;
 
+    RepairController repairController;
+
     // Player관련 함수
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
@@ -119,6 +124,7 @@ public class Controller : MonoBehaviour
         moveResourceController = new MoveResourceController();
         moveEnemyController = new MoveEnemyController();
         interactionModuleController = new InteractionModuleController();
+        repairController = new RepairController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -272,19 +278,23 @@ public class Controller : MonoBehaviour
                                 DTOenemymove resource = new DTOenemymove();
                                 moveEnemyController.newReceiveDTO(data, resource, ref head3);
                                 enemyList[i] = resource;
-                case PacketType.MODULE_INTERACTION:
-                    interactionModuleController.ReceiveDTO(data);
-                    interactionModuleController.SetAct(true);
-                    break;
-            }
+                            }
                             multiEnemy.ReceiveMoveEnemy(enemyList);
                             moveEnemyController.SetAct(true);
-        }
+                        }
                         catch (Exception e)
                         {
                             Debug.LogException(e);
                         }
                     }
+                    break;
+                case PacketType.MODULE_INTERACTION:
+                    interactionModuleController.ReceiveDTO(data);
+                    interactionModuleController.SetAct(true);
+                    break;
+                case PacketType.MODULE_REPAIR:
+                    repairController.ReceiveDTO(data);
+                    repairController.SetAct(true);
                     break;
             }
         }
@@ -447,8 +457,6 @@ public class CreateRoomController : ReceiveController
 // EnterRoomController
 public class EnterRoomController : ReceiveController
 {
-    
-
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (GetAct())
@@ -495,24 +503,6 @@ public class CreateResourceController : ReceiveController
     }
 }
 
-// 자원 변경
-public class ChangeResourceController : ReceiveController
-{
-    private readonly int id;
-    public int moduleType;
-    public int activeNum;
-
-    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
-    {
-        if (GetAct())
-        {
-            Debug.Log("ChangeResourceController : 자원 변경");
-            multiSpaceship.ChangeResource_RECEIVE(id);
-            SetAct(false);
-        }
-    }
-}
-
 // 자원 움직임
 public class MoveResourceController : ReceiveController
 {
@@ -553,6 +543,25 @@ public class InteractionModuleController : ReceiveController
                     multiSpaceship.IncreaseOxygen_RECEIVE(id);
                     break;
             }
+
+            SetAct(false);
+        }
+    }
+}
+
+public class RepairController : ReceiveController
+{
+    public int id;
+    public int xIdx;
+    public int zIdx;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("InteractionModule : 상호작용");
+
+            multiSpaceship.Repair_RECEIVE(id, xIdx, zIdx);
 
             SetAct(false);
         }

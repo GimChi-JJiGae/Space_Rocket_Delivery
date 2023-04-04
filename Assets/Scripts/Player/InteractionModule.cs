@@ -1,5 +1,4 @@
 using ResourceNamespace;
-//using ResourceNamespace;
 using System;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -148,7 +147,7 @@ public class InteractionModule : MonoBehaviour
             respawnObject = null;
         }
     }
-    private float CalculateRepairSpeed()
+    public float CalculateRepairSpeed()
     {
         float baseRepairSpeed = 0.1f;
         float repairSpeedLevel = skillTree.GetRepairSpeedLevel();
@@ -207,10 +206,9 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
-                        if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
-                        {
-                            MakeModule();
-                        }
+                    if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
+                    {
+                        MakeModule();
                     }
                 }
             }
@@ -239,6 +237,7 @@ public class InteractionModule : MonoBehaviour
                 {
                     int playerId = PlayerPrefs.GetInt("userId");
                     multiSpaceship.ChangeModule_SEND(playerId, (int)ModuleType.Factory);
+                }
             }
 
 
@@ -262,18 +261,20 @@ public class InteractionModule : MonoBehaviour
                         else if (inputObject.GetComponentInParent<Factory>())
                         {
                             inputObject.GetComponentInParent<Factory>().ProduceModule();
-                        
-                        if (multiplayer.isMultiplayer)
+
+                            if (multiplayer.isMultiplayer)
+                            {
+                                int playerId = PlayerPrefs.GetInt("userId");
+                                multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
+                            }
+                        }
+                        else if (turretObject != null)
                         {
-                            int playerId = PlayerPrefs.GetInt("userId");
-                            multiSpaceship.ProduceModule_SEND(playerId, (int)ModuleType.Factory);
+                            UpgradeModule();
                         }
                     }
-                    else if (turretObject != null)
-                    {
-                        UpgradeModule();
-                    }
                 }
+            }
         }
 
         if (playerInput.RepairModule)
@@ -292,11 +293,16 @@ public class InteractionModule : MonoBehaviour
             if (struckModule.hp < 3)
             {
                 struckModule.hp += repairAmount;
+                if (multiplayer.isMultiplayer)
+                {
+                    int playerId = PlayerPrefs.GetInt("userId");
+                    multiSpaceship.Repair_SEND(playerId, playerX, playerZ);
+                }
             }
         }
         else
         {
-    		playerAnimator.SetBool("Repairing", false);
+            playerAnimator.SetBool("Repairing", false);
         }
     }
 }

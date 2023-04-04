@@ -85,4 +85,9 @@ public class Multiplayer : MonoBehaviour
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
+
+    public void Respawn_SEND(int id)
+    {
+
+    }
 }

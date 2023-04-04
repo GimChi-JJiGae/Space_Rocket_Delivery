@@ -18,6 +18,7 @@ public class MultiSpaceship : MonoBehaviour
 
     Spaceship spaceship;
     Controller controller;
+
     InteractionModule interactionModule;
 
     public GameObject[] resourceList = new GameObject[10000];
@@ -85,7 +86,7 @@ public class MultiSpaceship : MonoBehaviour
     // supplier가 바뀌는 것을 전달
     public void SendChangeSupplier(int type)
     {
-        controller.Send(PacketType.SUPPLIER_CHANGE, type);
+        controller.Send(PacketType.RESOURCE_CHANGE, type);
     }
 
     public void ChangeResource_SEND(int id, int moduleType)
@@ -148,7 +149,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void IncreaseOxygen_SEND(int id, int moduleType)
     {
-        controller.Send(PacketType.OXYGEN_INCREASE, id, moduleType, ActiveNum.INCREASE_OXYGEN);
+        controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.INCREASE_OXYGEN);
     }
 
     public void IncreaseOxygen_RECEIVE(int id)
@@ -163,9 +164,23 @@ public class MultiSpaceship : MonoBehaviour
         });
     }
 
-    public void ReceiveChangeSupplier()
+    public void Repair_SEND(int id, int xIdx, int zIdx)
     {
+        controller.Send(PacketType.MODULE_REPAIR, id, xIdx, zIdx);
+    }
 
+    public void Repair_RECEIVE(int id, int xIdx, int zIdx)
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (PlayerPrefs.GetInt("userId") != id)
+            {
+                Module struckModule = spaceship.modules[zIdx, xIdx].GetComponent<Module>();
+                float repairAmount = interactionModule.CalculateRepairSpeed();
+
+                struckModule.hp += repairAmount;
+            }
+        });
     }
 
     IEnumerator SendCreateResource()
@@ -224,8 +239,6 @@ public class MultiSpaceship : MonoBehaviour
 	            controller.ListSend(PacketType.RESOURCE_MOVE, list);
 	        }
         }
-
-        
     }
 
     public void ReceiveMoveResource(DTOresourcemove[] DTOresourcemove)
