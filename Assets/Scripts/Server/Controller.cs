@@ -93,6 +93,10 @@ public class DTOenemymove    // 적 움직임
     public float rx, ry, rz, rw;
 }
 
+public class DTOgameStart
+{
+    public string roomCode;
+}
 public class Controller : MonoBehaviour
 {
     
@@ -102,6 +106,7 @@ public class Controller : MonoBehaviour
     CreateResourceController createResourceController; // 자원 추가를 위한 컨트롤러
     MoveResourceController moveResourceController;  // 자원 위치를 위한 컨트롤러
     MoveEnemyController moveEnemyController;
+    GameStartController gameStartController;
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
@@ -124,6 +129,7 @@ public class Controller : MonoBehaviour
         createResourceController = new CreateResourceController();
         moveResourceController = new MoveResourceController();
         moveEnemyController = new MoveEnemyController();
+        gameStartController = new GameStartController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -193,6 +199,21 @@ public class Controller : MonoBehaviour
                     break;
                 case PacketType.START_GAME:
                     Debug.Log("게임시작");
+                    DTOgameStart gameStart = new DTOgameStart();
+                    int GameHead = 0;
+                    gameStartController.newReceiveDTO(data, gameStart, ref GameHead);
+                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    {
+                        Debug.Log("======");
+                        Debug.Log(PlayerPrefs.GetString("roomCode"));
+                        Debug.Log(gameStart.roomCode);
+                        Debug.Log("======");
+                        if (gameStart.roomCode.Equals(PlayerPrefs.GetString("roomCode")))
+                        {
+                            SceneManager.LoadScene("Multiplay");
+                        }
+                        
+                    });
                     break;
 
                 case PacketType.OUT_USER:
@@ -427,6 +448,11 @@ public class CreateModuleController : ReceiveController
             this.SetAct(false);
         }
     }
+}
+
+public class GameStartController : ReceiveController
+{
+    
 }
 
 // 자원 생성

@@ -31,7 +31,7 @@ public class SocketClient : MonoBehaviour
         controller = GetComponent<Controller>();
 
         // 서버 주소와 포트번호 설정
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.45.38"), 5555); // 서버주소, 포트번호
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.30.116"), 5555); // 서버주소, 포트번호
 
         // 소켓 생성 및 연결 시도
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
