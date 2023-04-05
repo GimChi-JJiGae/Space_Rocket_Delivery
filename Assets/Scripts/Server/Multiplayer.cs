@@ -31,9 +31,13 @@ public class Multiplayer : MonoBehaviour
         controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
-        
-        AssignPlayer(PlayerPrefs.GetInt("userId"));
-
+        playerIndex = controller.userId;
+        roomCode = controller.roomCode;
+        AssignPlayer(playerIndex);
+        //AssignPlayer(PlayerPrefs.GetInt("userId"));
+        Debug.Log("멀티플레이 환경 실험");
+        Debug.Log(playerIndex);
+        Debug.Log(roomCode);
         StartCoroutine(CallFunctionRepeatedly());
     }
 
@@ -51,8 +55,8 @@ public class Multiplayer : MonoBehaviour
     }
     private void Update()
     {
-        playerIndex = PlayerPrefs.GetInt("userId");
-        roomCode = PlayerPrefs.GetString("roomCode");
+        //playerIndex = PlayerPrefs.GetInt("userId");
+        //roomCode = PlayerPrefs.GetString("roomCode");
     }
 
     void FixedUpdate()
@@ -95,8 +99,7 @@ public class Multiplayer : MonoBehaviour
         player.AddComponent<InteractionModule>();
         player.AddComponent<InteractionObject>();
 
-        Debug.Log("---여기서 할당---");
-        Debug.Log(PlayerPrefs.GetInt("userId"));
+        
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
