@@ -94,6 +94,8 @@ public class Multiplayer : MonoBehaviour
         player.AddComponent<InteractionModule>();
         player.AddComponent<InteractionObject>();
 
+        Debug.Log("---여기서 할당---");
+        Debug.Log(PlayerPrefs.GetInt("userId"));
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
