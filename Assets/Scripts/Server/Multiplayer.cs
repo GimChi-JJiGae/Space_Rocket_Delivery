@@ -17,7 +17,8 @@ public class Multiplayer : MonoBehaviour
 
     public GameObject[] players = new GameObject[4];   // 참조를 쉽게 하기 위해 오브젝트 저장
 
-    GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
+    //GameObject mainCamera;                             // 메인 카메라를 연동하기 위함
+    Camera mainCamera;
     private Controller controller;
 
     Vector3[] targetPosition = new Vector3[4];
@@ -30,7 +31,9 @@ public class Multiplayer : MonoBehaviour
         GameObject socketObj = GameObject.Find("SocketClient");
         controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
 
-        mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
+        //mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
+        mainCamera = Camera.main;
+        Debug.Log("카메라 잡히나?" + mainCamera.GetComponent<MainCamera>().name);
         playerIndex = controller.userId;
         roomCode = controller.roomCode;
         AssignPlayer(playerIndex);
@@ -100,7 +103,7 @@ public class Multiplayer : MonoBehaviour
         player.AddComponent<InteractionModule>();
         player.AddComponent<InteractionObject>();
 
-        
+        Debug.Log("카메라 잡히나?" + mainCamera.GetComponent<MainCamera>().name);
         // 카메라 연동
         mainCamera.GetComponent<MainCamera>().SetTarget(player);
     }
