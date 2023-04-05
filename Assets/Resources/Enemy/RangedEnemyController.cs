@@ -9,7 +9,7 @@ public class RangedEnemyController : MonoBehaviour
     public float minDistance = 100f;
     public float speed = 3f;
     public float attackInterval = 2f;
-    public int health = 1;
+    public float health = 1;
     public GameObject target;
     private float nextAttackTime;
     public float targetUpdateInterval = 5f;

@@ -1,15 +1,25 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Reflection;
+using System.Text;
+using Unity.VisualScripting;
+//using UnityEditor.VersionControl;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MultiEnemy : MonoBehaviour
 {
     Controller controller;
-    Multiplayer multiplayer; // ¸ÖÆ¼ÇÃ·¹ÀÌÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
+    Multiplayer multiplayer; // ë©€í‹°í”Œë ˆì´ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
 
     public GameObject[] enemyeList = new GameObject[10000];
     Vector3[] targetPosition = new Vector3[10000];
     Quaternion[] targetRotation = new Quaternion[10000];
     public int enemyCount = 0;
 
-    public GameObject[] enemies; // ÇÁ¸®ÆÕÀ» ÀúÀåÇØµÑ °ø°£
+    public GameObject[] enemies; // í”„ë¦¬íŒ¹ì„ ì €ì¥í•´ë‘˜ ê³µê°„
 
     void Start()
     {
@@ -39,8 +49,8 @@ public class MultiEnemy : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.1f); // 0.1ÃÊ¸¶´Ù ¹İº¹
-                                                   // ¹İº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
+            yield return new WaitForSeconds(0.1f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
+                                                   // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
             try
             {
                 if (multiplayer.isMultiplayer && multiplayer.isHost == true)
@@ -54,7 +64,7 @@ public class MultiEnemy : MonoBehaviour
                         {
                             count++;
                             list.Add((int)i);
-                            list.Add((int)0); // Å¸ÀÔÀ» ¿©±â ÀúÀå½ÃÅ³ °ÍÀÓ
+                            list.Add((int)0); // íƒ€ì…ì„ ì—¬ê¸° ì €ì¥ì‹œí‚¬ ê²ƒì„
                             Vector3 a = enemyeList[i].transform.position;
                             list.Add((float)a.x);
                             list.Add((float)a.y);
@@ -83,12 +93,12 @@ public class MultiEnemy : MonoBehaviour
     public void ReceiveMoveEnemy(DTOenemymove[] DTOenemymove)
     {
 
-        Debug.Log("¹Ş¾Ò´Ù ÀÌ°ÍÀ»");
+        Debug.Log("ë°›ì•˜ë‹¤ ì´ê²ƒì„");
         try
         {
             for (int i = 0; i < DTOenemymove.Length; i++)
             {
-                if (enemyeList[DTOenemymove[i].idxE] == null)   // null °³Ã¼¸é
+                if (enemyeList[DTOenemymove[i].idxE] == null)   // null ê°œì²´ë©´
                 {
                     spawnEnemy(DTOenemymove[i]);
                     Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
@@ -96,7 +106,7 @@ public class MultiEnemy : MonoBehaviour
                     targetPosition[DTOenemymove[i].idxE] = v;
                     targetRotation[DTOenemymove[i].idxE] = q;
                 }
-                else                                            // Á¸ÀçÇÏ¸é
+                else                                            // ì¡´ì¬í•˜ë©´
                 {
                     Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
                     Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
@@ -107,7 +117,7 @@ public class MultiEnemy : MonoBehaviour
         }
         catch
         {
-            Debug.Log("¿¡·¯ÀÎ°¡..");
+            Debug.Log("ì—ëŸ¬ì¸ê°€..");
         }
     }
 
@@ -132,23 +142,23 @@ public class MultiEnemy : MonoBehaviour
 
         if (currentEnemies.Length == 0)
         {
-            Debug.LogError("currentEnemies ¹è¿­ÀÌ ºñ¾îÀÖ½À´Ï´Ù.");
+            Debug.LogError("currentEnemies ë°°ì—´ì´ ë¹„ì–´ìˆìŠµë‹ˆë‹¤.");
             return;
         }
         */
         GameObject enemy;
-        /* º® Ã£±â
+        /* ë²½ ì°¾ê¸°
         GameObject closestWall = FindClosestWall();
         if (closestWall == null)
         {
-            Debug.LogError("°¡Àå °¡±î¿î º®À» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("ê°€ì¥ ê°€ê¹Œìš´ ë²½ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }*/
 
         Vector3 v = new Vector3(DTOenemymove.px, DTOenemymove.py, DTOenemymove.pz);
         Quaternion q = new Quaternion(DTOenemymove.rx, DTOenemymove.ry, DTOenemymove.rz, DTOenemymove.rw);
         enemy = Instantiate(enemies[0], v, q);
-        enemy.name = "ÀûÀÌ´Ù±¸¸®";
+        enemy.name = "ì ì´ë‹¤êµ¬ë¦¬";
         /*
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
@@ -157,7 +167,7 @@ public class MultiEnemy : MonoBehaviour
         }
         else
         {
-            controller.spawner = this; // spawner¸¦ ¼³Á¤ÇØÁÖ¼¼¿ä.
+            controller.spawner = this; // spawnerë¥¼ ì„¤ì •í•´ì£¼ì„¸ìš”.
             controller.target = closestWall;
             controller.enemyDestroyedSound = enemyDestroyedSound;
         }
@@ -166,14 +176,14 @@ public class MultiEnemy : MonoBehaviour
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
-            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // ¿ø°Å¸® ÀûÀÇ °æ¿ì ÀûÀıÇÑ Å©±â·Î Á¶Á¤
+            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // ì›ê±°ë¦¬ ì ì˜ ê²½ìš° ì ì ˆí•œ í¬ê¸°ë¡œ ì¡°ì •
         }
         else
         {
-            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // ±Ù°Å¸® ÀûÀÇ °æ¿ì ÀûÀıÇÑ Å©±â·Î Á¶Á¤
+            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // ê·¼ê±°ë¦¬ ì ì˜ ê²½ìš° ì ì ˆí•œ í¬ê¸°ë¡œ ì¡°ì •
         }
 
-        // Áß·ÂÀ» rigidboy·Î ¹Ş´Â´Ù.
+        // ì¤‘ë ¥ì„ rigidboyë¡œ ë°›ëŠ”ë‹¤.
         /*
         Rigidbody rb = enemy.AddComponent<Rigidbody>();
         rb.useGravity = false;

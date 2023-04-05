@@ -1,5 +1,11 @@
 using ResourceNamespace;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static Module;
 
 public class MultiSpaceship : MonoBehaviour
 {
@@ -12,7 +18,7 @@ public class MultiSpaceship : MonoBehaviour
         RESPAWN,
     }
 
-    Multiplayer multiplayer; // ¸ÖÆ¼ÇÃ·¹ÀÌÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
+    Multiplayer multiplayer; // ë©€í‹°í”Œë ˆì´ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
 
     Spaceship spaceship;
     Controller controller;
@@ -25,19 +31,20 @@ public class MultiSpaceship : MonoBehaviour
     //bool[] putResource = new bool[10000];
     int resourceCount = 0;
 
-    public delegate void EventResourceSpownHandler(int idxR);           // ¸®¼Ò½º »ı¼º ÀÌº¥Æ®
+    public delegate void EventResourceSpownHandler(int idxR);           // ë¦¬ì†ŒìŠ¤ ìƒì„± ì´ë²¤íŠ¸
     public event EventResourceSpownHandler eventResourceSpown;
 
-    public delegate void EventResourceChangeHandler();                  // ¸®¼Ò½º º¯°æ ÀÌº¥Æ®
+    public delegate void EventResourceChangeHandler();                  // ë¦¬ì†ŒìŠ¤ ë³€ê²½ ì´ë²¤íŠ¸
     public event EventResourceChangeHandler eventResourceChange;
 
-    public delegate void EventResourceMoveHandler(DTOresourcemove[] DTOresourcemove);                    // ¸®¼Ò½º ¹«ºê ÀÌº¥Æ®
+    public delegate void EventResourceMoveHandler(DTOresourcemove[] DTOresourcemove);                    // ë¦¬ì†ŒìŠ¤ ë¬´ë¸Œ ì´ë²¤íŠ¸
     public event EventResourceMoveHandler eventResourceMove;
 
     void Start()
     {
         spaceship = FindAnyObjectByType<Spaceship>();
-        controller = GetComponent<Controller>();
+        GameObject socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();                   // ì»¨íŠ¸ë¡¤ëŸ¬ ì—°ê²°í•˜ê¸°
         multiplayer = GetComponent<Multiplayer>();
 
         StartCoroutine(SendCreateResource());
@@ -62,7 +69,7 @@ public class MultiSpaceship : MonoBehaviour
         }
     }
 
-    // ÀÚ¿ø »ı¼º send corutine
+    // ìì› ìƒì„± send corutine
     public void CreateModule_SEND(int id, int xIdx, int zIdx, int moduleType)
     {
         controller.Send(PacketType.MODULE_CREATE, id, xIdx, zIdx, moduleType);
@@ -83,13 +90,13 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ChangeResource_SEND(int id, int moduleType)
     {
-        // Packet ¹øÈ£°¡ ¾ø´Ù.
+        // Packet ë²ˆí˜¸ê°€ ì—†ë‹¤.
         controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, (int)ActiveNum.RESOURCE_CHANGE);
     }
 
     public void ChangeResource_RECEIVE(int id)
     {
-        // ÀÎµ¦½º°¡ ¾ø´Ù.
+        // ì¸ë±ìŠ¤ê°€ ì—†ë‹¤.
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (PlayerPrefs.GetInt("userId") != id)
@@ -104,13 +111,13 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ChangeModule_SEND(int id, int moduleType)
     {
-        // Packet ¹øÈ£°¡ ¾ø´Ù.
+        // Packet ë²ˆí˜¸ê°€ ì—†ë‹¤.
         controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.FACTORY_CHANGE);
     }
 
     public void ChangeModule_RECEIVE(int id)
     {
-        // º¯°æµÈ °Å¿¡ ´ëÇÑ neededOre, neededFuel±îÁö ´Ù ¹Ş¾Æ¼­ Ã³¸® °¡´É?
+        // ë³€ê²½ëœ ê±°ì— ëŒ€í•œ neededOre, neededFuelê¹Œì§€ ë‹¤ ë°›ì•„ì„œ ì²˜ë¦¬ ê°€ëŠ¥?
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (PlayerPrefs.GetInt("userId") != id)
@@ -142,6 +149,7 @@ public class MultiSpaceship : MonoBehaviour
     public void IncreaseOxygen_SEND(int id, int moduleType)
     {
         controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.INCREASE_OXYGEN);
+        
     }
 
     public void IncreaseOxygen_RECEIVE(int id)
@@ -232,8 +240,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(10.0f); // 0.1ÃÊ¸¶´Ù ¹İº¹
-                                                    // ¹İº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
+            yield return new WaitForSeconds(10.0f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
+                                                    // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
                 controller.Send(PacketType.RESOURCE_CREATE, resourceCount);
@@ -251,8 +259,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.1f); // 0.1ÃÊ¸¶´Ù ¹İº¹
-                                                   // ¹İº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
+            yield return new WaitForSeconds(0.1f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
+                                                   // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
                 List<object> list = new List<object>();

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class ShieldTurret : MonoBehaviour
 {
-    public float shieldHealth = 20f;
+    public float maxShieldHealth = 20f;
     public GameObject sheildWall;
     public GameObject beacon;
     public float shieldReload = 20f;
     public float afterShieldDestroyed;
+    public float shieldHealth = 20f;
 
     public bool shieldOn;
     // Start is called before the first frame update
@@ -32,17 +33,16 @@ public class ShieldTurret : MonoBehaviour
         if (!shieldOn)
         {
             afterShieldDestroyed += Time.deltaTime;
-            
-            if (afterShieldDestroyed > shieldReload) {
+
+            if (afterShieldDestroyed > shieldReload)
+            {
                 afterShieldDestroyed = 0f;
-                shieldHealth = 20f;
-                
+                shieldHealth = maxShieldHealth;
+
                 sheildWall.SetActive(true);
                 beacon.SetActive(true);
                 shieldOn = true;
             }
         }
     }
-
-    
 }

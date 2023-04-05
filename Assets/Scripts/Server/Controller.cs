@@ -18,10 +18,10 @@ public enum PacketType
     BYE,
     CREATE_ROOM,
     PARTICIPATE_USER,
-    OUT_USER,   // 패킷,   받을 때는 패킷
+    OUT_USER,
     PARTICIPATE_ROOM,
     MOVE,
-    START_GAME, // 보낼때는 패킷, 방번호 받을때는 패킷만
+    START_GAME,
 
     REPLICATION,
 
@@ -34,11 +34,10 @@ public enum PacketType
     TURRET_STATUS,
     BASIC_TURRET,
 
-    //=============================
-    MODULE_CREATE,
-    MODULE_INTERACTION,
-    MODULE_REPAIR,
-    MODULE_UPGRADE,
+    MODULE_CREATE,      // 데이터 roomId, int moduleCode(1,2,3), int userId, int x, y     받는거: 그대로 받는다.
+    MODULE_INTERACTION, // 데이터 roomId, int userId, int moduleType, int activeNum, 받는 거: 그대로 받는다.
+    MODULE_REPAIR,      // 데이터 roomId, int userId, int x, int z,
+    MODULE_UPGRADE,     // 데이터 roomId, int userId, int x, int z
 
 
     RESOURCE_CREATE,
@@ -317,7 +316,7 @@ public class Controller : MonoBehaviour
                         Debug.Log(gameStart.roomCode);
                         Debug.Log("======");
                         
-                        SceneManager.LoadScene("Multiplay");
+                        SceneManager.LoadScene("New_Multiplay");
                         
                         
                     });
@@ -666,21 +665,6 @@ public class CreateResourceController : ReceiveController
     }
 }
 
-// 자원 변경
-public class ChangeResourceController : ReceiveController
-{
-    public int rIdx;
-    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
-    {
-        if (this.GetAct())
-        {
-            Debug.Log("ChangeResourceController : 자원 변경");
-            multiSpaceship.ReceiveChangeResource();
-            this.SetAct(false);
-        }
-    }
-}
-
 // 자원 움직임
 public class MoveResourceController : ReceiveController
 {
@@ -689,7 +673,7 @@ public class MoveResourceController : ReceiveController
         if (this.GetAct())
         {
             Debug.Log("MoveResourceController : 자원 위치 변경");
-            multiSpaceship.ReceiveChangeResource();
+            //multiSpaceship.ReceiveChangeResource();
             this.SetAct(false);
         }
     }

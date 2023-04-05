@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class ParticleController : MonoBehaviour
 {
-
-  
-
     private ParticleSystem lazerParticleSystem;
 
     public float delay = 0.2f; // 딜레이 시간
     public float interval = 7f; // 반복 주기
     public float miniInterval = 0.5f;
+    public float damage = 1f;
 
 
     public float damageInterval = 0.2f;
@@ -30,9 +28,9 @@ public class ParticleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    
+
     void OnParticleCollision(GameObject other)
     {
         Debug.Log("Particle collided with " + other.name);
@@ -43,7 +41,7 @@ public class ParticleController : MonoBehaviour
             {
                 if (timeAfterDamaged > damageInterval)
                 {
-                    controller.health -= 1;
+                    controller.health -= damage;
                     timeAfterDamaged = 0;
                 }
                 else
@@ -58,7 +56,7 @@ public class ParticleController : MonoBehaviour
 
                 if (timeAfterDamaged > damageInterval)
                 {
-                    Rangedcontroller.health -= 1;
+                    Rangedcontroller.health -= damage;
                     timeAfterDamaged = 0;
                 }
                 else
@@ -66,12 +64,12 @@ public class ParticleController : MonoBehaviour
                     timeAfterDamaged += Time.deltaTime;
                 }
             }
-            
+
         }
     }
     IEnumerator RepeatParticleSystem()
     {
-        
+
 
         while (true)
         {
@@ -81,14 +79,14 @@ public class ParticleController : MonoBehaviour
             if (targetCheck.isOnTarget)
             {
                 lazerParticleSystem.Play();
-                
+
                 yield return new WaitForSeconds(interval);
             }
             else
             {
                 lazerParticleSystem.Stop();
             }
-            
+
             //lazerParticleSystem.Play(); // Particle System 실행
             //    //Debug.Log(targetCheck.isOnTarget);
             //yield return new WaitForSeconds(interval); // 지정된 주기마다 대기
@@ -116,6 +114,4 @@ public class ParticleController : MonoBehaviour
         //}
 
     }
-
-
 }

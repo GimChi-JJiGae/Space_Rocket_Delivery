@@ -5,10 +5,10 @@ using TMPro;
 public class SkillTreeNode : MonoBehaviour
 {
     private GameManager gameManager;
-    public int currentModuleCurrentHpLevel = 0;
-    public int currentSupplySpeedLevel = 0;
-    public float currentRepairSpeedLevel = 0;
-    public int currentTurretDamageLevel = 0;
+    private int currentModuleCurrentHpLevel = 0;
+    private int currentSupplySpeedLevel = 0;
+    private float currentRepairSpeedLevel = 0;
+    private int currentTurretDamageLevel = 0;
     public int moduleHpUpgradeLevel = 0;
 
     public TextMeshProUGUI moduleCurrentHpLevelText;
@@ -32,8 +32,7 @@ public class SkillTreeNode : MonoBehaviour
         Module[] modules = FindObjectsOfType<Module>();
         foreach (Module module in modules)
         {
-            module.maxHp += 1.0f; // 체력 증가
-            module.hp += 1.0f; // 체력 증가
+            module.hp++; // 체력 증가
         }
         moduleCurrentHpLevelText.text = "" + moduleHpUpgradeLevel;
         Debug.Log(moduleHpUpgradeLevel);
@@ -44,8 +43,6 @@ public class SkillTreeNode : MonoBehaviour
     {
         currentRepairSpeedLevel++;
         repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
-        InteractionModule interactionModule = FindAnyObjectByType<InteractionModule>();
-        interactionModule.repairSpeed += 0.1f;
         gameManager.CloseSkillTree();
         Debug.Log(currentRepairSpeedLevel);
     }
@@ -91,3 +88,4 @@ public class SkillTreeNode : MonoBehaviour
         gameManager.CloseSkillTree();
     }
 }
+

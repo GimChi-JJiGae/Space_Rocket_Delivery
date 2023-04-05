@@ -6,18 +6,19 @@ public class ShotgunBullet : MonoBehaviour
 {
     private Rigidbody rb;
     public float speed = 20f;
+    public float damage = 1f;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.velocity = transform.forward*speed;
+        rb.velocity = transform.forward * speed;
         Destroy(gameObject, 5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -26,16 +27,16 @@ public class ShotgunBullet : MonoBehaviour
             EnemyController controller = other.GetComponent<EnemyController>();     // 근거리 적일 경우
             if (controller != null)
             {
-               
-                controller.health -= 1;
-            
+
+                controller.health -= damage;
+
             }
             else
             {
                 RangedEnemyController Rangedcontroller = other.GetComponent<RangedEnemyController>();   // 원거리 적일 경우
 
-                Rangedcontroller.health -= 1;
-                
+                Rangedcontroller.health -= damage;
+
             }
 
         }
