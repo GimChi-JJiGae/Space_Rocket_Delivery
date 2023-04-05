@@ -37,13 +37,12 @@ public class InteractionModule : MonoBehaviour
 
     // player 위치
     private Vector3 playerPosition;
-
     public float repairSpeed;
     public float maxHp;
 
     private void Start()
     {
-        repairSpeed = 0.1f;
+        repairSpeed = 0.5f;
 
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
@@ -237,7 +236,7 @@ public class InteractionModule : MonoBehaviour
             if (struckModule.hp < struckModule.maxHp)
             {
                 Debug.Log("수리중");
-                struckModule.hp += repairSpeed; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+                struckModule.hp += repairSpeed * Time.deltaTime; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
                 struckModule.Checked();
             }
         }

@@ -27,27 +27,32 @@ public class SkillTreeNode : MonoBehaviour
 
     public void UpgradeModuleHp()
     {
-        moduleHpUpgradeLevel++;
-        // 맵 내에 있는 모든 모듈의 체력 증가
-        Module[] modules = FindObjectsOfType<Module>();
-        foreach (Module module in modules)
+        if (moduleHpUpgradeLevel < 3)
         {
-            module.maxHp += 1.0f; // 체력 증가
-            module.hp += 1.0f; // 체력 증가
-        }
-        moduleCurrentHpLevelText.text = "" + moduleHpUpgradeLevel;
-        Debug.Log(moduleHpUpgradeLevel);
-        gameManager.CloseSkillTree();
-    }
+            moduleHpUpgradeLevel++;
+            // 맵 내에 있는 모든 모듈의 체력 증가
+            Module[] modules = FindObjectsOfType<Module>();
+            foreach (Module module in modules)
+            {
+                module.maxHp += 1.0f; // 체력 증가
+                module.hp += 1.0f; // 체력 증가
+            }
+            moduleCurrentHpLevelText.text = moduleHpUpgradeLevel == 3 ? "MAX" : "" + moduleHpUpgradeLevel;
+            gameManager.CloseSkillTree();
 
+        }
+    }
     public void UpgradeRepairSpeed()
     {
-        currentRepairSpeedLevel++;
-        repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
-        InteractionModule interactionModule = FindAnyObjectByType<InteractionModule>();
-        interactionModule.repairSpeed += 0.1f;
-        gameManager.CloseSkillTree();
-        Debug.Log(currentRepairSpeedLevel);
+        if (currentRepairSpeedLevel < 3)
+        {
+            currentRepairSpeedLevel++;
+            repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
+            InteractionModule interactionModule = FindAnyObjectByType<InteractionModule>();
+            interactionModule.repairSpeed += 0.5f;
+            repairSpeedLevelText.text = currentRepairSpeedLevel == 3 ? "MAX" : "" + currentRepairSpeedLevel;
+            gameManager.CloseSkillTree();
+        }
     }
 
     public float GetRepairSpeedLevel()
@@ -57,17 +62,20 @@ public class SkillTreeNode : MonoBehaviour
 
     public void UpgradebaseTurret()
     {
-        currentTurretDamageLevel++;
-        turretDamageLevelText.text = "" + currentTurretDamageLevel;
-
-        // 모든 BasicTurretDamage 오브젝트의 데미지를 업데이트
-        BasicTurretDamage[] basicTurrets = FindObjectsOfType<BasicTurretDamage>();
-        foreach (BasicTurretDamage turret in basicTurrets)
+        if (currentTurretDamageLevel < 3)
         {
-            turret.damage = 1 + currentTurretDamageLevel;
+            currentTurretDamageLevel++;
+            turretDamageLevelText.text = "" + currentTurretDamageLevel;
+
+            // 모든 BasicTurretDamage 오브젝트의 데미지를 업데이트
+            BasicTurretDamage[] basicTurrets = FindObjectsOfType<BasicTurretDamage>();
+            foreach (BasicTurretDamage turret in basicTurrets)
+            {
+                turret.damage = 1 + currentTurretDamageLevel;
+            }
+            turretDamageLevelText.text = currentTurretDamageLevel == 3 ? "MAX" : "" + currentTurretDamageLevel;
+            gameManager.CloseSkillTree();
         }
-        Debug.Log(currentTurretDamageLevel);
-        gameManager.CloseSkillTree();
     }
 
     public int GetCurrentTurretDamageLevel()
@@ -77,17 +85,20 @@ public class SkillTreeNode : MonoBehaviour
 
     public void UpgradeSupplySpeed()
     {
-        currentSupplySpeedLevel++;
-        supplySpeedLevelText.text = "" + currentSupplySpeedLevel;
-
-        // 보급기의 생성 속도를 줄입니다.
-        Supplier[] suppliers = FindObjectsOfType<Supplier>();
-        foreach (Supplier supplier in suppliers)
+        if (currentSupplySpeedLevel < 3)
         {
-            float newRespawnTime = 10 - currentSupplySpeedLevel;
-            supplier.SetRespawnTime(newRespawnTime);
+            currentSupplySpeedLevel++;
+            supplySpeedLevelText.text = "" + currentSupplySpeedLevel;
+
+            // 보급기의 생성 속도를 줄입니다.
+            Supplier[] suppliers = FindObjectsOfType<Supplier>();
+            foreach (Supplier supplier in suppliers)
+            {
+                float newRespawnTime = 10 - currentSupplySpeedLevel;
+                supplier.SetRespawnTime(newRespawnTime);
+            }
+            supplySpeedLevelText.text = currentSupplySpeedLevel == 3 ? "MAX" : "" + currentSupplySpeedLevel;
+            gameManager.CloseSkillTree();
         }
-        Debug.Log(currentSupplySpeedLevel);
-        gameManager.CloseSkillTree();
     }
 }
