@@ -34,6 +34,12 @@ public enum PacketType
     TURRET_STATUS,
     BASIC_TURRET,
 
+    //=============================
+    MODULE_CREATE,
+    MODULE_INTERACTION,
+    MODULE_REPAIR,
+    MODULE_UPGRADE,
+
     //NONE,
     //HELLO,
     //BYE,
@@ -117,6 +123,15 @@ public class Controller : MonoBehaviour
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
 
+
+    /// =========================================
+    InteractionModuleController interactionModuleController;
+
+    RepairController repairController;
+
+    ModuleUpgradeController moduleUpgradeController;
+    /// </summary>
+
     // Player관련 함수
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
@@ -154,6 +169,11 @@ public class Controller : MonoBehaviour
         moveResourceController = new MoveResourceController();
         moveEnemyController = new MoveEnemyController();
         gameStartController = new GameStartController();
+
+        //===============================================================
+        interactionModuleController = new InteractionModuleController();
+        repairController = new RepairController();
+        moduleUpgradeController = new ModuleUpgradeController();
 
         // 멀티플레이 관련 로직 
         //multiplayer = GetComponent<Multiplayer>();
@@ -360,7 +380,19 @@ public class Controller : MonoBehaviour
                         }
                     }
                     break;
-            
+                case PacketType.MODULE_INTERACTION:
+                    interactionModuleController.ReceiveDTO(data);
+                    interactionModuleController.SetAct(true);
+                    break;
+                case PacketType.MODULE_REPAIR:
+                    repairController.ReceiveDTO(data);
+                    repairController.SetAct(true);
+                    break;
+                case PacketType.MODULE_UPGRADE:
+                    moduleUpgradeController.ReceiveDTO(data);
+                    moduleUpgradeController.SetAct(true);
+                    break;
+
             }
 
         }
@@ -514,9 +546,12 @@ public class EnterRoomController : ReceiveController
     }
 }
 
+// ----------------------------------------------------------------------
+
 // 모듈 컨트롤러
 public class CreateModuleController : ReceiveController
 {
+    public int id;
     public int xIdx;           // 위치
     public int zIdx;
 
@@ -527,8 +562,82 @@ public class CreateModuleController : ReceiveController
         if (this.GetAct())
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
-            multiSpaceship.ReceiveCreateModule(xIdx, zIdx, moduleType);
+            multiSpaceship.CreateModule_RECEIVE(id, xIdx, zIdx, moduleType);
             this.SetAct(false);
+        }
+    }
+}
+
+public class InteractionModuleController : ReceiveController
+{
+    public int id;
+    public int moduleType;
+    public int activeNum;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("InteractionModule : 상호작용");
+
+            switch (activeNum)
+            {
+                case 0:
+                    multiSpaceship.ChangeResource_RECEIVE(id);
+                    break;
+                case 1:
+                    multiSpaceship.ChangeModule_RECEIVE(id);
+                    break;
+                case 2:
+                    multiSpaceship.ProduceModule_RECEIVE(id);
+                    break;
+                case 3:
+                    multiSpaceship.IncreaseOxygen_RECEIVE(id);
+                    break;
+                case 4:
+                    multiSpaceship.Respawn_RECEIVE(id);
+                    break;
+            }
+
+            SetAct(false);
+        }
+    }
+}
+
+public class RepairController : ReceiveController
+{
+    public int id;
+    public int xIdx;
+    public int zIdx;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("Repair : 수리");
+
+            multiSpaceship.Repair_RECEIVE(id, xIdx, zIdx);
+
+            SetAct(false);
+        }
+    }
+}
+
+public class ModuleUpgradeController : ReceiveController
+{
+    public int id;
+    public int x;
+    public int z;
+
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    {
+        if (GetAct())
+        {
+            Debug.Log("ModuleUpgrade : 업그레이드");
+
+            multiSpaceship.ModuleUpgrade_RECEIVE(id, x, z);
+
+            SetAct(false);
         }
     }
 }
