@@ -164,14 +164,7 @@ public class InteractionModule : MonoBehaviour
         {
             float deal = turretObject.transform.GetComponentInChildren<ParticleController>().damage;
 
-            if (deal == 1f)
-            {
-                deal = 1.5f;
-            }
-            else if (deal == 1.5f)
-            {
-                deal = 3f;
-            }
+            turretObject.transform.GetComponentInChildren<ShotgunBullet>().damage += 1;
 
             if (multiplayer.isMultiplayer)
             {
@@ -184,16 +177,7 @@ public class InteractionModule : MonoBehaviour
         }
         else if (turretObject.transform.GetComponentInChildren<ShotgunBullet>())
         {
-            float deal = turretObject.transform.GetComponentInChildren<ShotgunBullet>().damage;
-
-            if (deal == 1f)
-            {
-                deal = 1.5f;
-            }
-            else if (deal == 1.5f)
-            {
-                deal = 3f;
-            }
+            turretObject.transform.GetComponentInChildren<ShotgunBullet>().damage += 1;
 
             if (multiplayer.isMultiplayer)
             {

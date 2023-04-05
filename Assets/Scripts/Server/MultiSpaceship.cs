@@ -215,29 +215,11 @@ public class MultiSpaceship : MonoBehaviour
                 Module module = spaceship.modules[z, x].GetComponent<Module>();
                 if (module.transform.GetComponentInChildren<ParticleController>())
                 {
-                    float deal = module.transform.GetComponentInChildren<ParticleController>().damage;
-
-                    if (deal == 1f)
-                    {
-                        deal = 1.5f;
-                    }
-                    else if (deal == 1.5f)
-                    {
-                        deal = 3f;
-                    }
+                    module.transform.GetComponentInChildren<ParticleController>().damage += 1;
                 }
                 else if (module.transform.GetComponentInChildren<ShotgunBullet>())
                 {
-                    float deal = module.transform.GetComponentInChildren<ShotgunBullet>().damage;
-
-                    if (deal == 1f)
-                    {
-                        deal = 1.5f;
-                    }
-                    else if (deal == 1.5f)
-                    {
-                        deal = 3f;
-                    }
+                    module.transform.GetComponentInChildren<ShotgunBullet>().damage += 1;
                 }
                 else if (module.transform.GetComponentInChildren<ShieldTurret>())
                 {
