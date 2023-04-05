@@ -25,7 +25,7 @@ public class Module : MonoBehaviour
         ShieldTurret
     }
 
-    public InteractionModule interactionModule;
+    public PlayerInteraction playerInteraction;
 
     public GameObject[] players;
 
@@ -78,7 +78,7 @@ public class Module : MonoBehaviour
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
     {
-        moduleType = t;                 
+        moduleType = t;
 
         // 예외처리
         if (transform.Find("Floor"))    //바닥이 존재하면 부수고 새로 생성
@@ -178,7 +178,7 @@ public class Module : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<InteractionModule>().respawnObject != null)
+            if (player.GetComponent<PlayerInteraction>().respawnObject != null)
             {
                 player.GetComponent<PlayerMovement>().Respawn();
             }

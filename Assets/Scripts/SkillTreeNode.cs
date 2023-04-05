@@ -48,8 +48,8 @@ public class SkillTreeNode : MonoBehaviour
         {
             currentRepairSpeedLevel++;
             repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
-            InteractionModule interactionModule = FindAnyObjectByType<InteractionModule>();
-            interactionModule.repairSpeed += 0.5f;
+            PlayerInteraction playerInteraction = FindAnyObjectByType<PlayerInteraction>();
+            playerInteraction.repairSpeed += 0.5f;
             repairSpeedLevelText.text = currentRepairSpeedLevel == 3 ? "MAX" : "" + currentRepairSpeedLevel;
             gameManager.CloseSkillTree();
         }
