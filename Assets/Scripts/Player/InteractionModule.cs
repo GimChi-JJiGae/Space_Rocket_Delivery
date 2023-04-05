@@ -38,7 +38,6 @@ public class InteractionModule : MonoBehaviour
     // player 위치
     private Vector3 playerPosition;
 
-
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -239,7 +238,7 @@ public class InteractionModule : MonoBehaviour
 
             float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
 
-            if (struckModule.hp < 3)
+            if (struckModule.hp < skillTree.moduleHpUpgradeLevel + 3)
             {
                 struckModule.hp += repairAmount;
             }

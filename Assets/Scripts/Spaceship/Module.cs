@@ -147,6 +147,20 @@ public class Module : MonoBehaviour
         }
     }
 
+    public void Checked()
+    {
+        if (hp >= 2)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(false);
+        }
+        else if (hp >= 1)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(true);
+        }
+    }
+
     // 모듈 초기화시키기
     private void ResetModule()
     {

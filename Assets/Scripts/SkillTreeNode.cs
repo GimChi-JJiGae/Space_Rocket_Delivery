@@ -9,7 +9,7 @@ public class SkillTreeNode : MonoBehaviour
     private int currentSupplySpeedLevel = 0;
     private float currentRepairSpeedLevel = 0;
     private int currentTurretDamageLevel = 0;
-    private int moduleHpUpgradeLevel = 0;
+    public int moduleHpUpgradeLevel = 0;
 
     public TextMeshProUGUI moduleCurrentHpLevelText;
     public TextMeshProUGUI supplySpeedLevelText;
