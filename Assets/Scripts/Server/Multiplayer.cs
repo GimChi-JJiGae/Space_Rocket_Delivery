@@ -13,6 +13,7 @@ public class Multiplayer : MonoBehaviour
     public bool isMultiplayer;
 
     public int playerIndex;                            // 사용자의 플레이어 인덱스
+    public string roomCode;
 
     public GameObject[] players = new GameObject[4];   // 참조를 쉽게 하기 위해 오브젝트 저장
 
@@ -29,8 +30,8 @@ public class Multiplayer : MonoBehaviour
         controller  = GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
-
-        AssignPlayer(0);
+        
+        AssignPlayer(PlayerPrefs.GetInt("userId"));
 
         StartCoroutine(CallFunctionRepeatedly());
     }
@@ -44,8 +45,13 @@ public class Multiplayer : MonoBehaviour
             Vector3 a = players[playerIndex].transform.position;
             Quaternion b = players[playerIndex].transform.rotation;
             
-            controller.Send(PacketType.MOVE, "phqghu", playerIndex, a.x+1, a.y, a.z, b.x, b.y, b.z, b.w);
+            controller.Send(PacketType.MOVE,roomCode, playerIndex, a.x+1, a.y, a.z, b.x, b.y, b.z, b.w);
         }
+    }
+    private void Update()
+    {
+        playerIndex = PlayerPrefs.GetInt("userId");
+        roomCode = PlayerPrefs.GetString("roomCode");
     }
 
     void FixedUpdate()
@@ -66,7 +72,7 @@ public class Multiplayer : MonoBehaviour
 
     public void MoveOtherPlayer(string roomCode, int idx, float px, float py, float pz, float rx, float ry, float rz, float rw)
     {
-        idx = 3;
+     //   idx = 3;
         if (idx != playerIndex)
         {
             Vector3 dir = new Vector3(px, py, pz);
