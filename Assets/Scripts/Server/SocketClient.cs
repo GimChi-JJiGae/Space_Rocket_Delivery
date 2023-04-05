@@ -21,6 +21,12 @@ public class SocketClient : MonoBehaviour
 {
     // 소켓 연결과 직렬화 버퍼
     private Socket socket;
+
+    // 클라이언트의 개인 정보를 여기서 저장해보자
+    public String roomCode;
+    public int userId;
+    public string userNickname;
+
     private byte[] buffer = new byte[1024]; // 직렬화 버퍼
 
     // 로직은 컨트롤러에 위임
@@ -90,6 +96,7 @@ public class SocketClient : MonoBehaviour
     // 역직렬화
     private void Receive(byte[] buffer)
     {
+        Debug.Log("데이터 받음");
         byte[] header = SplitArray(buffer, 0, 1);
         //Debug.Log((int)header[0]);
         byte[] data = SplitArray(buffer, 1, buffer.Length - 1);

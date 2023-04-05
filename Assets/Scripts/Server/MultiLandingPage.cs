@@ -25,7 +25,8 @@ public class MultiLandingPage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<Controller>();                   // 컨트롤러 연결하기
+        GameObject socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         LandingPageCanvas = GameObject.Find("LandingPageCanvas");   // 캔버스 찾기
 
@@ -67,7 +68,7 @@ public class MultiLandingPage : MonoBehaviour
     {
         controller.Send(PacketType.CREATE_ROOM, userNicknameInput, "더미값");
         PlayerPrefs.SetString("userNickname", userNicknameInput);
-        SceneManager.LoadScene("WaitingRoom");
+        //SceneManager.LoadScene("WaitingRoom");
     }
 
     void OnEnterRoom()

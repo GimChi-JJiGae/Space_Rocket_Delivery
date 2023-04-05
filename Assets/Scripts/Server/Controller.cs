@@ -118,6 +118,13 @@ public class Controller : MonoBehaviour
     SocketClient socketClient;
     MutiplayWaitingRoom waitingRoom;
 
+
+    private void Awake()
+    {
+        // DontDestroyOnLoad 함수를 사용하여 해당 게임 오브젝트를 삭제하지 않도록 설정
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
         GameObject socketObj = GameObject.Find("SocketClient");
@@ -142,11 +149,49 @@ public class Controller : MonoBehaviour
         gameStartController = new GameStartController();
 
         // 멀티플레이 관련 로직 
-        multiplayer = GetComponent<Multiplayer>();
-        multiSpaceship = GetComponent<MultiSpaceship>();
-        multiEnemy = GetComponent<MultiEnemy>();
+        //multiplayer = GetComponent<Multiplayer>();
+        //multiSpaceship = GetComponent<MultiSpaceship>();
+        //multiEnemy = GetComponent<MultiEnemy>();
     }
+    private void Update()
+    {
+        if (multiplayer == null)
+        {
+            try
+            {
+                multiplayer = GameObject.Find ("Server").GetComponent<Multiplayer>();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("멀티플레이어 못찾음");
+            }
+        }
 
+        if (multiSpaceship == null)
+        {
+            try
+            {
+                multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("멀티스페이스쉽 못찾음");
+            }
+        }
+
+        if (multiEnemy == null)
+        {
+            try
+            {
+                multiEnemy = GameObject.Find("Server").GetComponent<MultiEnemy>();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("멀티에너미 못찾음");
+            }
+        }
+        
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -164,12 +209,12 @@ public class Controller : MonoBehaviour
         
         try
         {
-            Debug.Log("받았당~");// + (PacketType)header);
+            Debug.Log("받았당" + (PacketType)header);
             switch (header)
             {
                 
                 case PacketType.CREATE_ROOM:
-                    
+                    Debug.Log("여기오긴함?");
                     //createRoomController.ReceiveDTO(data);
                     //createRoomController.SetAct(true);
                     byte[] isCreateSucess = SplitArray(data, 0, 1);
@@ -186,7 +231,12 @@ public class Controller : MonoBehaviour
 
                         PlayerPrefs.SetString("roomCode", createRoom.roomName);
                         Debug.Log(PlayerPrefs.GetString("roomCode"));
+
+                        socketClient.roomCode = createRoom.roomName;
+                        Debug.Log("여기서 소켓에서 정보확인" + socketClient.roomCode);
+                        SceneManager.LoadScene("WaitingRoom");
                     });
+
                     Debug.Log("방생성 수신");
                     
                     break;
