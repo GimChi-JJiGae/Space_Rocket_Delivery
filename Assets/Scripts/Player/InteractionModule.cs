@@ -38,8 +38,13 @@ public class InteractionModule : MonoBehaviour
     // player 위치
     private Vector3 playerPosition;
 
+    public float repairSpeed;
+    public float maxHp;
+
     private void Start()
     {
+        repairSpeed = 0.1f;
+
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
         interactionObject = GetComponent<InteractionObject>();
@@ -138,13 +143,6 @@ public class InteractionModule : MonoBehaviour
             respawnObject = null;
         }
     }
-    public float CalculateRepairSpeed()
-    {
-        float baseRepairSpeed = 0.1f;
-        float repairSpeedLevel = skillTree.GetRepairSpeedLevel();
-        float repairSpeed = baseRepairSpeed + (0.1f * (repairSpeedLevel - 1));
-        return repairSpeed;
-    }
 
     public void UpgradeModule()
     {
@@ -236,11 +234,11 @@ public class InteractionModule : MonoBehaviour
 
             playerAnimator.SetBool("Repairing", true);
 
-            float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
-
-            if (struckModule.hp < skillTree.moduleHpUpgradeLevel + 3)
+            if (struckModule.hp < struckModule.maxHp)
             {
-                struckModule.hp += repairAmount;
+                Debug.Log("수리중");
+                struckModule.hp += repairSpeed; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+                struckModule.Checked();
             }
         }
         else

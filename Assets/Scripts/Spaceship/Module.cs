@@ -45,10 +45,12 @@ public class Module : MonoBehaviour
     public GameManager gameManager;
 
     public float hp = 0;
+    public float maxHp = 3;
 
     // Start is called before the first frame update
     void Start()
     {
+        maxHp = 3;
         //spaceship = FindAnyObjectByType<Spaceship>();
         // 벽 찾기
         Transform wallTransform = transform.Find("Wall");
@@ -120,7 +122,7 @@ public class Module : MonoBehaviour
         floorModule.name = "Floor";                                             // 모듈 이름 변경
         floorModule.transform.parent = transform;                               // 바닥 위치를 Spaceship아래로 내려주기
 
-        hp = 3;
+        hp = maxHp;
         if (t == ModuleType.Blueprint)
         {
             floorModule.SetActive(false);
