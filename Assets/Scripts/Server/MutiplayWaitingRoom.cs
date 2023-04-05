@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,12 +13,14 @@ public class MutiplayWaitingRoom : MonoBehaviour
     private Button GoBtn;
     private Button QuitRoomBtn;
     private TMP_Text RoomCode;
+    private bool alreadySend;
     public TMP_Text UserList;
     public List<string> userStringList = new List<string>();
 
     // Start is called before the first frame update
     void Start()
     {
+        alreadySend = false;
         controller = GetComponent<Controller>();                   // 컨트롤러 연결하기
 
         RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
@@ -46,10 +49,14 @@ public class MutiplayWaitingRoom : MonoBehaviour
 
     void StartNewGame()
     {
-        //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
-        controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
-        SceneManager.LoadScene("Multiplay");
-        //        SceneManager.LoadScene("Multiplay");
+        if (!alreadySend)
+        {
+            //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
+            controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
+            SceneManager.LoadScene("Multiplay");
+            //        SceneManager.LoadScene("Multiplay");
+            alreadySend = true;
+        }
     }
 
     void QuitRoom()

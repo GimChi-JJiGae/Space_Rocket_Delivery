@@ -37,6 +37,14 @@ public class SocketClient : MonoBehaviour
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.BeginConnect(endPoint, ConnectCallback, null);
 
+        Debug.Log("소켓 실행 테스트");
+
+    }
+
+    private void Awake()
+    {
+        // DontDestroyOnLoad 함수를 사용하여 해당 게임 오브젝트를 삭제하지 않도록 설정합니다.
+        DontDestroyOnLoad(gameObject);
     }
 
     private void ConnectCallback(IAsyncResult result)

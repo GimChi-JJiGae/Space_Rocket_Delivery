@@ -120,7 +120,8 @@ public class Controller : MonoBehaviour
 
     void Start()
     {
-        socketClient = GetComponent<SocketClient>();
+        GameObject socketObj = GameObject.Find("SocketClient");
+        socketClient = socketObj.GetComponent<SocketClient>();
         try
         {
             MutiplayWaitingRoom waitingRoom = GetComponent<MutiplayWaitingRoom>();
