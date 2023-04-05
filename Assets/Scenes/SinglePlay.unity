@@ -5451,33 +5451,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4821198073135640, guid: ea69caf230089fd45b16b373fef6d83f, type: 3}
   m_PrefabInstance: {fileID: 1471980288}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1503479904 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2470289558330825847, guid: bd26ccea9c84b054fb0dd886b0d464fa, type: 3}
-  m_PrefabInstance: {fileID: 2470289557668959255}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 467018541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1503479907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 467018541}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267dec23dcae19644a37384dd5161c1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  oxygen: 100
-  decreaseAmount: 0.834
-  increaseAmount: 41.7
-  oxygenBarFilled: {fileID: 1503479904}
 --- !u!114 &1503479910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7813,7 +7786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: spawnInterval
