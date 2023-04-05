@@ -255,16 +255,18 @@ public class Controller : MonoBehaviour
                     byte[] isSucess = SplitArray(data, 0, 1);
                     byte[] userCount = SplitArray(data, 1, 4);
                     int head = 5;
-                    waitingRoom.userStringList = new List<string>();
+                    //waitingRoom.userStringList = new List<string>();
                     for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
                     {
                         
                         DTOuser user = new DTOuser();
                         enterRoomController.newReceiveDTO(data, user, ref head);
-                        waitingRoom.userStringList.Add(user.userNickName);
+                        //waitingRoom.userStringList.Add(user.userNickName);
                         if (user.userNickName.Equals(userNickname))
                         {
                             userId = user.userId;
+                            Debug.Log("반복문 돌면서 확인 몇번이나 찍히나");
+                            Debug.Log(userId);
                         }
                         //Debug.Log(user.userNickName);
                         //Debug.Log(user.userId);

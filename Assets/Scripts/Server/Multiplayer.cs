@@ -57,6 +57,7 @@ public class Multiplayer : MonoBehaviour
     {
         //playerIndex = PlayerPrefs.GetInt("userId");
         //roomCode = PlayerPrefs.GetString("roomCode");
+        Debug.Log(playerIndex);
     }
 
     void FixedUpdate()
