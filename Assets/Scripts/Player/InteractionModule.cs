@@ -163,6 +163,7 @@ public class InteractionModule : MonoBehaviour
         if (turretObject.transform.GetComponentInChildren<ParticleController>())
         {
             float deal = turretObject.transform.GetComponentInChildren<ParticleController>().damage;
+
             if (deal == 1f)
             {
                 deal = 1.5f;
@@ -174,13 +175,17 @@ public class InteractionModule : MonoBehaviour
 
             if (multiplayer.isMultiplayer)
             {
+                int x = turretObject.GetComponentInParent<Module>().idxX;
+                int z = turretObject.GetComponentInParent<Module>().idxZ;
+
                 int playerId = PlayerPrefs.GetInt("userId");
-                multiSpaceship.ModuleUpgrade_SEND(playerId, (int)ActiveNum.UPGRADE);
+                multiSpaceship.ModuleUpgrade_SEND(playerId, x, z);
             }
         }
         else if (turretObject.transform.GetComponentInChildren<ShotgunBullet>())
         {
             float deal = turretObject.transform.GetComponentInChildren<ShotgunBullet>().damage;
+
             if (deal == 1f)
             {
                 deal = 1.5f;
@@ -192,13 +197,34 @@ public class InteractionModule : MonoBehaviour
 
             if (multiplayer.isMultiplayer)
             {
+                int x = turretObject.GetComponentInParent<Module>().idxX;
+                int z = turretObject.GetComponentInParent<Module>().idxZ;
+
                 int playerId = PlayerPrefs.GetInt("userId");
-                multiSpaceship.ModuleUpgrade_SEND(playerId, (int)ActiveNum.UPGRADE);
+                multiSpaceship.ModuleUpgrade_SEND(playerId, x, z);
             }
         }
         else if (turretObject.transform.GetComponentInChildren<ShieldTurret>())
         {
-            float health = turretObject.transform.GetComponentInChildren<ShieldTurret>().shieldHealth;
+            float health = turretObject.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth;
+
+            if (health == 20f)
+            {
+                health = 30f;
+            }
+            else if (health == 30f)
+            {
+                health = 40f;
+            }
+
+            if (multiplayer.isMultiplayer)
+            {
+                int x = turretObject.GetComponentInParent<Module>().idxX;
+                int z = turretObject.GetComponentInParent<Module>().idxZ;
+
+                int playerId = PlayerPrefs.GetInt("userId");
+                multiSpaceship.ModuleUpgrade_SEND(playerId, x, z);
+            }
         }
     }
 

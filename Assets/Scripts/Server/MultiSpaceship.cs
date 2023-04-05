@@ -1,4 +1,5 @@
 using ResourceNamespace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,6 @@ public class MultiSpaceship : MonoBehaviour
         FACTORY_PRODUCE,
         INCREASE_OXYGEN,
         RESPAWN,
-        UPGRADE,
     }
 
     Multiplayer multiplayer; // 멀티플레이인지 확인하는 변수
@@ -201,18 +201,57 @@ public class MultiSpaceship : MonoBehaviour
         });
     }
 
-    public void ModuleUpgrade_SEND(int id, int activeNum)
+    public void ModuleUpgrade_SEND(int id, int x, int z)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, id, activeNum);
+        controller.Send(PacketType.MODULE_UPGRADE, id, x, z);
     }
 
-    public void ModuleUpgrade_RECEIVE(int id)
+    public void ModuleUpgrade_RECEIVE(int id, int x, int z)
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (PlayerPrefs.GetInt("userId") != id)
             {
-                GameObject.Find("Player" + id).transform.position = new Vector3(0, 0, -2);
+                Module module = spaceship.modules[z, x].GetComponent<Module>();
+                if (module.transform.GetComponentInChildren<ParticleController>())
+                {
+                    float deal = module.transform.GetComponentInChildren<ParticleController>().damage;
+
+                    if (deal == 1f)
+                    {
+                        deal = 1.5f;
+                    }
+                    else if (deal == 1.5f)
+                    {
+                        deal = 3f;
+                    }
+                }
+                else if (module.transform.GetComponentInChildren<ShotgunBullet>())
+                {
+                    float deal = module.transform.GetComponentInChildren<ShotgunBullet>().damage;
+
+                    if (deal == 1f)
+                    {
+                        deal = 1.5f;
+                    }
+                    else if (deal == 1.5f)
+                    {
+                        deal = 3f;
+                    }
+                }
+                else if (module.transform.GetComponentInChildren<ShieldTurret>())
+                {
+                    float health = module.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth;
+
+                    if (health == 20f)
+                    {
+                        health = 30f;
+                    }
+                    else if (health == 30f)
+                    {
+                        health = 40f;
+                    }
+                }
             }
         });
     }

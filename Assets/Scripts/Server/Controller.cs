@@ -40,6 +40,7 @@ public enum PacketType
     RESOURCE_CREATE = 201, // SUPPLIER 오브젝트 생성
     MODULE_CREATE = 301, // 모듈 생성
     MODULE_REPAIR = 302, // 모듈 수리
+    MODULE_UPGRADE = 303,
 
     RESOURCE_CHANGE = 210, // SUPPLIER 오브젝트 변경
     RESOURCE_MOVE = 211, // 리소스 움직임
@@ -104,7 +105,7 @@ public class Controller : MonoBehaviour
 
     RepairController repairController;
 
-    RespawnController respawnController;
+    ModuleUpgradeController moduleUpgradeController;
 
     // Player관련 함수
     Multiplayer multiplayer;
@@ -128,7 +129,7 @@ public class Controller : MonoBehaviour
         moveEnemyController = new MoveEnemyController();
         interactionModuleController = new InteractionModuleController();
         repairController = new RepairController();
-        respawnController = new RespawnController();
+        moduleUpgradeController = new ModuleUpgradeController();
 
         // 멀티플레이 관련 로직 
         multiplayer = GetComponent<Multiplayer>();
@@ -300,9 +301,9 @@ public class Controller : MonoBehaviour
                     repairController.ReceiveDTO(data);
                     repairController.SetAct(true);
                     break;
-                case PacketType.RESPAWN:
-                    respawnController.ReceiveDTO(data);
-                    respawnController.SetAct(true);
+                case PacketType.MODULE_UPGRADE:
+                    moduleUpgradeController.ReceiveDTO(data);
+                    moduleUpgradeController.SetAct(true);
                     break;
             }
         }
@@ -550,6 +551,9 @@ public class InteractionModuleController : ReceiveController
                 case 3:
                     multiSpaceship.IncreaseOxygen_RECEIVE(id);
                     break;
+                case 4:
+                    multiSpaceship.Respawn_RECEIVE(id);
+                    break;
             }
 
             SetAct(false);
@@ -567,7 +571,7 @@ public class RepairController : ReceiveController
     {
         if (GetAct())
         {
-            Debug.Log("InteractionModule : 상호작용");
+            Debug.Log("Repair : 수리");
 
             multiSpaceship.Repair_RECEIVE(id, xIdx, zIdx);
 
@@ -576,18 +580,19 @@ public class RepairController : ReceiveController
     }
 }
 
-public class RespawnController : ReceiveController
+public class ModuleUpgradeController : ReceiveController
 {
     public int id;
-    public int activeNum;
+    public int x;
+    public int z;
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
         if (GetAct())
         {
-            Debug.Log("InteractionModule : 상호작용");
+            Debug.Log("ModuleUpgrade : 업그레이드");
 
-            multiSpaceship.Respawn_RECEIVE(id);
+            multiSpaceship.ModuleUpgrade_RECEIVE(id, x, z);
 
             SetAct(false);
         }
