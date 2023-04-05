@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.019136017, g: 0.009631307, b: 0.039147314, a: 1}
+  m_IndirectSpecularColor: {r: 0.019120552, g: 0.009632196, b: 0.039120577, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6113,6 +6113,31 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2205704392875011112, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
   m_PrefabInstance: {fileID: 1891627967}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1599322671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599322670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b346ccdd3bb201a4ea860e4786fe7e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HoldableObjects: []
+  isHoldingObject: 0
+  currentObject: {fileID: 0}
+  matchObject: {fileID: 0}
+  targetObject: {fileID: 0}
+  resourceObject: {fileID: 0}
+  inputObject: {fileID: 0}
+  produceObject: {fileID: 0}
+  upgradeObject: {fileID: 0}
+  respawnObject: {fileID: 0}
+  repairSpeed: 0
+  maxHp: 0
+  skillTree: {fileID: 0}
 --- !u!1001 &1665434424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7354,7 +7379,9 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 112
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6878477196426667772, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
+    - {fileID: 6878477196426667763, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
 --- !u!1001 &1916226102
 PrefabInstance:
