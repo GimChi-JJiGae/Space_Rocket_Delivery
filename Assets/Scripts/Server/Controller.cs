@@ -40,6 +40,10 @@ public enum PacketType
     MODULE_REPAIR,
     MODULE_UPGRADE,
 
+
+    RESOURCE_CREATE,
+    RESOURCE_MOVE
+
     //NONE,
     //HELLO,
     //BYE,
