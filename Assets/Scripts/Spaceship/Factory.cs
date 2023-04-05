@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Linq;
-using Unity.Profiling.Editor;
-using Unity.VisualScripting;
 
 public class Factory : MonoBehaviour
 {
