@@ -10,8 +10,6 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
 
-    public GameObject player;
-
     private Vector3 initialPosition = new(0, 0, -2);
 
     private void Start()

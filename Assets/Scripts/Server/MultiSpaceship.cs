@@ -1,9 +1,5 @@
 using ResourceNamespace;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Module;
 
 public class MultiSpaceship : MonoBehaviour
 {
@@ -16,7 +12,7 @@ public class MultiSpaceship : MonoBehaviour
         RESPAWN,
     }
 
-    Multiplayer multiplayer; // ë©€í‹°í”Œë ˆì´ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
+    Multiplayer multiplayer; // ¸ÖÆ¼ÇÃ·¹ÀÌÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
 
     Spaceship spaceship;
     Controller controller;
@@ -29,13 +25,13 @@ public class MultiSpaceship : MonoBehaviour
     //bool[] putResource = new bool[10000];
     int resourceCount = 0;
 
-    public delegate void EventResourceSpownHandler(int idxR);           // ë¦¬ì†ŒìŠ¤ ìƒì„± ì´ë²¤íŠ¸
+    public delegate void EventResourceSpownHandler(int idxR);           // ¸®¼Ò½º »ý¼º ÀÌº¥Æ®
     public event EventResourceSpownHandler eventResourceSpown;
 
-    public delegate void EventResourceChangeHandler();                  // ë¦¬ì†ŒìŠ¤ ë³€ê²½ ì´ë²¤íŠ¸
+    public delegate void EventResourceChangeHandler();                  // ¸®¼Ò½º º¯°æ ÀÌº¥Æ®
     public event EventResourceChangeHandler eventResourceChange;
 
-    public delegate void EventResourceMoveHandler(DTOresourcemove[] DTOresourcemove);                    // ë¦¬ì†ŒìŠ¤ ë¬´ë¸Œ ì´ë²¤íŠ¸
+    public delegate void EventResourceMoveHandler(DTOresourcemove[] DTOresourcemove);                    // ¸®¼Ò½º ¹«ºê ÀÌº¥Æ®
     public event EventResourceMoveHandler eventResourceMove;
 
     void Start()
@@ -66,7 +62,7 @@ public class MultiSpaceship : MonoBehaviour
         }
     }
 
-    // ìžì› ìƒì„± send corutine
+    // ÀÚ¿ø »ý¼º send corutine
     public void CreateModule_SEND(int id, int xIdx, int zIdx, int moduleType)
     {
         controller.Send(PacketType.MODULE_CREATE, id, xIdx, zIdx, moduleType);
@@ -87,13 +83,13 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ChangeResource_SEND(int id, int moduleType)
     {
-        // Packet ë²ˆí˜¸ê°€ ì—†ë‹¤.
+        // Packet ¹øÈ£°¡ ¾ø´Ù.
         controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, (int)ActiveNum.RESOURCE_CHANGE);
     }
 
     public void ChangeResource_RECEIVE(int id)
     {
-        // ì¸ë±ìŠ¤ê°€ ì—†ë‹¤.
+        // ÀÎµ¦½º°¡ ¾ø´Ù.
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (PlayerPrefs.GetInt("userId") != id)
@@ -108,13 +104,13 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ChangeModule_SEND(int id, int moduleType)
     {
-        // Packet ë²ˆí˜¸ê°€ ì—†ë‹¤.
+        // Packet ¹øÈ£°¡ ¾ø´Ù.
         controller.Send(PacketType.MODULE_INTERACTION, id, moduleType, ActiveNum.FACTORY_CHANGE);
     }
 
     public void ChangeModule_RECEIVE(int id)
     {
-        // ë³€ê²½ëœ ê±°ì— ëŒ€í•œ neededOre, neededFuelê¹Œì§€ ë‹¤ ë°›ì•„ì„œ ì²˜ë¦¬ ê°€ëŠ¥?
+        // º¯°æµÈ °Å¿¡ ´ëÇÑ neededOre, neededFuel±îÁö ´Ù ¹Þ¾Æ¼­ Ã³¸® °¡´É?
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (PlayerPrefs.GetInt("userId") != id)
@@ -236,8 +232,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(10.0f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
-                                                    // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
+            yield return new WaitForSeconds(10.0f); // 0.1ÃÊ¸¶´Ù ¹Ýº¹
+                                                    // ¹Ýº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
                 controller.Send(PacketType.RESOURCE_CREATE, resourceCount);
@@ -255,8 +251,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.1f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
-                                                   // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
+            yield return new WaitForSeconds(0.1f); // 0.1ÃÊ¸¶´Ù ¹Ýº¹
+                                                   // ¹Ýº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
             if (multiplayer.isMultiplayer && multiplayer.isHost == true)
             {
                 List<object> list = new List<object>();

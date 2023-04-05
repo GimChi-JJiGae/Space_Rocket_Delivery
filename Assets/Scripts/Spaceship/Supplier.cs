@@ -1,14 +1,9 @@
 using System.Collections;
 using ResourceNamespace;
 using UnityEngine;
-using static MultiSpaceship;
 
 public class Supplier : MonoBehaviour
 {
-    Multiplayer multiplayer; // 멀티플레이 중인지 확인만 함
-    MultiSpaceship multiSpaceship; // 자원을 여기다가 저장함
-    int resourceCount = 0;
-
     public Animator popAnimator;
 
     public GameObject currentPrefab;
@@ -19,7 +14,7 @@ public class Supplier : MonoBehaviour
     private GameObject orePrefab;
 
     // 생성주기
-    readonly private float respawnTime = 10f;
+    public float respawnTime = 10f;
 
     //Start is called before the first frame update
     void Start()
@@ -32,22 +27,11 @@ public class Supplier : MonoBehaviour
         currentPrefab = null;
 
         popAnimator = GetComponent<Animator>();
-        try
-        {
-            multiplayer = FindAnyObjectByType<Multiplayer>();
-            multiSpaceship = FindAnyObjectByType<MultiSpaceship>();
-            multiSpaceship.eventResourceSpown += MultiSpawnResource;
-            
-            if (!multiplayer.isMultiplayer) 
-            {
-                Debug.Log("멀티가 아니네요");
-                StartCoroutine(SpawnResource());
-            }
-        }
-        catch
-        {
-
-        }
+        StartCoroutine(SpawnResource());
+    }
+    public void SetRespawnTime(float newRespawnTime)
+    {
+        respawnTime = newRespawnTime;
     }
 
     // 자원 생성
@@ -81,37 +65,5 @@ public class Supplier : MonoBehaviour
 
             yield return new WaitForSeconds(respawnTime);
         }
-    }
-
-    // 자원 생성
-    public void MultiSpawnResource(int idxR)
-    {
-        float positionX = transform.position.x;     // 현재 오브젝트의 위치를 가져옴
-        float positionZ = transform.position.z;
-        float positionY = transform.position.y;
-        Vector3 position = new Vector3(positionX, positionY, positionZ - 2); // 앞에 생성
-
-        GameObject currentPrefab;
-        switch (currentResource)
-        {
-            case ResourceType.Fuel:
-                currentPrefab = fuelPrefab;
-                break;
-            case ResourceType.Ore:
-                currentPrefab = orePrefab;
-                break;
-            default:
-                currentPrefab = null;
-                break;
-        }
-        Debug.Log("Supplier: " + currentResource + " 생성");
-        GameObject newResource = Instantiate(currentPrefab, position, Quaternion.identity);
-
-        // 이름변경
-        newResource.name = currentResource.ToString();
-        popAnimator.Play("SupplierPopAnimation");
-
-        multiSpaceship.resourceList[idxR] = newResource;
-        resourceCount++;
     }
 }

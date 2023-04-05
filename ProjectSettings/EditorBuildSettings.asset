@@ -8,15 +8,18 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Main.unity
     guid: 33115ea25dcd04040bc306e21a288b72
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Module.unity
     guid: 18d955b946a7c894ebb523e52c597d9b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LandingPage.unity
     guid: bcf84ff979512a54d888231c6bb69184
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WaitingRoom.unity
     guid: 7609f0eaef46542408e50a6032008d33
+  - enabled: 1
+    path: Assets/Scenes/Enemy2.unity
+    guid: f5f48106adade104389f5672a3eff86d
   - enabled: 1
     path: Assets/Scenes/Multiplay.unity
     guid: 48c48aa4f50657940b52771174588e80

@@ -1,11 +1,7 @@
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
-    public Animator popAnimator;
-
     public enum PrintType
     {
         Kit,
@@ -34,6 +30,9 @@ public class Factory : MonoBehaviour
     public int destroyOre = 0;
     public int destroyFuel = 0;
 
+    public TextMesh oreText;
+    public TextMesh fuelText;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -51,11 +50,17 @@ public class Factory : MonoBehaviour
 
         kitModule = Resources.Load<GameObject>("Resources/Kit");
         shotgunModule = Resources.Load<GameObject>("Resources/Shotgun");
-        laserModule = Resources.Load<GameObject>("Rosources/Laser");
+        laserModule = Resources.Load<GameObject>("Resources/Laser");
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
 
         neededOre = 1;
         neededFuel = 1;
+    }
+    // Update is called once per frame
+    private void Update()
+    {
+        oreText.text = "광석: " + destroyOre + " / " + neededOre;
+        fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
     public void SwitchModule()
@@ -133,8 +138,8 @@ public class Factory : MonoBehaviour
         }
 
         float positionX = gameObject.transform.position.x;
-        float positionZ = gameObject.transform.position.z;
         float positionY = gameObject.transform.position.y;
+        float positionZ = gameObject.transform.position.z;
 
         Vector3 position = new(positionX, positionY, positionZ - 2);
 
@@ -143,8 +148,8 @@ public class Factory : MonoBehaviour
             GameObject newModule = Instantiate(currentModule, position, Quaternion.identity);
 
             newModule.name = currentType.ToString();
-            //popAnimator.Play("FactoryPopAnimation");
+
+            currentModule = null;
         }
-        currentModule = null;
     }
 }

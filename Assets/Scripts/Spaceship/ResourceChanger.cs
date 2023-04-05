@@ -18,6 +18,8 @@ namespace ResourceNamespace
         // Start is called before the first frame update
         private void Start()
         {
+            //multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
             fuelObject = transform.Find("FuelBlueprint").gameObject;
             oreObject = transform.Find("OreBlueprint").gameObject;
 

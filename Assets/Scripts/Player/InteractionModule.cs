@@ -10,9 +10,6 @@ using static MultiSpaceship;
 
 public class InteractionModule : MonoBehaviour
 {
-    // 멀티를 위한 오브젝트
-    public Multiplayer multiplayer;
-    public MultiSpaceship multiSpaceship;
 
     private PlayerInput playerInput;
     private Animator playerAnimator;
@@ -21,10 +18,10 @@ public class InteractionModule : MonoBehaviour
     //private ResourceChanger resourceChanger;
     private Spaceship spaceship;
     private GameObject player;
+    public GameObject targetObject;
 
     // Edge 체크를 위한 오브젝트
     public GameObject matchObject;
-    public GameObject targetObject;
 
     // Resource 변경을 위한 오브젝트
     public GameObject resourceObject;
@@ -45,9 +42,10 @@ public class InteractionModule : MonoBehaviour
     // player 위치
     private Vector3 playerPosition;
 
-
     private void Start()
     {
+        repairSpeed = 0.1f;
+
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
         interactionObject = GetComponent<InteractionObject>();
@@ -63,6 +61,9 @@ public class InteractionModule : MonoBehaviour
 
         skillTree = GetComponent<SkillTreeNode>();
     }
+
+    public float repairSpeed;
+    public float maxHp;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -112,42 +113,6 @@ public class InteractionModule : MonoBehaviour
         else if (other.gameObject.CompareTag("Respawn"))
         {
             respawnObject = other.gameObject;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Edge") && targetObject != null)
-        {
-            Module module = targetObject.GetComponentInParent<Module>();
-
-            if (module.moduleType == ModuleType.Blueprint)
-            {
-                targetObject.GetComponent<Module>().floorModule.SetActive(false);
-            }
-
-            matchObject = null;
-            targetObject = null;
-        }
-        else if (other.gameObject.CompareTag("Change"))
-        {
-            resourceObject = null;
-        }
-        else if (other.gameObject.CompareTag("Input"))
-        {
-            inputObject = null;
-        }
-        else if (other.gameObject.CompareTag("Produce"))
-        {
-            produceObject = null;
-        }
-        else if (other.gameObject.CompareTag("Turret"))
-        {
-            turretObject = null;
-        }
-        else if (other.gameObject.CompareTag("Respawn"))
-        {
-            respawnObject = null;
         }
     }
     public float CalculateRepairSpeed()
@@ -212,6 +177,42 @@ public class InteractionModule : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Edge") && targetObject != null)
+        {
+            Module module = targetObject.GetComponentInParent<Module>();
+
+            if (module.moduleType == ModuleType.Blueprint)
+            {
+                targetObject.GetComponent<Module>().floorModule.SetActive(false);
+            }
+
+            matchObject = null;
+            targetObject = null;
+        }
+        else if (other.gameObject.CompareTag("Change"))
+        {
+            resourceObject = null;
+        }
+        else if (other.gameObject.CompareTag("Input"))
+        {
+            inputObject = null;
+        }
+        else if (other.gameObject.CompareTag("Produce"))
+        {
+            produceObject = null;
+        }
+        else if (other.gameObject.CompareTag("Turret"))
+        {
+            turretObject = null;
+        }
+        else if (other.gameObject.CompareTag("Respawn"))
+        {
+            respawnObject = null;
+        }
+    }
+
     public void MakeModule()
     {
         int tIdxX = targetObject.GetComponent<Module>().idxX;
@@ -225,7 +226,7 @@ public class InteractionModule : MonoBehaviour
             {
                 int playerId = PlayerPrefs.GetInt("userId");
                 multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.LaserTurret);
-            }
+        }
         }
         else if (interactionObject.currentObject.name == "Shotgun")
         {
@@ -234,7 +235,7 @@ public class InteractionModule : MonoBehaviour
             {
                 int playerId = PlayerPrefs.GetInt("userId");
                 multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShotgunTurret);
-            }
+        }
 
         }
         else if (interactionObject.currentObject.name == "Shield")
@@ -245,7 +246,7 @@ public class InteractionModule : MonoBehaviour
             {
                 int playerId = PlayerPrefs.GetInt("userId");
                 multiSpaceship.CreateModule_SEND(playerId, tIdxX, tIdxZ, (int)ModuleType.ShieldTurret);
-            }
+        }
         }
         spaceship.MakeWall(targetObject);
     }
@@ -258,12 +259,12 @@ public class InteractionModule : MonoBehaviour
             {
                 if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint && interactionObject.isHoldingObject)
                 {
-                    if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
-                    {
-                        MakeModule();
+                        if (interactionObject.currentObject.name == "Laser" || interactionObject.currentObject.name == "Shotgun" || interactionObject.currentObject.name == "Shield")
+                        {
+                            MakeModule();
+                        }
                     }
                 }
-            }
             // Supplier 자원 변경
             else if (resourceObject != null)
             {
@@ -273,13 +274,12 @@ public class InteractionModule : MonoBehaviour
                 {
                     int playerId = PlayerPrefs.GetInt("userId");
                     multiSpaceship.ChangeResource_SEND(playerId, (int)ModuleType.Supplier);
+                    }
+                    if (resourceObject.GetComponentInParent<Supplier>() != null)
+                    {
+                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    }
                 }
-
-                if (resourceObject.GetComponentInParent<Supplier>() != null)
-                {
-                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
-                }
-            }
             else if (produceObject != null)
             {
                 produceObject.GetComponentInParent<Factory>().SwitchModule();
@@ -289,7 +289,7 @@ public class InteractionModule : MonoBehaviour
                 {
                     int playerId = PlayerPrefs.GetInt("userId");
                     multiSpaceship.ChangeModule_SEND(playerId, (int)ModuleType.Factory);
-                }
+            }
             }
 
 
@@ -309,11 +309,10 @@ public class InteractionModule : MonoBehaviour
                                 int playerId = PlayerPrefs.GetInt("userId");
                                 multiSpaceship.IncreaseOxygen_SEND(playerId, (int)ModuleType.Oxygenator);
                             }
-                        }
-                    }
-                    else if (inputObject.GetComponentInParent<Factory>())
-                    {
-                        inputObject.GetComponentInParent<Factory>().ProduceModule();
+                            }
+                        else if (inputObject.GetComponentInParent<Factory>())
+                        {
+                            inputObject.GetComponentInParent<Factory>().ProduceModule();
 
                         if (multiplayer.isMultiplayer)
                         {
@@ -322,40 +321,38 @@ public class InteractionModule : MonoBehaviour
                         }
                     }
                 }
-                else if (turretObject != null)
-                {
-                    UpgradeModule();
+                    else if (turretObject != null)
+                    {
+                        UpgradeModule();
+                    }
                 }
-            }
         }
 
-        if (playerInput.RepairModule)
-        {
-            playerPosition = player.GetComponent<Transform>().position;
+                if (playerInput.RepairModule)
+                {
+                    playerPosition = player.GetComponent<Transform>().position;
 
-            int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
-            int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
+                    int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
+                    int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
 
-            struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
+                    struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
 
-            playerAnimator.SetBool("Repairing", true);
+                    playerAnimator.SetBool("Repairing", true);
 
-            float repairAmount = CalculateRepairSpeed(); // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
-
-            if (struckModule.hp < 3)
-            {
-                struckModule.hp += repairAmount;
+            if (struckModule.hp < struckModule.maxHp)
+                    {
+                        struckModule.hp += repairAmount;
                 if (multiplayer.isMultiplayer)
                 {
                     int playerId = PlayerPrefs.GetInt("userId");
                     multiSpaceship.Repair_SEND(playerId, playerX, playerZ);
+                    }
                 }
-            }
         }
-        else
-        {
+                else
+                {
             playerAnimator.SetBool("Repairing", false);
-        }
+                }
 
         if (respawnObject != null)
         {
@@ -366,6 +363,4 @@ public class InteractionModule : MonoBehaviour
                 int playerId = PlayerPrefs.GetInt("userId");
                 multiSpaceship.Respawn_SEND(playerId, (int)ActiveNum.RESPAWN);
             }
-        }
-    }
 }

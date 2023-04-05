@@ -5,7 +5,6 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Module;
 
 public class Module : MonoBehaviour
 {
@@ -24,8 +23,12 @@ public class Module : MonoBehaviour
         BasicTurret,     // 제공되는 커다란 기본 터렛
         ShotgunTurret,   // 샷건터렛
         ShieldTurret
-
     }
+
+    public InteractionModule interactionModule;
+
+    public GameObject[] players;
+
     public ModuleType moduleType;   // 모듈타입
 
     public GameObject wallTop;      // 벽 모듈
@@ -39,12 +42,15 @@ public class Module : MonoBehaviour
     public GameObject broken2;
 
     public GameObject hitArea;      // 데미지 받는 범위
+    public GameManager gameManager;
 
     public float hp = 0;
+    public float maxHp = 3;
 
     // Start is called before the first frame update
     void Start()
     {
+        maxHp = 3;
         //spaceship = FindAnyObjectByType<Spaceship>();
         // 벽 찾기
         Transform wallTransform = transform.Find("Wall");
@@ -65,6 +71,7 @@ public class Module : MonoBehaviour
 
         hitArea = transform.Find("HitArea").gameObject;
         hitArea.SetActive(false);
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // 모듈 생성
@@ -80,69 +87,46 @@ public class Module : MonoBehaviour
             Destroy(beforeFloor);
         }
 
-        
-        GameObject floorPrefab;
-        // T에 따라 파일 로드
-        switch (t)
+        GameObject floorPrefab = t switch
         {
-            case ModuleType.Blueprint:      // 청사진
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BlueprintFloor");
-                break;
-            case ModuleType.Engine:         // 엔진
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Engine");
-                break;
-            case ModuleType.Cargo:          // 화물
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Cargo");
-                break;    
-            case ModuleType.Factory:        // 제작기
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Factory");
-                break;
-            case ModuleType.Supplier:       // 생성기
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Supplier");
-                break;
-            case ModuleType.Oxygenator:     // 산소재생기
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Oxygenator");
-                break;
-            case ModuleType.DefaultTurret:  // 기본터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
-                break;
-            case ModuleType.LaserTurret:    // 레이저터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/Turret");
-                break;                      
-            case ModuleType.BasicTurret:    // 기존 제공 터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/BasicTurret");
-                break;
-            case ModuleType.ShotgunTurret:    // 샷건터렛
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShotgunTurret");
-                break;
-            case ModuleType.ShieldTurret:
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/ShieldTurret");
-                break;
-            default:
-                floorPrefab = Resources.Load<GameObject>("Spaceship/Module/DefaultFloor");
-                break;
-        }
-
+            // 청사진
+            ModuleType.Blueprint => Resources.Load<GameObject>("Spaceship/Module/BlueprintFloor"),
+            // 엔진
+            ModuleType.Engine => Resources.Load<GameObject>("Spaceship/Module/Engine"),
+            // 화물
+            ModuleType.Cargo => Resources.Load<GameObject>("Spaceship/Module/Cargo"),
+            // 제작기
+            ModuleType.Factory => Resources.Load<GameObject>("Spaceship/Module/Factory"),
+            // 생성기
+            ModuleType.Supplier => Resources.Load<GameObject>("Spaceship/Module/Supplier"),
+            // 산소재생기
+            ModuleType.Oxygenator => Resources.Load<GameObject>("Spaceship/Module/Oxygenator"),
+            // 기본터렛
+            ModuleType.DefaultTurret => Resources.Load<GameObject>("Spaceship/Module/Turret"),
+            // 레이저터렛
+            ModuleType.LaserTurret => Resources.Load<GameObject>("Spaceship/Module/Turret"),
+            // 기존 제공 터렛
+            ModuleType.BasicTurret => Resources.Load<GameObject>("Spaceship/Module/BasicTurret"),
+            // 샷건터렛
+            ModuleType.ShotgunTurret => Resources.Load<GameObject>("Spaceship/Module/ShotgunTurret"),
+            ModuleType.ShieldTurret => Resources.Load<GameObject>("Spaceship/Module/ShieldTurret"),
+            _ => Resources.Load<GameObject>("Spaceship/Module/DefaultFloor"),
+        };
         float positionX = gameObject.transform.position.x;     // 지금 오브젝트의 위치를 가져옴
         float positionZ = gameObject.transform.position.z;      
         float positionY = gameObject.transform.position.y;
-        Vector3 position = new Vector3(positionX, positionY, positionZ);        // 바닥 타일의 위치
+        Vector3 position = new(positionX, positionY, positionZ);        // 바닥 타일의 위치
         Quaternion rotation = Quaternion.identity;                              // 바닥 타일의 회전
 
         floorModule = Instantiate(floorPrefab, position, rotation);             // 바닥 생성시키기
         floorModule.name = "Floor";                                             // 모듈 이름 변경
         floorModule.transform.parent = transform;                               // 바닥 위치를 Spaceship아래로 내려주기
 
-        hp = 3;
+        hp = maxHp;
         if (t == ModuleType.Blueprint)
         {
             floorModule.SetActive(false);
         }
-    }
-
-    void UpgradeModule()
-    {
-
     }
 
     // 공격받음
@@ -151,7 +135,9 @@ public class Module : MonoBehaviour
         hp -= 1;
         if (hp <= 0)
         {
+            CheckGameOverCondition(); // 모듈 파괴 후 게임 오버 조건 확인
             ResetModule();
+            Debug.Log('6');
         }
         else if (hp <= 1)
         {
@@ -161,7 +147,20 @@ public class Module : MonoBehaviour
         {
             broken1.SetActive(true);
         }
-        
+    }
+
+    public void Checked()
+    {
+        if (hp >= 2)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(false);
+        }
+        else if (hp >= 1)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(true);
+        }
     }
 
     // 모듈 초기화시키기
@@ -177,6 +176,14 @@ public class Module : MonoBehaviour
         // 바닥 재생성 (청사진)
         CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
 
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<InteractionModule>().respawnObject != null)
+            {
+                player.GetComponent<PlayerMovement>().Respawn();
+            }
+        }
+
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);
     }
@@ -184,5 +191,32 @@ public class Module : MonoBehaviour
     public static implicit operator Module(GameObject v)
     {
         throw new NotImplementedException();
+    }
+    private void OnDestroy()
+    {
+        gameObject.SetActive(false);
+    }
+    private void CheckGameOverCondition()
+    {
+        Debug.Log('5');
+        switch (moduleType)
+        {
+            case ModuleType.Engine:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Supplier:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Oxygenator:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+            case ModuleType.Factory:
+                Debug.Log(8);
+                gameManager.EndGame();
+                break;
+        }
     }
 }

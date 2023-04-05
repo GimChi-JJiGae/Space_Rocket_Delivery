@@ -1,19 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static Module;
 
 public class MultiEnemy : MonoBehaviour
 {
     Controller controller;
-    Multiplayer multiplayer; // ë©€í‹°í”Œë ˆì´ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
+    Multiplayer multiplayer; // ¸ÖÆ¼ÇÃ·¹ÀÌÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
 
     public GameObject[] enemyeList = new GameObject[10000];
     Vector3[] targetPosition = new Vector3[10000];
     Quaternion[] targetRotation = new Quaternion[10000];
     public int enemyCount = 0;
 
-    public GameObject[] enemies; // í”„ë¦¬íŒ¹ì„ ì €ì¥í•´ë‘˜ ê³µê°„
+    public GameObject[] enemies; // ÇÁ¸®ÆÕÀ» ÀúÀåÇØµÑ °ø°£
 
     void Start()
     {
@@ -43,8 +39,8 @@ public class MultiEnemy : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.1f); // 0.1ì´ˆë§ˆë‹¤ ë°˜ë³µ
-                                                   // ë°˜ë³µí•´ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ í˜¸ì¶œ
+            yield return new WaitForSeconds(0.1f); // 0.1ÃÊ¸¶´Ù ¹İº¹
+                                                   // ¹İº¹ÇØ¼­ È£ÃâÇÒ ÇÔ¼ö È£Ãâ
             try
             {
                 if (multiplayer.isMultiplayer && multiplayer.isHost == true)
@@ -58,7 +54,7 @@ public class MultiEnemy : MonoBehaviour
                         {
                             count++;
                             list.Add((int)i);
-                            list.Add((int)0); // íƒ€ì…ì„ ì—¬ê¸° ì €ì¥ì‹œí‚¬ ê²ƒì„
+                            list.Add((int)0); // Å¸ÀÔÀ» ¿©±â ÀúÀå½ÃÅ³ °ÍÀÓ
                             Vector3 a = enemyeList[i].transform.position;
                             list.Add((float)a.x);
                             list.Add((float)a.y);
@@ -87,12 +83,12 @@ public class MultiEnemy : MonoBehaviour
     public void ReceiveMoveEnemy(DTOenemymove[] DTOenemymove)
     {
 
-        Debug.Log("ë°›ì•˜ë‹¤ ì´ê²ƒì„");
+        Debug.Log("¹Ş¾Ò´Ù ÀÌ°ÍÀ»");
         try
         {
             for (int i = 0; i < DTOenemymove.Length; i++)
             {
-                if (enemyeList[DTOenemymove[i].idxE] == null)   // null ê°œì²´ë©´
+                if (enemyeList[DTOenemymove[i].idxE] == null)   // null °³Ã¼¸é
                 {
                     spawnEnemy(DTOenemymove[i]);
                     Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
@@ -100,7 +96,7 @@ public class MultiEnemy : MonoBehaviour
                     targetPosition[DTOenemymove[i].idxE] = v;
                     targetRotation[DTOenemymove[i].idxE] = q;
                 }
-                else                                            // ì¡´ì¬í•˜ë©´
+                else                                            // Á¸ÀçÇÏ¸é
                 {
                     Vector3 v = new Vector3(DTOenemymove[i].px, DTOenemymove[i].py, DTOenemymove[i].pz);
                     Quaternion q = new Quaternion(DTOenemymove[i].rx, DTOenemymove[i].ry, DTOenemymove[i].rz, DTOenemymove[i].rw);
@@ -111,7 +107,7 @@ public class MultiEnemy : MonoBehaviour
         }
         catch
         {
-            Debug.Log("ì—ëŸ¬ì¸ê°€..");
+            Debug.Log("¿¡·¯ÀÎ°¡..");
         }
     }
 
@@ -136,23 +132,23 @@ public class MultiEnemy : MonoBehaviour
 
         if (currentEnemies.Length == 0)
         {
-            Debug.LogError("currentEnemies ë°°ì—´ì´ ë¹„ì–´ìˆìŠµë‹ˆë‹¤.");
+            Debug.LogError("currentEnemies ¹è¿­ÀÌ ºñ¾îÀÖ½À´Ï´Ù.");
             return;
         }
         */
         GameObject enemy;
-        /* ë²½ ì°¾ê¸°
+        /* º® Ã£±â
         GameObject closestWall = FindClosestWall();
         if (closestWall == null)
         {
-            Debug.LogError("ê°€ì¥ ê°€ê¹Œìš´ ë²½ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            Debug.LogError("°¡Àå °¡±î¿î º®À» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
             return;
         }*/
 
         Vector3 v = new Vector3(DTOenemymove.px, DTOenemymove.py, DTOenemymove.pz);
         Quaternion q = new Quaternion(DTOenemymove.rx, DTOenemymove.ry, DTOenemymove.rz, DTOenemymove.rw);
         enemy = Instantiate(enemies[0], v, q);
-        enemy.name = "ì ì´ë‹¤êµ¬ë¦¬";
+        enemy.name = "ÀûÀÌ´Ù±¸¸®";
         /*
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
@@ -161,7 +157,7 @@ public class MultiEnemy : MonoBehaviour
         }
         else
         {
-            controller.spawner = this; // spawnerë¥¼ ì„¤ì •í•´ì£¼ì„¸ìš”.
+            controller.spawner = this; // spawner¸¦ ¼³Á¤ÇØÁÖ¼¼¿ä.
             controller.target = closestWall;
             controller.enemyDestroyedSound = enemyDestroyedSound;
         }
@@ -170,14 +166,14 @@ public class MultiEnemy : MonoBehaviour
         BoxCollider collider = enemy.AddComponent<BoxCollider>();
         if (enemy.GetComponent<RangedEnemyController>() != null)
         {
-            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // ì›ê±°ë¦¬ ì ì˜ ê²½ìš° ì ì ˆí•œ í¬ê¸°ë¡œ ì¡°ì •
+            collider.size = new Vector3(0.7f, 0.7f, 0.7f); // ¿ø°Å¸® ÀûÀÇ °æ¿ì ÀûÀıÇÑ Å©±â·Î Á¶Á¤
         }
         else
         {
-            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // ê·¼ê±°ë¦¬ ì ì˜ ê²½ìš° ì ì ˆí•œ í¬ê¸°ë¡œ ì¡°ì •
+            collider.size = new Vector3(0.5f, 0.5f, 0.5f); // ±Ù°Å¸® ÀûÀÇ °æ¿ì ÀûÀıÇÑ Å©±â·Î Á¶Á¤
         }
 
-        // ì¤‘ë ¥ì„ rigidboyë¡œ ë°›ëŠ”ë‹¤.
+        // Áß·ÂÀ» rigidboy·Î ¹Ş´Â´Ù.
         /*
         Rigidbody rb = enemy.AddComponent<Rigidbody>();
         rb.useGravity = false;

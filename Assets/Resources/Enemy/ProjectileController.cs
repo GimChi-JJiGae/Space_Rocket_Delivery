@@ -17,11 +17,25 @@ public class ProjectileController : MonoBehaviour
         rb.velocity = transform.forward * speed;
     }
 
-    void OnCollisionEnter(Collision collision)
+    // void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Wall"))
+    //     {
+    //         Module module = collision.gameObject.GetComponentInParent<Module>();
+    //         if (module != null)
+    //         {
+    //             module.Attacked();
+    //         }
+    //         DestroyProjectile();
+    //     }
+    // }
+
+
+    private void OnParticleCollision(GameObject other)
     {
-        if (collision.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Wall"))
         {
-            Module module = collision.gameObject.GetComponentInParent<Module>();
+            Module module = other.gameObject.GetComponentInParent<Module>();
             if (module != null)
             {
                 module.Attacked();
@@ -29,8 +43,6 @@ public class ProjectileController : MonoBehaviour
             DestroyProjectile();
         }
     }
-
-
     void DestroyProjectile()
     {
         AudioSource.PlayClipAtPoint(projectileDestroyedSound, transform.position);

@@ -58,7 +58,7 @@ public class Spaceship : MonoBehaviour
         float positionX = -(size * rows) / 2 + (x * size) + (size) / 2;     // -전체크기 +놓을위치 +중앙정렬용 size/2
         float positionZ = -(size * cols) / 2 + (z * size) + (size) / 2;
         float positionY = 0;
-        Vector3 position = new Vector3(positionX, positionY, positionZ);    // 바닥 타일의 위치
+        Vector3 position = new(positionX, positionY, positionZ);    // 바닥 타일의 위치
         Quaternion rotation = Quaternion.identity;                           // 바닥 타일의 회전
 
         // 모듈 생성하고 space의 배열에 할당시키기
@@ -167,7 +167,6 @@ public class Spaceship : MonoBehaviour
             rightModule.wallLeft.SetActive(true);
         }
     }
-
 }
 
 

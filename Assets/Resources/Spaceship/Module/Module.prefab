@@ -595,6 +595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idxX: 0
   idxZ: 0
+  interactionModule: {fileID: 0}
+  players: []
   moduleType: 0
   wallTop: {fileID: 0}
   wallLeft: {fileID: 0}
@@ -604,6 +606,7 @@ MonoBehaviour:
   broken1: {fileID: 0}
   broken2: {fileID: 0}
   hitArea: {fileID: 0}
+  gameManager: {fileID: 0}
   hp: 0
 --- !u!1 &3178273408534485906
 GameObject:
