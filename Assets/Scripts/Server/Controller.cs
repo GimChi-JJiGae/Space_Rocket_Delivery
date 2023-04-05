@@ -220,10 +220,9 @@ public class Controller : MonoBehaviour
                         Debug.Log(PlayerPrefs.GetString("roomCode"));
                         Debug.Log(gameStart.roomCode);
                         Debug.Log("======");
-                        if (gameStart.roomCode.Equals(PlayerPrefs.GetString("roomCode")))
-                        {
-                            SceneManager.LoadScene("Multiplay");
-                        }
+                        
+                        SceneManager.LoadScene("Multiplay");
+                        
                         
                     });
                     break;
