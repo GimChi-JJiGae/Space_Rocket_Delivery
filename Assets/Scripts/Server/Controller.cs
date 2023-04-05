@@ -116,11 +116,20 @@ public class Controller : MonoBehaviour
     MultiEnemy multiEnemy;
 
     SocketClient socketClient;
+    MutiplayWaitingRoom waitingRoom;
 
     void Start()
     {
         socketClient = GetComponent<SocketClient>();
-
+        try
+        {
+            MutiplayWaitingRoom waitingRoom = GetComponent<MutiplayWaitingRoom>();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+            Debug.Log("불러오기 실패");
+        }
         // 필요한 컨트롤러 인스턴스 생성.
         createRoomController = new CreateRoomController();
         enterRoomController = new EnterRoomController();
@@ -184,11 +193,13 @@ public class Controller : MonoBehaviour
                     byte[] isSucess = SplitArray(data, 0, 1);
                     byte[] userCount = SplitArray(data, 1, 4);
                     int head = 5;
+                    waitingRoom.userStringList = new List<string>();
                     for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
                     {
+                        
                         DTOuser user = new DTOuser();
                         enterRoomController.newReceiveDTO(data, user, ref head);
-
+                        waitingRoom.userStringList.Add(user.userNickName);
                         Debug.Log(user.userNickName);
                         Debug.Log(user.userId);
                         Debug.Log(user.roomName);
