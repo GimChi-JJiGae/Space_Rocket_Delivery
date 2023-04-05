@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
+
 public enum PacketType
 {
     NONE,
@@ -99,7 +101,12 @@ public class DTOgameStart
 }
 public class Controller : MonoBehaviour
 {
-    
+
+    // 클라이언트의 개인 정보를 여기서 저장해보자
+    public string roomCode;
+    public int userId;
+    public string userNickname;
+
     CreateRoomController createRoomController;      // 방 생성을 위한 컨트롤러
     EnterRoomController enterRoomController;        // 방 참가를 위한 컨트롤러
     CreateModuleController createModuleController;  // 모듈 추가를 위한 컨트롤러
@@ -225,6 +232,9 @@ public class Controller : MonoBehaviour
                     Debug.Log(createRoom.roomName);
                     Debug.Log(createRoom.nickname);
                     createRoom.active = true;
+                    roomCode = createRoom.roomName;
+                    userId = 0;
+
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
                         Debug.Log("과연 방코드가");
@@ -232,8 +242,9 @@ public class Controller : MonoBehaviour
                         PlayerPrefs.SetString("roomCode", createRoom.roomName);
                         Debug.Log(PlayerPrefs.GetString("roomCode"));
 
-                        socketClient.roomCode = createRoom.roomName;
-                        Debug.Log("여기서 소켓에서 정보확인" + socketClient.roomCode);
+                        
+                        
+                        Debug.Log("컨트롤러에서 정보확인:" + roomCode);
                         SceneManager.LoadScene("WaitingRoom");
                     });
 
@@ -251,11 +262,19 @@ public class Controller : MonoBehaviour
                         DTOuser user = new DTOuser();
                         enterRoomController.newReceiveDTO(data, user, ref head);
                         waitingRoom.userStringList.Add(user.userNickName);
-                        Debug.Log(user.userNickName);
-                        Debug.Log(user.userId);
-                        Debug.Log(user.roomName);
-                        Debug.Log("--------");
+                        if (user.userNickName.Equals(userNickname))
+                        {
+                            userId = user.userId;
+                        }
+                        //Debug.Log(user.userNickName);
+                        //Debug.Log(user.userId);
+                        //Debug.Log(user.roomName);
+                        //Debug.Log("--------");
                     }
+                    Debug.Log("나자신의 정보");
+                    Debug.Log(userNickname);
+                    Debug.Log(userId);
+                    Debug.Log(roomCode);
                     //enterRoomController.ReceiveDTO(data);
                     enterRoomController.SetAct(true);
                     break;
@@ -266,8 +285,9 @@ public class Controller : MonoBehaviour
                     gameStartController.newReceiveDTO(data, gameStart, ref GameHead);
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
-                        Debug.Log("======");
-                        Debug.Log(PlayerPrefs.GetString("roomCode"));
+                        Debug.Log("======시작하는 방 확인, 내방, 시작 방");
+                        Debug.Log(roomCode);
+                        //Debug.Log(PlayerPrefs.GetString("roomCode"));
                         Debug.Log(gameStart.roomCode);
                         Debug.Log("======");
                         

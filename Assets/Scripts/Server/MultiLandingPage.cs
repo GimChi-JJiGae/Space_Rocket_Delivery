@@ -57,7 +57,7 @@ public class MultiLandingPage : MonoBehaviour
         Debug.Log("눌림");
         
         userNicknameInput = nicknameInputField.text;
-        
+        controller.userNickname = userNicknameInput;
 
         //}
     }
@@ -81,6 +81,9 @@ public class MultiLandingPage : MonoBehaviour
 
             PlayerPrefs.SetString("userNickname", userNicknameInput);
             PlayerPrefs.SetString("roomCode", roomNameInput);
+
+            controller.userNickname = userNicknameInput;
+            controller.roomCode = roomNameInput;
 
             controller.Send(PacketType.PARTICIPATE_USER, userNicknameInput, roomNameInput);
             Debug.Log("방 진입 완료");

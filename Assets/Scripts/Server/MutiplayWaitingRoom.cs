@@ -53,8 +53,9 @@ public class MutiplayWaitingRoom : MonoBehaviour
         if (!alreadySend)
         {
             //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
-            controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
+            //controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
             //        SceneManager.LoadScene("Multiplay");
+            controller.Send(PacketType.START_GAME, controller.roomCode);
             alreadySend = true;
         }
     }
