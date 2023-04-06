@@ -1,6 +1,6 @@
 using System.Collections;
-using ResourceNamespace;
 using UnityEngine;
+using static ResourceChanger;
 
 public class Supplier : MonoBehaviour
 {

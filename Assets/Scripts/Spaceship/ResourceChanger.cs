@@ -1,48 +1,45 @@
 using UnityEngine;
 
-namespace ResourceNamespace
+public class ResourceChanger : MonoBehaviour
 {
+    private GameObject fuelObject;
+    private GameObject oreObject;
+
     public enum ResourceType
     {
         Fuel,
         Ore,
     }
 
-    public class ResourceChanger : MonoBehaviour
+    public ResourceType resourceType;
+
+    // Start is called before the first frame update
+    private void Start()
     {
-        private GameObject fuelObject;
-        private GameObject oreObject;
+        //multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
 
-        public ResourceType resourceType;
+        fuelObject = transform.Find("FuelBlueprint").gameObject;
+        oreObject = transform.Find("OreBlueprint").gameObject;
 
-        // Start is called before the first frame update
-        private void Start()
+        oreObject.SetActive(false);
+
+        resourceType = ResourceType.Fuel;
+    }
+
+    public void SwitchResource()
+    {
+        switch (resourceType)
         {
-            //multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
-
-            fuelObject = transform.Find("FuelBlueprint").gameObject;
-            oreObject = transform.Find("OreBlueprint").gameObject;
-
-            oreObject.SetActive(false);
-
-            resourceType = ResourceType.Fuel;
-        }
-
-        public void SwitchResource()
-        {
-            switch (resourceType)
-            {
-                case ResourceType.Fuel:
-                    fuelObject.SetActive(false);
-                    resourceType = ResourceType.Ore;
-                    oreObject.SetActive(true);
-                    break;
-                case ResourceType.Ore:
-                    oreObject.SetActive(false);
-                    resourceType = ResourceType.Fuel;
-                    fuelObject.SetActive(true);
-                    break;
-            }
+            case ResourceType.Fuel:
+                fuelObject.SetActive(false);
+                resourceType = ResourceType.Ore;
+                oreObject.SetActive(true);
+                break;
+            case ResourceType.Ore:
+                oreObject.SetActive(false);
+                resourceType = ResourceType.Fuel;
+                fuelObject.SetActive(true);
+                break;
         }
     }
 }
