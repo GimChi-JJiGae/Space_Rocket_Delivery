@@ -26,6 +26,9 @@ public class MultiSpaceship : MonoBehaviour
 
     InteractionModule interactionModule;
 
+    GameObject factory;
+
+
     public GameObject[] resourceList = new GameObject[10000];
     Vector3[] targetPosition = new Vector3[10000];
     Quaternion[] targetRotation = new Quaternion[10000];
@@ -52,6 +55,8 @@ public class MultiSpaceship : MonoBehaviour
         //StartCoroutine(SendPositionResource());
 
         eventResourceMove += MoveResource;
+
+        
     }
 
     void FixedUpdate()
@@ -120,9 +125,12 @@ public class MultiSpaceship : MonoBehaviour
         
         if (controller.userId != id)
         {
-            GameObject factory = spaceship.modules[9, 10];
-            factory.GetComponent<Factory>().SwitchModule();
-            factory.GetComponent<Factory>().ProduceModule();
+            //factory = GameObject.Find("Factory");
+
+            //factory.GetComponent<Factory>().SwitchModule();
+            //factory.GetComponent<Factory>().ProduceModule();
+            FindAnyObjectByType<Factory>().SwitchModule();
+            FindAnyObjectByType<Factory>().ProduceModule();
         }
         
     }
@@ -137,8 +145,7 @@ public class MultiSpaceship : MonoBehaviour
         
         if (controller.userId != id)
         {
-            GameObject factory = spaceship.modules[10, 9];
-            factory.GetComponent<Factory>().ProduceModule();
+            FindAnyObjectByType<Factory>().ProduceModule();
         }
         
     }

@@ -100,8 +100,7 @@ public class Multiplayer : MonoBehaviour
         // 캐릭터 모듈 연결
         player.AddComponent<PlayerInput>();
         player.AddComponent<PlayerMovement>();
-        player.AddComponent<InteractionModule>();
-        player.AddComponent<InteractionObject>();
+        player.AddComponent<PlayerInteraction>();
 
         Debug.Log("카메라 잡히나?" + mainCamera.GetComponent<MainCamera>().name);
         // 카메라 연동
