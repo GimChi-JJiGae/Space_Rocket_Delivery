@@ -170,9 +170,12 @@ public class MultiSpaceship : MonoBehaviour
         controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, resourceType);
     }
 
-    public void FactoryInput_RECEIVE(int id, int ore, int fuel)
+    public void FactoryInput_RECEIVE(int ore, int fuel, bool isMade, int type)
     {
-        FindAnyObjectByType<Factory>().ProduceModule(id, ore, fuel);
+        if (isMade)
+        {
+            FindAnyObjectByType<Factory>().ProduceModule(ore, fuel, type);
+        }
     }
 
     public void ModuleUpgrade_SEND(int id, int x, int z)
