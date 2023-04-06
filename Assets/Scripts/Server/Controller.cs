@@ -35,7 +35,7 @@ public enum PacketType
     BASIC_TURRET,
 
     MODULE_CREATE,      // 데이터 roomId, int moduleCode(1,2,3), int userId, int x, y     받는거: 그대로 받는다.
-    MODULE_INTERACTION, // 데이터 roomId, int userId, int moduleType, int activeNum, 받는 거: 그대로 받는다.
+    MODULE_INTERACTION, // 데이터 roomId, int userId, int activeNum, 받는 거: 그대로 받는다.
     MODULE_REPAIR,      // 데이터 roomId, int userId, int x, int z,
     MODULE_UPGRADE,     // 데이터 roomId, int userId, int x, int z
 
