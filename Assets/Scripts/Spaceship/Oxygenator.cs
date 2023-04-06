@@ -31,6 +31,10 @@ public class Oxygenator : MonoBehaviour
         }
 
         // oxygenBarFilled 이미지의 fillAmount 값을 현재 oxygen 값에 따라 변경
+        if (oxygenBarFilled == null)
+        {
+            oxygenBarFilled = FindAnyObjectByType<FindO2Fill>().gameObject.GetComponent<Image>();
+        }
         oxygenBarFilled.fillAmount = oxygen / 100f;
     }
 
