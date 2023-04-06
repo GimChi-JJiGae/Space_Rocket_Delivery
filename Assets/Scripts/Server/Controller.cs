@@ -244,7 +244,7 @@ public class Controller : MonoBehaviour
     {
         createRoomController.Service();
         enterRoomController.Service();
-        //playerPositionController.Service(multiplayer);
+        playerPositionController.Service(multiplayer);
         
         //createResourceController.Service(multiSpaceship);
         //moveResourceController.Service();
