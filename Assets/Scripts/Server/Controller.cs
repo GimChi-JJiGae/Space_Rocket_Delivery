@@ -232,6 +232,11 @@ public class Controller : MonoBehaviour
         createResourceController.Service(multiSpaceship);
         moveResourceController.Service();
         moveEnemyController.Service();
+
+        interactionModuleController.Service();
+        repairController.Service();
+        moduleUpgradeController.Service();
+
     }
 
     public void Receive(PacketType header, byte[] data)
@@ -387,10 +392,14 @@ public class Controller : MonoBehaviour
                     interactionModuleController.ReceiveDTO(data);
                     interactionModuleController.SetAct(true);
                     break;
+
+
                 case PacketType.MODULE_REPAIR:
                     repairController.ReceiveDTO(data);
                     repairController.SetAct(true);
                     break;
+
+
                 case PacketType.MODULE_UPGRADE:
                     moduleUpgradeController.ReceiveDTO(data);
                     moduleUpgradeController.SetAct(true);
@@ -579,6 +588,7 @@ public class InteractionModuleController : ReceiveController
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
+        Debug.Log("모듈 인터랙션");
         if (GetAct())
         {
             Debug.Log("InteractionModule : 상호작용");
@@ -615,6 +625,7 @@ public class RepairController : ReceiveController
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
+        Debug.Log("리페어 컨트롤러");
         if (GetAct())
         {
             Debug.Log("Repair : 수리");
@@ -634,6 +645,7 @@ public class ModuleUpgradeController : ReceiveController
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
+        Debug.Log("업그레이드 컨트롤러");
         if (GetAct())
         {
             Debug.Log("ModuleUpgrade : 업그레이드");
