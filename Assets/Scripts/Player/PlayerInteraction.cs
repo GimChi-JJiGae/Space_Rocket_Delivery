@@ -1,9 +1,8 @@
-using ResourceNamespace;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using static Module;
+using static Supplier;
 using static MultiSpaceship;
 
 public class PlayerInteraction : MonoBehaviour
@@ -58,11 +57,9 @@ public class PlayerInteraction : MonoBehaviour
     // 맞은 모듈 확인
     private Module struckModule;
 
-    public float repairSpeed;
-    public float maxHp;
-
     // skillTree
     public SkillTreeNode skillTree;
+    public float repairSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -78,11 +75,10 @@ public class PlayerInteraction : MonoBehaviour
         player = GameObject.Find("Player" + controller.userId);
         playerPosition = player.GetComponent<Transform>().position;
 
-        repairSpeed = 0.5f;
-
         playerHead = transform.Find("PlayerHead").gameObject;
 
         skillTree = GetComponent<SkillTreeNode>();
+        repairSpeed += 0.5f;
 
         try
         {
@@ -262,15 +258,31 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SaveObject(GameObject obj)
     {
+        int playerId = controller.userId;
+
         Factory factory = FindAnyObjectByType<Factory>();
 
-        if (obj.name == "Fuel")
+        if (multiplayer.isMultiplayer)
         {
-            factory.destroyFuel++;
+            if (obj.name == "Fuel")
+            {
+                multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
+            }
+            else if (obj.name == "Ore")
+            {
+                multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
+            }
         }
-        else if (obj.name == "Ore")
+        else
         {
-            factory.destroyOre++;
+            if (obj.name == "Fuel")
+            {
+                factory.destroyFuel++;
+            }
+            else if (obj.name == "Ore")
+            {
+                factory.destroyOre++;
+            }
         }
 
         Destroy(obj);
@@ -278,12 +290,6 @@ public class PlayerInteraction : MonoBehaviour
         isHoldingObject = false;
 
         factory.ProduceModule();
-
-        if (multiplayer.isMultiplayer)
-        {
-            int playerId = controller.userId;
-            multiSpaceship.ProduceModule_SEND(playerId);
-        }
     }
 
     public void MakeModule(string name)
@@ -379,8 +385,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
                 else if (resourceObject != null)
                 {
-                    resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-                    resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
+                    resourceObject.GetComponent<Supplier>().SwitchResource();
 
                     if (multiplayer.isMultiplayer)
                     {
@@ -391,7 +396,6 @@ public class PlayerInteraction : MonoBehaviour
                 else if (produceObject != null)
                 {
                     produceObject.GetComponentInParent<Factory>().SwitchModule();
-                    produceObject.GetComponentInParent<Factory>().ProduceModule();
 
                     if (multiplayer.isMultiplayer)
                     {

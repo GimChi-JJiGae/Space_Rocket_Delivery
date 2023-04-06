@@ -14,7 +14,6 @@ public class RangedEnemyController : MonoBehaviour
     private float nextAttackTime;
     public float targetUpdateInterval = 5f;
     private float nextTargetUpdateTime;
-    private bool isProjectileDestroyed = true;
     public float projectileSpeed = 20f;
 
 

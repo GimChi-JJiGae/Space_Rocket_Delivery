@@ -96,19 +96,21 @@ public class Factory : MonoBehaviour
                 neededFuel = 1;
                 break;
         }
+
+        ProduceModule(destroyOre, destroyFuel);
     }
 
     // Update is called once per frame
-    public void ProduceModule()
+    public void ProduceModule(int ore, int fuel)
     {
         switch (currentType)
         {
             case PrintType.Kit:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
+                if (ore >= neededOre && fuel >= neededFuel)
                 {
                     currentModule = kitModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
+                    ore -= neededOre;
+                    fuel -= neededFuel;
                 }
                 break;
             case PrintType.Shotgun:

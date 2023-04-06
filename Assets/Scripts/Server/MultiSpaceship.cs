@@ -1,13 +1,8 @@
-using JetBrains.Annotations;
-using ResourceNamespace;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using static Module;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using static Supplier;
 
 public class MultiSpaceship : MonoBehaviour
 {
@@ -15,7 +10,6 @@ public class MultiSpaceship : MonoBehaviour
     {
         RESOURCE_CHANGE,
         FACTORY_CHANGE,
-        FACTORY_PRODUCE,
         INCREASE_OXYGEN,
         RESPAWN,
     }
@@ -29,14 +23,11 @@ public class MultiSpaceship : MonoBehaviour
     GameObject player;
     PlayerInteraction playerInteraction;
 
-    GameObject factory;
 
-
-    public GameObject[] resourceList = new GameObject[10000];
-    Vector3[] targetPosition = new Vector3[10000];
-    Quaternion[] targetRotation = new Quaternion[10000];
+    public GameObject[] resourceList = new GameObject[10000]; 
+    public Vector3[] targetPosition = new Vector3[10000];
+    public Quaternion[] targetRotation = new Quaternion[10000];
     //bool[] putResource = new bool[10000];
-    int resourceCount = 0;
 
     public delegate void EventResourceSpownHandler(int idxR);           // 리소스 생성 이벤트
     public event EventResourceSpownHandler eventResourceSpown;
@@ -61,8 +52,6 @@ public class MultiSpaceship : MonoBehaviour
         //StartCoroutine(SendPositionResource());
 
         eventResourceMove += MoveResource;
-
-        
     }
 
     void FixedUpdate()
@@ -73,7 +62,7 @@ public class MultiSpaceship : MonoBehaviour
             {
                 if (resourceList[i] != null)
                 {
-                    Vector3 v = (targetPosition[i] - resourceList[i].transform.position) * 5.0f * Time.deltaTime;
+                    Vector3 v = 5.0f * Time.deltaTime * (targetPosition[i] - resourceList[i].transform.position);
                     resourceList[i].transform.position += v;
                     resourceList[i].transform.rotation = Quaternion.Lerp(targetRotation[i], resourceList[i].transform.rotation, 0.1f * Time.deltaTime);
                 }
@@ -81,7 +70,7 @@ public class MultiSpaceship : MonoBehaviour
         }
     }
 
-    // 자원 생성 send corutine
+    // 모듈 생성 send Coroutine
     public void CreateModule_SEND(int id, int xIdx, int zIdx, int moduleType)
     {
         controller.Send(PacketType.MODULE_CREATE, controller.roomCode ,id, xIdx, zIdx, moduleType);
@@ -109,10 +98,7 @@ public class MultiSpaceship : MonoBehaviour
         
         if (controller.userId != id)
         {
-            GameObject supplier = spaceship.modules[10, 10];
-
-            supplier.GetComponent<ResourceChanger>().SwitchResource();
-            supplier.GetComponent<Supplier>().currentResource = supplier.GetComponent<ResourceChanger>().resourceType;
+            FindAnyObjectByType<Supplier>().SwitchResource();
         }
         
     }
@@ -127,21 +113,6 @@ public class MultiSpaceship : MonoBehaviour
         if (controller.userId != id)
         {
             FindAnyObjectByType<Factory>().SwitchModule();
-            FindAnyObjectByType<Factory>().ProduceModule();
-        }
-        
-    }
-
-    public void ProduceModule_SEND(int id)
-    {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.FACTORY_PRODUCE);
-    }
-
-    public void ProduceModule_RECEIVE(int id)
-    {
-        if (controller.userId != id)
-        {
-            FindAnyObjectByType<Factory>().ProduceModule();
         }
         
     }
@@ -157,8 +128,7 @@ public class MultiSpaceship : MonoBehaviour
         
         if (controller.userId != id)
         {
-            GameObject oxygenator = spaceship.modules[10, 11];
-            oxygenator.GetComponent<Oxygenator>().Increase();
+            FindAnyObjectByType<Oxygenator>().Increase();
         }
     }
 
@@ -189,12 +159,20 @@ public class MultiSpaceship : MonoBehaviour
 
     public void Respawn_RECEIVE(int id)
     {
-        
         if (controller.userId != id)
         {
             GameObject.Find("Player" + id).transform.position = new Vector3(0, 0, -2);
         }
-        
+    }
+
+    public void FactoryInput_SEND(int id, int resourceType)
+    {
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, resourceType);
+    }
+
+    public void FactoryInput_RECEIVE(int id, int ore, int fuel)
+    {
+        FindAnyObjectByType<Factory>().ProduceModule(id, ore, fuel);
     }
 
     public void ModuleUpgrade_SEND(int id, int x, int z)
@@ -208,6 +186,7 @@ public class MultiSpaceship : MonoBehaviour
         if (controller.userId != id)
         {
             Module module = spaceship.modules[z, x].GetComponent<Module>();
+
             if (module.transform.GetComponentInChildren<ParticleController>())
             {
                 module.transform.GetComponentInChildren<ParticleController>().damage += 1;
@@ -223,63 +202,63 @@ public class MultiSpaceship : MonoBehaviour
         }
     }
     // 소켓이 막혀서 일단 정지
-    //IEnumerator SendCreateResource()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(10.0f); // 0.1초마다 반복
-    //                                                // 반복해서 호출할 함수 호출
-    //        if (multiplayer.isMultiplayer && multiplayer.isHost == true)
-    //        {
-    //            controller.Send(PacketType.RESOURCE_CREATE, resourceCount);
-    //            resourceCount++;
-    //        }
-    //    }
-    //}
+    IEnumerator SendCreateResource()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10.0f); // 0.1초마다 반복
+                                                    // 반복해서 호출할 함수 호출
+            if (multiplayer.isMultiplayer && multiplayer.isHost == true)
+            {
+                //controller.Send(PacketType.RESOURCE_CREATE, resourceCount);
+                //resourceCount++;
+            }
+        }
+    }
 
     public void ReceiveCreateResource(int idxR)
     {
         eventResourceSpown?.Invoke(idxR);
     }
 
-    //IEnumerator SendPositionResource()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
-    //                                               // 반복해서 호출할 함수 호출
-    //        if (multiplayer.isMultiplayer && multiplayer.isHost == true)
-    //        {
-    //            List<object> list = new List<object>();
-    //            int rCount = 0;
-    //            for (int i = 0; i < resourceCount; i++)
-    //            {
-    //                if (resourceList[i] != null)
-    //                {
-    //                    rCount++;
-    //                }
-    //            }
-    //            list.Add(rCount);
-    //            for (int i = 0; i < resourceCount; i++)
-    //            {
-    //                if (resourceList[i] != null)
-    //                {
-    //                    list.Add(i);
-    //                    Vector3 a = resourceList[i].transform.position;
-    //                    list.Add(a.x);
-    //                    list.Add(a.y);
-    //                    list.Add(a.z);
-    //                    Quaternion q = resourceList[i].transform.rotation;
-    //                    list.Add(q.x);
-    //                    list.Add(q.y);
-    //                    list.Add(q.z);
-    //                    list.Add(q.w);
-    //                }
-    //            }
-    //            controller.ListSend(PacketType.RESOURCE_MOVE, list);
-    //        }
-    //    }
-    //}
+    IEnumerator SendPositionResource()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.1f); // 0.1초마다 반복
+                                                   // 반복해서 호출할 함수 호출
+            if (multiplayer.isMultiplayer && multiplayer.isHost == true)
+            {
+                List<object> list = new();
+                //int rCount = 0;
+                //for (int i = 0; i < resourceCount; i++)
+                //{
+                //    if (resourceList[i] != null)
+                //    {
+                //        rCount++;
+                //    }
+                //}
+                //list.Add(rCount);
+                //for (int i = 0; i < resourceCount; i++)
+                //{
+                //    if (resourceList[i] != null)
+                //    {
+                //        list.Add(i);
+                //        Vector3 a = resourceList[i].transform.position;
+                //        list.Add(a.x);
+                //        list.Add(a.y);
+                //        list.Add(a.z);
+                //        Quaternion q = resourceList[i].transform.rotation;
+                //        list.Add(q.x);
+                //        list.Add(q.y);
+                //        list.Add(q.z);
+                //        list.Add(q.w);
+                //    }
+                //}
+                //controller.ListSend(PacketType.RESOURCE_MOVE, list);
+            }
+        }
+    }
 
     public void ReceiveMoveResource(DTOresourcemove[] DTOresourcemove)
     {
@@ -293,8 +272,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         for (int i = 0; i < DTOresourcemove.Length; i++)
         {
-            Vector3 v = new Vector3(DTOresourcemove[i].px, DTOresourcemove[i].py, DTOresourcemove[i].pz);
-            Quaternion q = new Quaternion(DTOresourcemove[i].rx, DTOresourcemove[i].ry, DTOresourcemove[i].rz, DTOresourcemove[i].rw);
+            Vector3 v = new(DTOresourcemove[i].px, DTOresourcemove[i].py, DTOresourcemove[i].pz);
+            Quaternion q = new(DTOresourcemove[i].rx, DTOresourcemove[i].ry, DTOresourcemove[i].rz, DTOresourcemove[i].rw);
             targetPosition[DTOresourcemove[i].idxR] = v;
             targetRotation[DTOresourcemove[i].idxR] = q;
         }

@@ -5,7 +5,6 @@ using TMPro;
 public class SkillTreeNode : MonoBehaviour
 {
     private GameManager gameManager;
-    private int currentModuleCurrentHpLevel = 0;
     private int currentSupplySpeedLevel = 0;
     private float currentRepairSpeedLevel = 0;
     private int currentTurretDamageLevel = 0;

@@ -39,9 +39,11 @@ public enum PacketType
     MODULE_REPAIR,      // 데이터 roomId, int userId, int x, int z,
     MODULE_UPGRADE,     // 데이터 roomId, int userId, int x, int z
 
-
     RESOURCE_CREATE,
-    RESOURCE_MOVE
+    RESOURCE_MOVE,
+
+    FACTORY_INPUT, // 데이터 roomId, int userId, int resourceType
+    FACTORY_OUTPUT, // 데이터 roomId, int userId, int ore, int fuel,
 
     //NONE,
     //HELLO,
@@ -141,6 +143,8 @@ public class Controller : MonoBehaviour
     RepairController repairController;
 
     ModuleUpgradeController moduleUpgradeController;
+
+    FactoryOutputController factoryOutputController;
     /// </summary>
 
     // Player관련 함수
@@ -182,6 +186,8 @@ public class Controller : MonoBehaviour
         moveEnemyController = new MoveEnemyController();
         gameStartController = new GameStartController();
 
+        factoryOutputController = new FactoryOutputController();
+
         //===============================================================
         interactionModuleController = new InteractionModuleController();
         repairController = new RepairController();
@@ -205,7 +211,7 @@ public class Controller : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.Log("서버 오브젝트 못찾음");
+                Debug.LogError(e);
             }
         }
 
@@ -218,7 +224,7 @@ public class Controller : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.Log("멀티플레이어 못찾음");
+                Debug.LogError(e);
             }
         }
 
@@ -230,7 +236,7 @@ public class Controller : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.Log("멀티스페이스쉽 못찾음");
+                Debug.LogError(e);
             }
         }
 
@@ -242,7 +248,7 @@ public class Controller : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.Log("멀티에너미 못찾음");
+                Debug.LogError(e);
             }
         }
         
@@ -282,7 +288,7 @@ public class Controller : MonoBehaviour
                     //createRoomController.SetAct(true);
                     byte[] isCreateSucess = SplitArray(data, 0, 1);
                     int createRoomHead = 0;
-                    DTOcreateRoom createRoom = new DTOcreateRoom();
+                    DTOcreateRoom createRoom = new();
                     createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
                     createRoom.active = true;
                     roomCode = createRoom.roomName;
@@ -311,7 +317,7 @@ public class Controller : MonoBehaviour
                     for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
                     {
                         
-                        DTOuser user = new DTOuser();
+                        DTOuser user = new();
                         enterRoomController.newReceiveDTO(data, user, ref head);
                         //waitingRoom.userStringList.Add(user.userNickName);
                         if (user.userNickName.Equals(userNickname))
@@ -334,7 +340,7 @@ public class Controller : MonoBehaviour
                     break;
                 case PacketType.START_GAME:
                     Debug.Log("게임시작");
-                    DTOgameStart gameStart = new DTOgameStart();
+                    DTOgameStart gameStart = new();
                     int GameHead = 0;
                     gameStartController.newReceiveDTO(data, gameStart, ref GameHead);
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -360,34 +366,34 @@ public class Controller : MonoBehaviour
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
-                //case PacketType.MODULE_CREATE:
-                //    createModuleController.ReceiveDTO(data);
-                //    createModuleController.SetAct(true);
-                //    break;
-                //case PacketType.SUPPLIER_CREATE:
-                //    createResourceController.ReceiveDTO(data);
-                //    createResourceController.SetAct(true);
-                //    break;
-                //case PacketType.RESOURCE_MOVE:
-                //    try
-                //    {
-                //        byte[] resourceCount = SplitArray(data, 0, 4);
-                //        DTOresourcemove[] resourceList = new DTOresourcemove[BitConverter.ToInt32(resourceCount, 0)];
-                //        int head2 = 4;
-                //        for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
-                //        {
-                //            DTOresourcemove resource = new DTOresourcemove();
-                //            moveResourceController.newReceiveDTO(data, resource, ref head2);
-                //            resourceList[i] = resource;
-                //        }
-                //        multiSpaceship.ReceiveMoveResource(resourceList);
-                //        moveResourceController.SetAct(true);
-                //    }
-                    //catch(Exception e)
-                    //{
-                    //    Debug.LogException(e);
-                    //}
-                    //break;
+                case PacketType.MODULE_CREATE:
+                    createModuleController.ReceiveDTO(data);
+                    createModuleController.SetAct(true);
+                    break;
+                case PacketType.RESOURCE_CREATE:
+                    createResourceController.ReceiveDTO(data);
+                    createResourceController.SetAct(true);
+                    break;
+                case PacketType.RESOURCE_MOVE:
+                    try
+                    {
+                        byte[] resourceCount = SplitArray(data, 0, 4);
+                        DTOresourcemove[] resourceList = new DTOresourcemove[BitConverter.ToInt32(resourceCount, 0)];
+                        int head2 = 4;
+                        for (int i = 0; i < BitConverter.ToInt32(resourceCount, 0); i++)
+                        {
+                            DTOresourcemove resource = new();
+                            moveResourceController.newReceiveDTO(data, resource, ref head2);
+                            resourceList[i] = resource;
+                        }
+                        multiSpaceship.ReceiveMoveResource(resourceList);
+                        moveResourceController.SetAct(true);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
+                    break;
                 case PacketType.ENEMY_MOVE:
                     Debug.Log("ENEMY_MOVE");
                     if (true)//multiplayer.isHost == false
@@ -400,7 +406,7 @@ public class Controller : MonoBehaviour
                             Debug.Log(BitConverter.ToInt32(enemyCount, 0));
                             for (int i = 0; i < BitConverter.ToInt32(enemyCount, 0); i++)
                             {
-                                DTOenemymove resource = new DTOenemymove();
+                                DTOenemymove resource = new();
                                 moveEnemyController.newReceiveDTO(data, resource, ref head3);
                                 enemyList[i] = resource;
                             }
@@ -418,7 +424,7 @@ public class Controller : MonoBehaviour
                 case PacketType.MODULE_INTERACTION:
 
                     Debug.Log("모듈 인터랙션 수신");
-                    DTOinteractionModule interactionModuleDto = new DTOinteractionModule();
+                    DTOinteractionModule interactionModuleDto = new();
                     int interactionHead = 0;
                     interactionModuleController.newReceiveDTO(data, interactionModuleDto, ref interactionHead);
                     
@@ -430,8 +436,6 @@ public class Controller : MonoBehaviour
                     //interactionModuleController.ReceiveDTO(data);
                     //interactionModuleController.SetAct(true);
                     break;
-
-
                 case PacketType.MODULE_REPAIR:
                     repairController.ReceiveDTO(data);
                     repairController.SetAct(true);
@@ -442,7 +446,6 @@ public class Controller : MonoBehaviour
                     moduleUpgradeController.ReceiveDTO(data);
                     moduleUpgradeController.SetAct(true);
                     break;
-
             }
 
         }
@@ -454,11 +457,11 @@ public class Controller : MonoBehaviour
 
     public void Send(PacketType header, params object[] args)      // 인자를 object배열로 받아옴
     {
-        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
-
-
-        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        byteList.Add((byte)header); // BitConverter.GetBytes()
+        List<byte> byteList = new()
+        {
+            // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+            (byte)header // BitConverter.GetBytes()
+        };             // List를 byte로 받아옴
 
         // params 직렬화
         for (int i = 0; i < args.Length; i++)
@@ -493,11 +496,11 @@ public class Controller : MonoBehaviour
 
     public void ListSend(PacketType header, List<object> args)      // 인자를 object배열로 받아옴
     {
-        List<byte> byteList = new List<byte>();             // List를 byte로 받아옴
-
-
-        // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
-        byteList.Add((byte)header); // BitConverter.GetBytes()
+        List<byte> byteList = new()
+        {
+            // header 세팅. header를 해석하면 뒷단 정보 구조를 제공받을 수 있음
+            (byte)header // BitConverter.GetBytes()
+        };             // List를 byte로 받아옴
 
         // params 직렬화
         for (int i = 0; i < args.Count; i++)
@@ -583,8 +586,6 @@ public class CreateRoomController : ReceiveController
 // EnterRoomController
 public class EnterRoomController : ReceiveController
 {
-    
-
     public new void Service() // isAct가 활성화 되었을 때 실행할 로직
     {
         if (this.GetAct())
@@ -645,7 +646,7 @@ public class InteractionModuleController : ReceiveController
                     multiSpaceship.ChangeModule_RECEIVE(id);
                     break;
                 case 2:
-                    multiSpaceship.ProduceModule_RECEIVE(id);
+                    //multiSpaceship.ProduceModule_RECEIVE(id);
                     break;
                 case 3:
                     multiSpaceship.IncreaseOxygen_RECEIVE(id);
@@ -666,7 +667,7 @@ public class RepairController : ReceiveController
     public int xIdx;
     public int zIdx;
 
-    public new void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
         Debug.Log("리페어 컨트롤러");
         if (GetAct())
@@ -714,7 +715,7 @@ public class CreateResourceController : ReceiveController
         if (this.GetAct())
         {
             Debug.Log("CreateResourceController : 자원 생성");
-            multiSpaceship.ReceiveCreateResource(rIdx);
+            //multiSpaceship.ReceiveCreateResource(rIdx);
             this.SetAct(false);
         }
     }
@@ -743,6 +744,23 @@ public class MoveEnemyController : ReceiveController
         {
             //multiSpaceship.ReceiveChangeResource();
             this.SetAct(false);
+        }
+    }
+}
+
+public class FactoryOutputController : ReceiveController
+{
+    public int ore;
+    public int fuel;
+    public bool isMade;
+    public int type = 4;
+
+    public void Service(MultiSpaceship multiSpaceship)
+    {
+        if (GetAct())
+        {
+            multiSpaceship.FactoryInput_RECEIVE(ore, fuel, isMade, type);
+            SetAct(false);
         }
     }
 }
@@ -811,8 +829,6 @@ public class ReceiveController
                 field.SetValue(this, stringValue);
 
                 Debug.Log(stringValue);
-                
-
             }
         }
     }
@@ -868,8 +884,7 @@ public class ReceiveController
         }
 
     }
-
-   
+ 
     public bool GetAct()
     {
         return isAct;
