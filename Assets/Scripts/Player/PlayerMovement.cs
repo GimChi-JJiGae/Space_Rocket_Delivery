@@ -35,11 +35,25 @@ public class PlayerMovement : MonoBehaviour {
         {
             playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * Time.deltaTime * dir);
             playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
+
+            if (playerInput.Teleport)
+            {
+                playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * dir);
+                playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
+            }
         }
     }
 
     public void Respawn()
     {
         transform.position = initialPosition;
+    }
+
+    private void Update()
+    {
+        if (transform.position.y <= -20)
+        {
+            Respawn();
+        }
     }
 }

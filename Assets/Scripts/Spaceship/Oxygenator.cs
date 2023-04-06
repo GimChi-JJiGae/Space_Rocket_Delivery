@@ -14,8 +14,8 @@ public class Oxygenator : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        oxygenBarFilled = GetComponent<Image>();
         InvokeRepeating(nameof(Decrease), 1.0f, 1.0f);
+        oxygenBarFilled = FindAnyObjectByType<FindO2Fill>().gameObject.GetComponent<Image>();//GameObject.Find("GameUiCanvas").transform.Find("o2fill").GetComponent<Image>();// GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -43,6 +43,7 @@ public class Oxygenator : MonoBehaviour
     public void Increase()
     {
         oxygen += increaseAmount;
+        Debug.Log(oxygen);
 
         if (oxygen > 100)
         {
