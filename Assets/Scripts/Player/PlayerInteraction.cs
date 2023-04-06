@@ -434,9 +434,9 @@ public class PlayerInteraction : MonoBehaviour
             playerAnimator.SetBool("Repairing", false);
         }
 
-        if (respawnObject != null)
-        {
-            transform.GetComponent<PlayerMovement>().Respawn();
-        }
+        //if (respawnObject != null)
+        //{
+        //    transform.GetComponent<PlayerMovement>().Respawn();
+        //}
     }
 }
