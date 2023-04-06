@@ -519,12 +519,15 @@ public class Controller : MonoBehaviour
                     if(userId != basicTurretDto.userId)
                     {
                         Debug.Log("베이스터렛 이동란에 들어옵니까?");
+
+                        BasicTurret = GameObject.Find("TurretHead");
+                        BasicTurretHead = GameObject.Find("TurretShooting");
+
+                        basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
+                        basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
+
+
                         Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
-                        Debug.Log(BasicTurret);
-                        Debug.Log(target1.x);
-                        Debug.Log(target1.y);
-                        Debug.Log(target1.z);
-                        Debug.Log(target1.w);
                         Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
                         BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,100.0f * Time.deltaTime);   // 수평이동
                         BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 100.0f * Time.deltaTime);   // 수직이동
