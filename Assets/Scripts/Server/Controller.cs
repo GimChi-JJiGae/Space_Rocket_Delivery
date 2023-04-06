@@ -220,6 +220,7 @@ public class Controller : MonoBehaviour
         moveResourceController = new MoveResourceController();
         moveEnemyController = new MoveEnemyController();
         gameStartController = new GameStartController();
+        basicTurretControll = new BasicTurretControll();
 
         //===============================================================
         interactionModuleController = new InteractionModuleController();
@@ -919,7 +920,7 @@ public class ReceiveController
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] intByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToInt32(intByte));
-
+                Debug.Log(BitConverter.ToInt32(intByte));
                 //헤드 올림
                 mHead += sizeof(int);
                 //field.SetValue(c, 100);
@@ -931,7 +932,7 @@ public class ReceiveController
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] floatByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToSingle(floatByte));
-
+                Debug.Log(BitConverter.ToSingle(floatByte));
                 //헤드 올림
                 mHead += sizeof(float);
                 //field.SetValue(c, 100);
@@ -943,6 +944,7 @@ public class ReceiveController
                 byte[] intByte = SplitArray(data, mHead, 4);
                 int size = BitConverter.ToInt32(intByte);
                 mHead += sizeof(int);
+                
 
 
                 //앞서 얻은 크기만큼 배열을 자른다.
@@ -950,7 +952,7 @@ public class ReceiveController
                 byte[] stringByte = SplitArray(data, mHead, size);
                 string stringValue = Encoding.UTF8.GetString(stringByte);
                 field.SetValue(c, stringValue);
-
+                Debug.Log(stringValue);
                 mHead += size;
             }
         }
