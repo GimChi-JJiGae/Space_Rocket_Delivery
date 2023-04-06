@@ -7,7 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class TurretLazer : MonoBehaviour
 {
     public GameObject Turret;
-    public float rotationSpeed = 0.8f; // 회전 속도
+    public float rotationSpeed = 5.0f; // 회전 속도
     private Transform nearest = null;
 
     public bool isOnTarget = false;

@@ -41,11 +41,12 @@ public class Factory : MonoBehaviour
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
         laserObject = transform.Find("LaserBlueprint").gameObject;
 
-        shotgunObject.SetActive(false);
+        kitObject.SetActive(false);
+        //shotgunObject.SetActive(false);
         shieldObject.SetActive(false);
         laserObject.SetActive(false);
 
-        currentType = PrintType.Kit;
+        currentType = PrintType.Shotgun;
         currentModule = null;
 
         kitModule = Resources.Load<GameObject>("Resources/Kit");
@@ -54,7 +55,7 @@ public class Factory : MonoBehaviour
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
 
         neededOre = 1;
-        neededFuel = 1;
+        neededFuel = 2;
     }
     // Update is called once per frame
     private void Update()
