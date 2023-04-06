@@ -19,6 +19,7 @@ public class BasicTurretSpinController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("포탑송신");
         float horizontal = Input.GetAxis("Horizontal"); // 수평 입력 값
 
         if(socketObj == null)
@@ -35,12 +36,9 @@ public class BasicTurretSpinController : MonoBehaviour
         {
             Vector3 rotationDirection = new Vector3(0, horizontal, 0f);
             transform.Rotate(rotationDirection * degree * Time.deltaTime);
-
-
-            Quaternion currentSpin = transform.rotation;
-            Quaternion verticalSpin = TurretShootingHead.transform.rotation;
-            controller.Send(PacketType.MOVE, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
-
         }
+        Quaternion currentSpin = transform.rotation;
+        Quaternion verticalSpin = TurretShootingHead.transform.rotation;
+        controller.Send(PacketType.MOVE, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
     }
 }
