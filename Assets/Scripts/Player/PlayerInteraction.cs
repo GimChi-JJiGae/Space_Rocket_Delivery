@@ -118,30 +118,33 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Edge"))
         {
-            matchObject = other.gameObject;
-            Module module = matchObject.GetComponentInParent<Module>();
-
-            int idxZ = module.idxZ;
-            int idxX = module.idxX;
-
-            switch (other.gameObject.name)
+            if(currentObject != null && (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield"))
             {
-                case "EdgeTop":
-                    idxZ += 1;
-                    break;
-                case "EdgeBottom":
-                    idxZ -= 1;
-                    break;
-                case "EdgeRight":
-                    idxX += 1;
-                    break;
-                case "EdgeLeft":
-                    idxX -= 1;
-                    break;
-            }
+                matchObject = other.gameObject;
+                Module module = matchObject.GetComponentInParent<Module>();
 
-            targetObject = spaceship.modules[idxZ, idxX];
-            targetObject.GetComponent<Module>().floorModule.SetActive(true);
+                int idxZ = module.idxZ;
+                int idxX = module.idxX;
+
+                switch (other.gameObject.name)
+                {
+                    case "EdgeTop":
+                        idxZ += 1;
+                        break;
+                    case "EdgeBottom":
+                        idxZ -= 1;
+                        break;
+                    case "EdgeRight":
+                        idxX += 1;
+                        break;
+                    case "EdgeLeft":
+                        idxX -= 1;
+                        break;
+                }
+
+                targetObject = spaceship.modules[idxZ, idxX];
+                targetObject.GetComponent<Module>().floorModule.SetActive(true);
+            }
         }
         else if (other.gameObject.CompareTag("Input"))
         {
@@ -333,6 +336,7 @@ public class PlayerInteraction : MonoBehaviour
                     produceObject.GetComponentInParent<Factory>().SwitchModule();
                     produceObject.GetComponentInParent<Factory>().ProduceModule();
                 }
+                
             }
             else
             {
@@ -355,7 +359,7 @@ public class PlayerInteraction : MonoBehaviour
                         }
                     }
                 }
-                else if (inputObject != null)
+                if (inputObject != null)
                 {
                     if (inputObject.GetComponentInParent<Oxygenator>())
                     {
