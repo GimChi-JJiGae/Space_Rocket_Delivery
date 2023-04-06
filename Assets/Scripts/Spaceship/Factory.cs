@@ -1,13 +1,19 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
+    private Multiplayer multiplayer;
+    private MultiSpaceship multiSpaceship;
+
+    private Controller controller;
+
     public enum PrintType
     {
-        Kit,
         Shotgun,
         Laser,
         Shield,
+        Kit,
     }
 
     public PrintType currentType;
@@ -63,7 +69,7 @@ public class Factory : MonoBehaviour
         fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
-    public void SwitchModule()
+    public void SwitchModule(int id)
     {
         switch (currentType)
         {
@@ -71,71 +77,48 @@ public class Factory : MonoBehaviour
                 kitObject.SetActive(false);
                 currentType = PrintType.Shotgun;
                 shotgunObject.SetActive(true);
-                neededOre = 1;
-                neededFuel = 2;
                 break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
                 currentType = PrintType.Laser;
                 laserObject.SetActive(true);
-                neededOre = 2;
-                neededFuel = 1;
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);
                 currentType = PrintType.Shield;
                 shieldObject.SetActive(true);
-                neededOre = 0;
-                neededFuel = 3;
                 break;
             case PrintType.Shield:
                 shieldObject.SetActive(false);
                 currentType = PrintType.Kit;
                 kitObject.SetActive(true);
-                neededOre = 1;
-                neededFuel = 1;
                 break;
         }
 
-        ProduceModule(destroyOre, destroyFuel);
+        if (controller.userId == id)
+        {
+            int playerId = controller.userId;
+
+            multiSpaceship.ChangeModule_SEND(playerId);
+        }
     }
 
     // Update is called once per frame
-    public void ProduceModule(int ore, int fuel)
+    public void ProduceModule(int type)
     {
-        switch (currentType)
+        switch (type)
         {
-            case PrintType.Kit:
-                if (ore >= neededOre && fuel >= neededFuel)
-                {
-                    currentModule = kitModule;
-                    ore -= neededOre;
-                    fuel -= neededFuel;
-                }
+            case (int)PrintType.Kit:
+                currentModule = kitModule;
                 break;
-            case PrintType.Shotgun:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shotgunModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Shotgun:
+                currentModule = shotgunModule;
                 break;
-            case PrintType.Laser:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = laserModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Laser:
+                currentModule = laserModule;
                 break;
-            case PrintType.Shield:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shieldModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Shield:
+                currentModule = laserModule;
                 break;
         }
 

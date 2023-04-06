@@ -51,9 +51,6 @@ public class PlayerInteraction : MonoBehaviour
     // 업그레이드할 모듈
     public GameObject upgradeObject;
 
-    // 모듈이 부서지고 Blueprint 위에 올라간 경우
-    public GameObject respawnObject;
-
     // 맞은 모듈 확인
     private Module struckModule;
 
@@ -170,10 +167,6 @@ public class PlayerInteraction : MonoBehaviour
         {
             upgradeObject = other.gameObject;
         }
-        else if (other.gameObject.CompareTag("Respawn"))
-        {
-            respawnObject = other.gameObject;
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -205,10 +198,6 @@ public class PlayerInteraction : MonoBehaviour
         else if (other.gameObject.CompareTag("Turret"))
         {
             upgradeObject = null;
-        }
-        else if (other.gameObject.CompareTag("Respawn"))
-        {
-            respawnObject = null;
         }
     }
 
@@ -262,34 +251,18 @@ public class PlayerInteraction : MonoBehaviour
 
         Factory factory = FindAnyObjectByType<Factory>();
 
-        if (multiplayer.isMultiplayer)
+        if (obj.name == "Fuel")
         {
-            if (obj.name == "Fuel")
-            {
-                multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
-            }
-            else if (obj.name == "Ore")
-            {
-                multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
-            }
+            multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
         }
-        else
+        else if (obj.name == "Ore")
         {
-            if (obj.name == "Fuel")
-            {
-                factory.destroyFuel++;
-            }
-            else if (obj.name == "Ore")
-            {
-                factory.destroyOre++;
-            }
+            multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Ore);
         }
 
         Destroy(obj);
 
         isHoldingObject = false;
-
-        factory.ProduceModule();
     }
 
     public void MakeModule(string name)
@@ -396,12 +369,6 @@ public class PlayerInteraction : MonoBehaviour
                 else if (produceObject != null)
                 {
                     produceObject.GetComponentInParent<Factory>().SwitchModule();
-
-                    if (multiplayer.isMultiplayer)
-                    {
-                        int playerId = controller.userId;
-                        multiSpaceship.ChangeModule_SEND(playerId);
-                    }
                 }
             }
             else

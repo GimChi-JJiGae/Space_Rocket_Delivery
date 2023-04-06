@@ -112,7 +112,8 @@ public class MultiSpaceship : MonoBehaviour
     {
         if (controller.userId != id)
         {
-            FindAnyObjectByType<Factory>().SwitchModule();
+            FindAnyObjectByType<Factory>().SwitchModule(id);
+            
         }
         
     }
@@ -174,7 +175,12 @@ public class MultiSpaceship : MonoBehaviour
     {
         if (isMade)
         {
-            FindAnyObjectByType<Factory>().ProduceModule(ore, fuel, type);
+            FindAnyObjectByType<Factory>().ProduceModule(type);
+        }
+        else
+        {
+            FindAnyObjectByType<Factory>().destroyOre = ore;
+            FindAnyObjectByType<Factory>().destroyFuel = fuel;
         }
     }
 
