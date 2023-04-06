@@ -33,12 +33,12 @@ public class Multiplayer : MonoBehaviour
 
         //mainCamera = GameObject.FindWithTag("MainCamera");          // 카메라 연동
         mainCamera = Camera.main;
-        Debug.Log("카메라 잡히나?" + mainCamera.GetComponent<MainCamera>().name);
+
         playerIndex = controller.userId;
         roomCode = controller.roomCode;
         AssignPlayer(playerIndex);
         //AssignPlayer(PlayerPrefs.GetInt("userId"));
-        Debug.Log("멀티플레이 환경 실험");
+
         Debug.Log(playerIndex);
         Debug.Log(roomCode);
         StartCoroutine(CallFunctionRepeatedly());

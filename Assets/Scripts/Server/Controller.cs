@@ -139,6 +139,7 @@ public class Controller : MonoBehaviour
     Multiplayer multiplayer;
     MultiSpaceship multiSpaceship;
     MultiEnemy multiEnemy;
+    GameObject server;
 
     SocketClient socketClient;
     MutiplayWaitingRoom waitingRoom;
@@ -185,6 +186,22 @@ public class Controller : MonoBehaviour
     }
     private void Update()
     {
+        if (server == null)
+        {
+            try
+            {
+                server = GameObject.Find("Server");
+                multiplayer = server.GetComponent<Multiplayer>();
+                multiSpaceship = server.GetComponent<MultiSpaceship>();
+                multiEnemy = server.GetComponent<MultiEnemy>();
+            }
+            catch (Exception e)
+            {
+                Debug.Log("서버 오브젝트 못찾음");
+            }
+        }
+
+
         if (multiplayer == null)
         {
             try
@@ -227,15 +244,19 @@ public class Controller : MonoBehaviour
     {
         createRoomController.Service();
         enterRoomController.Service();
-        playerPositionController.Service(multiplayer);
-        createModuleController.Service(multiSpaceship);
-        createResourceController.Service(multiSpaceship);
-        moveResourceController.Service();
-        moveEnemyController.Service();
+        //playerPositionController.Service(multiplayer);
+        
+        //createResourceController.Service(multiSpaceship);
+        //moveResourceController.Service();
+        //moveEnemyController.Service();
 
-        interactionModuleController.Service();
-        repairController.Service();
-        moduleUpgradeController.Service();
+        if (multiSpaceship != null)
+        {
+            createModuleController.Service(multiSpaceship);
+            interactionModuleController.Service(multiSpaceship);
+            repairController.Service(multiSpaceship);
+            moduleUpgradeController.Service(multiSpaceship);
+        }
 
     }
 
@@ -623,7 +644,7 @@ public class RepairController : ReceiveController
     public int xIdx;
     public int zIdx;
 
-    public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
+    public new void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
         Debug.Log("리페어 컨트롤러");
         if (GetAct())
