@@ -111,7 +111,7 @@ public class MultiSpaceship : MonoBehaviour
     public void ChangeModule_SEND(int id, int moduleType)
     {
         // Packet 번호가 없다.
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, ActiveNum.FACTORY_CHANGE);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.FACTORY_CHANGE);
     }
 
     public void ChangeModule_RECEIVE(int id)
@@ -120,7 +120,7 @@ public class MultiSpaceship : MonoBehaviour
         
         if (controller.userId != id)
         {
-            GameObject factory = spaceship.modules[10, 9];
+            GameObject factory = spaceship.modules[9, 10];
             factory.GetComponent<Factory>().SwitchModule();
             factory.GetComponent<Factory>().ProduceModule();
         }
@@ -129,7 +129,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ProduceModule_SEND(int id, int moduleType)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, ActiveNum.FACTORY_PRODUCE);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.FACTORY_PRODUCE);
     }
 
     public void ProduceModule_RECEIVE(int id)
@@ -145,7 +145,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void IncreaseOxygen_SEND(int id, int moduleType)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, ActiveNum.INCREASE_OXYGEN);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.INCREASE_OXYGEN);
         
     }
 
