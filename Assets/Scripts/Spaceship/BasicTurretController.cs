@@ -6,17 +6,17 @@ using UnityEngine;
 public class BasicTurretController : MonoBehaviour
 {
     public float degree = 15f;
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
 
         float vertical = Input.GetAxis("Vertical"); // 수직 입력 값
 
@@ -29,14 +29,14 @@ public class BasicTurretController : MonoBehaviour
         //    // 회전 방향으로 오브젝트 회전
         //    transform.Rotate(rotationDirection * degree * Time.deltaTime);
         //}
-        
+
         if (vertical != 0)
         {
             Vector3 rotationDirection = new Vector3(-vertical, 0, 0f);
             transform.Rotate(rotationDirection * degree * Time.deltaTime);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             gameObject.GetComponent<BasicTurretController>().enabled = false; // 일단 이 스크립트 잠금
             GameObject turretHead = transform.parent.gameObject;
@@ -46,9 +46,9 @@ public class BasicTurretController : MonoBehaviour
             //maincam.SetActive(true);
 
 
-            
 
-            
+
+
 
 
             GameObject basicTurret = turretHead.transform.parent.gameObject;
@@ -58,9 +58,9 @@ public class BasicTurretController : MonoBehaviour
                 if (child.name == "TurretEnter")
                 {
                     BasicTurretEnter turretEnter = child.GetComponent<BasicTurretEnter>();
-                   
+
                     PlayerMovement playerMovement = turretEnter.enteredPlayer.GetComponent<PlayerMovement>();
-                    
+
                     turretEnter.isUserIn = false;
                     playerMovement.enabled = true;
 
