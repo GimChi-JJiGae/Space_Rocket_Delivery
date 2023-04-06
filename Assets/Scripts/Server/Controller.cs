@@ -518,10 +518,16 @@ public class Controller : MonoBehaviour
                     basicTurretControll.newReceiveDTO(data, basicTurretDto, ref basicTurretHead);
                     if(userId != basicTurretDto.userId)
                     {
+                        Debug.Log("베이스터렛 이동란에 들어옵니까?");
                         Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
+                        Debug.Log(BasicTurret);
+                        Debug.Log(target1.x);
+                        Debug.Log(target1.y);
+                        Debug.Log(target1.z);
+                        Debug.Log(target1.w);
                         Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
-                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,10.0f * Time.deltaTime);   // 수평이동
-                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 10.0f * Time.deltaTime);   // 수평이동
+                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,100.0f * Time.deltaTime);   // 수평이동
+                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 100.0f * Time.deltaTime);   // 수직이동
                     }
                     break;
 
@@ -899,7 +905,7 @@ public class ReceiveController
                 string stringValue = Encoding.UTF8.GetString(stringBytes);
                 field.SetValue(this, stringValue);
 
-                Debug.Log(stringValue);
+      
                 
 
             }
@@ -920,7 +926,7 @@ public class ReceiveController
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] intByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToInt32(intByte));
-                Debug.Log(BitConverter.ToInt32(intByte));
+
                 //헤드 올림
                 mHead += sizeof(int);
                 //field.SetValue(c, 100);
@@ -932,7 +938,7 @@ public class ReceiveController
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] floatByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToSingle(floatByte));
-                Debug.Log(BitConverter.ToSingle(floatByte));
+
                 //헤드 올림
                 mHead += sizeof(float);
                 //field.SetValue(c, 100);
@@ -952,7 +958,7 @@ public class ReceiveController
                 byte[] stringByte = SplitArray(data, mHead, size);
                 string stringValue = Encoding.UTF8.GetString(stringByte);
                 field.SetValue(c, stringValue);
-                Debug.Log(stringValue);
+  
                 mHead += size;
             }
         }
