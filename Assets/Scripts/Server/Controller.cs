@@ -285,16 +285,12 @@ public class Controller : MonoBehaviour
                 Debug.Log("멀티에너미 못찾음");
             }
         }
-        
-        if (BasicTurret == null)
-        {
-            BasicTurret = GameObject.Find("TurretHead");
-            BasicTurretHead = GameObject.Find("TurretShooting");
 
-            basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
-            basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
-            
-        }
+        BasicTurret = GameObject.Find("TurretHead");
+        BasicTurretHead = GameObject.Find("TurretShooting");
+
+        basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
+        basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -515,16 +511,23 @@ public class Controller : MonoBehaviour
                     Debug.Log("베이스 터렛 수신");
                     DTObasicTurret basicTurretDto = new DTObasicTurret();
                     int basicTurretHead = 0;
+                    Debug.Log("--------");
+                    Debug.Log(basicTurretDto.roomName);
+                    Debug.Log(basicTurretDto.userId);
+                    Debug.Log(basicTurretDto.rx1);
+                    Debug.Log(basicTurretDto.ry1);
+                    Debug.Log(basicTurretDto.rz1);
+                    Debug.Log(basicTurretDto.rw1);
+                    Debug.Log(basicTurretDto.rx2);
+                    Debug.Log(basicTurretDto.ry2);
+                    Debug.Log(basicTurretDto.rz2);
+                    Debug.Log(basicTurretDto.rw2);
                     basicTurretControll.newReceiveDTO(data, basicTurretDto, ref basicTurretHead);
                     if(userId != basicTurretDto.userId)
                     {
                         Debug.Log("베이스터렛 이동란에 들어옵니까?");
 
-                        BasicTurret = GameObject.Find("TurretHead");
-                        BasicTurretHead = GameObject.Find("TurretShooting");
-
-                        basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
-                        basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
+                        
 
 
                         Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
