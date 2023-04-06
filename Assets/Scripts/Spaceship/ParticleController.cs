@@ -30,8 +30,7 @@ public class ParticleController : MonoBehaviour
         Debug.Log("Particle collided with " + other.name);
         if (other.CompareTag("enemy"))
         {
-            EnemyController controller = other.GetComponent<EnemyController>();     // 근거리 적일 경우
-            if (controller != null)
+            if (other.TryGetComponent<EnemyController>(out var controller))
             {
                 if (timeAfterDamaged > damageInterval)
                 {
