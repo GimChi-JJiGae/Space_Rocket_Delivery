@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 1635301778244382494}
   - component: {fileID: 5183285654934929271}
   - component: {fileID: 6880724423546912838}
+  - component: {fileID: 4537139462783433283}
   m_Layer: 5
   m_Name: RecordTime
   m_TagString: Untagged
@@ -214,7 +215,25 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: your score:2222
+  m_Text: 
+--- !u!114 &4537139462783433283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993700360805905768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ac98dbc22aab94480b30406c49d7f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 0}
+  colors:
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.12300229, g: 1, b: 0, a: 0}
+  duration: 1
 --- !u!1 &1348642700998373175
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,6 +651,8 @@ MonoBehaviour:
   isGameover: 0
   gameoverCanvasPrefab: {fileID: 0}
   skillTreeOpenedCount: 0
+  gameStartCanvas: {fileID: 0}
+  blinkingTextObject: {fileID: 0}
 --- !u!1 &3068777460363165137
 GameObject:
   m_ObjectHideFlags: 0

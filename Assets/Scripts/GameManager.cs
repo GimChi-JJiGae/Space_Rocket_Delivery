@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     private Text gameUITimeText; // 추가된 코드
     public GameObject gameoverCanvasPrefab;
     public int skillTreeOpenedCount = 0;
+    public GameObject gameStartCanvas;
+    public GameObject blinkingTextObject;
+
 
     public bool IsGameOver()
     {
@@ -27,23 +30,50 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        surviveTime = 0;
-        isGameover = false;
-        isSkillTreeOpen = false;
-        lastSkillTreeOpenTime = 0;
-
-        timeText.text = "Time: 0";
-        OpenSkillTree();
-
-        // GamePanel과 GameUI를 참조하는 코드
-        GameObject gamePanel = GameObject.Find("GamePanel");
-        GameObject gameUITextObject = gamePanel.transform.Find("GameUI").gameObject;
-        gameUITimeText = gameUITextObject.GetComponent<Text>();
+        gameUITimeText = timeText;
+        if (gameStartCanvas != null)
+        {
+            gameStartCanvas.SetActive(true);
+            Time.timeScale = 0;
+            if (blinkingTextObject != null)
+            {
+                BlinkingText blinkingTextScript = blinkingTextObject.GetComponent<BlinkingText>();
+                if (blinkingTextScript != null)
+                {
+                    blinkingTextScript.InitializeBlinking();
+                }
+                else
+                {
+                    Debug.LogError("BlinkingText script not found on the blinkingTextObject.");
+                }
+            }
+            else
+            {
+                Debug.LogError("BlinkingText game object is not assigned in the inspector.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Game Start Canvas is not assigned in the inspector.");
+        }
     }
+
 
     private void Update()
     {
-        if (!isGameover)
+        if (gameStartCanvas != null && gameStartCanvas.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                gameStartCanvas.SetActive(false);
+                Time.timeScale = 1;
+            }
+            else
+            {
+                Time.timeScale = 0;
+            }
+        }
+        else if (!isGameover)
         {
             surviveTime += Time.deltaTime;
             timeText.text = "Time: " + (int)surviveTime;
@@ -55,6 +85,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+
 
     public void EndGame()
     {
