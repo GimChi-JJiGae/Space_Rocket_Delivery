@@ -37,9 +37,9 @@ public class BasicTurretSpinController : MonoBehaviour
             transform.Rotate(rotationDirection * degree * Time.deltaTime);
 
 
-            //Quaternion currentSpin = transform.rotation;
-            //Quaternion verticalSpin = TurretShootingHead.transform.rotation;
-            //controller.Send(PacketType.MOVE, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
+            Quaternion currentSpin = transform.rotation;
+            Quaternion verticalSpin = TurretShootingHead.transform.rotation;
+            controller.Send(PacketType.MOVE, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
 
         }
     }

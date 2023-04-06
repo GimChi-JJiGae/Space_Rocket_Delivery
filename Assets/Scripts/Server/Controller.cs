@@ -164,6 +164,8 @@ public class Controller : MonoBehaviour
     GameStartController gameStartController;
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
+
+    // 기본 포탑 각도 변경
     BasicTurretControll basicTurretControll;
 
     /// =========================================
@@ -183,6 +185,12 @@ public class Controller : MonoBehaviour
     SocketClient socketClient;
     MutiplayWaitingRoom waitingRoom;
 
+
+    BasicTurretController basicTurretController;
+    BasicTurretSpinController basicTurretSpinController;
+
+    GameObject BasicTurret;
+    GameObject BasicTurretHead;
 
     private void Awake()
     {
@@ -277,6 +285,15 @@ public class Controller : MonoBehaviour
             }
         }
         
+        if (BasicTurret == null)
+        {
+            BasicTurret = GameObject.Find("TurretHead");
+            BasicTurretHead = GameObject.Find("TurretShooting");
+
+            basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
+            basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
+            
+        }
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -500,7 +517,10 @@ public class Controller : MonoBehaviour
                     basicTurretControll.newReceiveDTO(data, basicTurretDto, ref basicTurretHead);
                     if(userId != basicTurretDto.userId)
                     {
-
+                        Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
+                        Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
+                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,10.0f * Time.deltaTime);   // 수평이동
+                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 10.0f * Time.deltaTime);   // 수평이동
                     }
                     break;
 
