@@ -287,7 +287,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (upgradeObject.transform.GetComponentInChildren<ParticleController>())
         {
-            upgradeObject.transform.GetComponentInChildren<ShotgunBullet>().damage += 1;
+            upgradeObject.transform.GetComponentInChildren<ParticleController>().damage += 1;
         }
         else if (upgradeObject.transform.GetComponentInChildren<ShotgunBullet>())
         {
