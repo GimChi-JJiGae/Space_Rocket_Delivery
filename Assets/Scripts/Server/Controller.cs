@@ -108,6 +108,14 @@ public class DTOgameStart
 {
     public string roomCode;
 }
+
+public class DTOinteractionModule
+{
+    public string roomName;
+    public int userId;
+    public int moduletype;
+    public int activeNum;
+}
 public class Controller : MonoBehaviour
 {
 
@@ -270,23 +278,18 @@ public class Controller : MonoBehaviour
             {
                 
                 case PacketType.CREATE_ROOM:
-                    Debug.Log("여기오긴함?");
                     //createRoomController.ReceiveDTO(data);
                     //createRoomController.SetAct(true);
                     byte[] isCreateSucess = SplitArray(data, 0, 1);
                     int createRoomHead = 0;
                     DTOcreateRoom createRoom = new DTOcreateRoom();
                     createRoomController.newReceiveDTO(data, createRoom, ref createRoomHead);
-                    Debug.Log("방은 생성되었다.");
-                    Debug.Log(createRoom.roomName);
-                    Debug.Log(createRoom.nickname);
                     createRoom.active = true;
                     roomCode = createRoom.roomName;
                     userId = 0;
 
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
-                        Debug.Log("과연 방코드가");
 
                         PlayerPrefs.SetString("roomCode", createRoom.roomName);
                         Debug.Log(PlayerPrefs.GetString("roomCode"));
@@ -351,6 +354,7 @@ public class Controller : MonoBehaviour
                 case PacketType.OUT_USER:
                     Debug.Log("방 나가기");
                     break;
+
                 case PacketType.MOVE:
                     
                     playerPositionController.ReceiveDTO(data);
@@ -409,9 +413,22 @@ public class Controller : MonoBehaviour
                         }
                     }
                     break;
+
+
                 case PacketType.MODULE_INTERACTION:
-                    interactionModuleController.ReceiveDTO(data);
+
+                    Debug.Log("모듈 인터랙션 수신");
+                    DTOinteractionModule interactionModuleDto = new DTOinteractionModule();
+                    int interactionHead = 0;
+                    interactionModuleController.newReceiveDTO(data, interactionModuleDto, ref interactionHead);
+                    
+                    interactionModuleController.roomId = interactionModuleDto.roomName;
+                    interactionModuleController.moduleType = interactionModuleDto.moduletype;
+                    interactionModuleController.activeNum = interactionModuleDto.activeNum;
                     interactionModuleController.SetAct(true);
+
+                    //interactionModuleController.ReceiveDTO(data);
+                    //interactionModuleController.SetAct(true);
                     break;
 
 
@@ -603,16 +620,21 @@ public class CreateModuleController : ReceiveController
 
 public class InteractionModuleController : ReceiveController
 {
+    public string roomId;
     public int id;
     public int moduleType;
     public int activeNum;
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        Debug.Log("모듈 인터랙션");
+        Debug.Log("모듈 인터랙션 클래스 진입");
         if (GetAct())
         {
-            Debug.Log("InteractionModule : 상호작용");
+            Debug.Log("InteractionModule : 상호작용 함수 진입");
+            Debug.Log(roomId);
+            Debug.Log(id);
+            Debug.Log(moduleType);
+            Debug.Log(activeNum);
 
             switch (activeNum)
             {
