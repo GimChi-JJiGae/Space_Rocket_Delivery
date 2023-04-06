@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public int skillTreeOpenedCount = 0;
     public GameObject gameStartCanvas;
     public GameObject blinkingTextObject;
-
+    public GameObject menuCanvas;
 
     public bool IsGameOver()
     {
@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 gameStartCanvas.SetActive(false);
+                menuCanvas.SetActive(true);
                 Time.timeScale = 1;
             }
             else

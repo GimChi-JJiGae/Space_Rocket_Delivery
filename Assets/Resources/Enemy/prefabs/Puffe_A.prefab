@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094848}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: line2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094850}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: line3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094852}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094854}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: line1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8418656659574094856}
   - component: {fileID: 8418656659562622244}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Puffe_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094858}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094860}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: line4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,8 +294,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8418656659574094862}
   - component: {fileID: 8418656659566826468}
-  - component: {fileID: -4780911254142910536}
-  m_Layer: 0
+  - component: {fileID: 3477677975500406197}
+  m_Layer: 3
   m_Name: Puffe_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +339,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &-4780911254142910536
+--- !u!114 &3477677975500406197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,11 +351,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080, type: 3}
-  attackRange: 50
-  minDistance: 100
+  projectilePrefab: {fileID: 0}
+  attackRange: 30
+  minDistance: 30
   speed: 3
-  attackInterval: 1
+  attackInterval: 2
   health: 1
   target: {fileID: 0}
   targetUpdateInterval: 5
@@ -369,7 +369,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094868}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: spine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +401,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8418656659574094870}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: tial
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -96,12 +96,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080,
-    type: 3}
-  attackRange: 10
-  minDistance: 10
+  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080, type: 3}
+  attackRange: 20
+  minDistance: 20
   speed: 3
   attackInterval: 1
   health: 1
   target: {fileID: 0}
   targetUpdateInterval: 1
+  projectileSpeed: 20

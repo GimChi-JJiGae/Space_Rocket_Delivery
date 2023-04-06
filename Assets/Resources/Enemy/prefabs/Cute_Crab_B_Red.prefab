@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483361}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483363}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483365}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483367}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483369}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483371}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483373}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483375}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483377}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483379}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483381}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_r1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,7 +358,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483383}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483385}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483387}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483389}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +515,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483291}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483329}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -579,10 +579,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9027157818135483331}
   - component: {fileID: 9027157818143013947}
-  - component: {fileID: -6906485340566035706}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cute_Crab_B_Red
-  m_TagString: Untagged
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -624,27 +623,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &-6906485340566035706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9027157818135580643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed95f5d41286b4d459318a5966fded09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1239156983776194, guid: 5cfb67c4a96fdbc469a952af82903080, type: 3}
-  attackRange: 50
-  minDistance: 100
-  speed: 3
-  attackInterval: 2
-  health: 1
-  target: {fileID: 0}
-  targetUpdateInterval: 5
-  projectileSpeed: 20
 --- !u!1 &9027157818135580645
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,7 +632,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483333}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -686,7 +664,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483335}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: leg_l1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -718,7 +696,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483337}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_r5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +727,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483339}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_r4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,7 +759,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9027157818135483341}
   - component: {fileID: 9027157818138690299}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Crab_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,7 +873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483343}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -935,7 +913,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483345}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_r1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,7 +945,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483347}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_l5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -998,7 +976,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483349}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_r3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1031,7 +1009,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483351}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_r2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1063,7 +1041,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483353}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_l2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1095,7 +1073,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483355}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_l1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1127,7 +1105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483357}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_l4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1158,7 +1136,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027157818135483359}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: arm_l3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
