@@ -1067,6 +1067,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6961e721ac79b49bae43e247f82519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketObj: {fileID: 0}
+  controller: {fileID: 0}
+  TurretShootingHead: {fileID: 3067026799081180724}
   degree: 15
 --- !u!4 &3069808236839013634 stripped
 Transform:
