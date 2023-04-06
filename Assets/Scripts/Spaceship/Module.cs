@@ -25,7 +25,7 @@ public class Module : MonoBehaviour
         ShieldTurret
     }
 
-    public InteractionModule interactionModule;
+    public PlayerInteraction playerInteraction;
 
     public GameObject[] players;
 
@@ -178,7 +178,7 @@ public class Module : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<InteractionModule>().respawnObject != null)
+            if (player.GetComponent<PlayerInteraction>().respawnObject != null)
             {
                 player.GetComponent<PlayerMovement>().Respawn();
             }

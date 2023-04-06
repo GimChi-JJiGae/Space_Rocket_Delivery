@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using ResourceNamespace;
 using System;
 using System.Collections;
@@ -6,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Module;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MultiSpaceship : MonoBehaviour
 {
@@ -24,7 +26,8 @@ public class MultiSpaceship : MonoBehaviour
     Spaceship spaceship;
     Controller controller;
 
-    InteractionModule interactionModule;
+    GameObject player;
+    PlayerInteraction playerInteraction;
 
     GameObject factory;
 
@@ -46,6 +49,9 @@ public class MultiSpaceship : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.Find("Player" + controller.userId);
+        playerInteraction = player.transform.GetComponentInChildren<PlayerInteraction>();
+
         spaceship = FindAnyObjectByType<Spaceship>();
         socketObj = GameObject.Find("SocketClient");
         controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
@@ -83,20 +89,18 @@ public class MultiSpaceship : MonoBehaviour
 
     public void CreateModule_RECEIVE(int id, int xIdx, int zIdx, int moduleType)
     {
-        
         if (controller.userId != id)
         {
             GameObject targetObject = spaceship.modules[zIdx, xIdx];
             targetObject.GetComponent<Module>().CreateFloor((ModuleType)moduleType);
             spaceship.MakeWall(targetObject);
         }
-        
     }
 
-    public void ChangeResource_SEND(int id, int moduleType)
+    public void ChangeResource_SEND(int id)
     {
         // Packet 번호가 없다.
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.RESOURCE_CHANGE);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.RESOURCE_CHANGE);
     }
 
     public void ChangeResource_RECEIVE(int id)
@@ -113,36 +117,28 @@ public class MultiSpaceship : MonoBehaviour
         
     }
 
-    public void ChangeModule_SEND(int id, int moduleType)
+    public void ChangeModule_SEND(int id)
     {
-        // Packet 번호가 없다.
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.FACTORY_CHANGE);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.FACTORY_CHANGE);
     }
 
     public void ChangeModule_RECEIVE(int id)
     {
-        // 변경된 거에 대한 neededOre, neededFuel까지 다 받아서 처리 가능?
-        
         if (controller.userId != id)
         {
-            //factory = GameObject.Find("Factory");
-
-            //factory.GetComponent<Factory>().SwitchModule();
-            //factory.GetComponent<Factory>().ProduceModule();
             FindAnyObjectByType<Factory>().SwitchModule();
             FindAnyObjectByType<Factory>().ProduceModule();
         }
         
     }
 
-    public void ProduceModule_SEND(int id, int moduleType)
+    public void ProduceModule_SEND(int id)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.FACTORY_PRODUCE);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.FACTORY_PRODUCE);
     }
 
     public void ProduceModule_RECEIVE(int id)
     {
-        
         if (controller.userId != id)
         {
             FindAnyObjectByType<Factory>().ProduceModule();
@@ -150,9 +146,9 @@ public class MultiSpaceship : MonoBehaviour
         
     }
 
-    public void IncreaseOxygen_SEND(int id, int moduleType)
+    public void IncreaseOxygen_SEND(int id)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, moduleType, (int)ActiveNum.INCREASE_OXYGEN);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.INCREASE_OXYGEN);
         
     }
 
@@ -164,7 +160,6 @@ public class MultiSpaceship : MonoBehaviour
             GameObject oxygenator = spaceship.modules[10, 11];
             oxygenator.GetComponent<Oxygenator>().Increase();
         }
-        
     }
 
     public void Repair_SEND(int id, int xIdx, int zIdx)
@@ -174,15 +169,17 @@ public class MultiSpaceship : MonoBehaviour
 
     public void Repair_RECEIVE(int id, int xIdx, int zIdx)
     {
-        
+        float repairSpeed = 0.5f;
+
         if (controller.userId != id)
         {
             Module struckModule = spaceship.modules[zIdx, xIdx].GetComponent<Module>();
-            float repairAmount = interactionModule.CalculateRepairSpeed();
-
-            struckModule.hp += repairAmount;
+            if (struckModule.hp < struckModule.maxHp)
+            {
+                struckModule.hp += repairSpeed * Time.deltaTime; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+                struckModule.Checked();
+            }
         }
-        
     }
 
     public void Respawn_SEND(int id, int activeNum)
@@ -221,16 +218,7 @@ public class MultiSpaceship : MonoBehaviour
             }
             else if (module.transform.GetComponentInChildren<ShieldTurret>())
             {
-                float health = module.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth;
-
-                if (health == 20f)
-                {
-                    health = 30f;
-                }
-                else if (health == 30f)
-                {
-                    health = 40f;
-                }
+                module.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth += 10;
             }
         }
     }
