@@ -29,7 +29,7 @@ public class BasicTurretSpinController : MonoBehaviour
             Quaternion currentSpin = transform.rotation;
             Quaternion verticalSpin = TurretShootingHead.transform.rotation;
             Debug.Log("포탑송신");
-            controller.Send(PacketType.MOVE, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
+            controller.Send(PacketType.BASIC_TURRET, controller.roomCode, controller.userId, currentSpin.x, currentSpin.y, currentSpin.z, currentSpin.w, verticalSpin.x, verticalSpin.y, verticalSpin.z, verticalSpin.w);
         }
     }
 
