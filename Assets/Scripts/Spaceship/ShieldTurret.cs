@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShieldTurret : MonoBehaviour
 {
-    public float shieldHealth = 20f;
+	public float shieldHealth = 20f;
     public float maxShieldHealth = 20f;
     public GameObject sheildWall;
     public GameObject beacon;
@@ -12,6 +12,7 @@ public class ShieldTurret : MonoBehaviour
     public float afterShieldDestroyed;
 
     public bool shieldOn;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +35,8 @@ public class ShieldTurret : MonoBehaviour
         {
             afterShieldDestroyed += Time.deltaTime;
             
-            if (afterShieldDestroyed > shieldReload) {
+            if (afterShieldDestroyed > shieldReload)
+            {
                 afterShieldDestroyed = 0f;
                 shieldHealth = maxShieldHealth;
                 

@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour {
         playerInput = GetComponent<PlayerInput>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
+
+        //player = GameObject.Find("PlayerCharacter");
     }
 
     private void FixedUpdate()

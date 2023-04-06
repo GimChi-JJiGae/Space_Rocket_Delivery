@@ -18,7 +18,7 @@ public class ShotgunBullet : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "enemy")
+        if (other.CompareTag("enemy"))
         {
             EnemyController controller = other.GetComponent<EnemyController>();     // 근거리 적일 경우
             if (controller != null)

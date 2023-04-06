@@ -36,7 +36,7 @@ public class BasicTurretController : MonoBehaviour
             transform.Rotate(rotationDirection * degree * Time.deltaTime);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             gameObject.GetComponent<BasicTurretController>().enabled = false; // 일단 이 스크립트 잠금
             GameObject turretHead = transform.parent.gameObject;

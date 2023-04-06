@@ -165,7 +165,7 @@ public class EnemyController : MonoBehaviour
     public float speed = 5f;
     private bool hasExploded = false;
     public CameraShake cameraShake; // Add this line
-    public int health; // 변경된 부분: [SerializeField] private int health; 에서 public int health;
+    public float health; // 변경된 부분: [SerializeField] private int health; 에서 public int health;
     public GameObject target;
     public AudioClip enemyDestroyedSound;
 
