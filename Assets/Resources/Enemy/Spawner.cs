@@ -17,13 +17,15 @@ public class Spawner : MonoBehaviour
     public GameObject[] enemiesTier3; // 레벨 3에 등장하는 적의 프리팹 배열
     public int[] enemyHealthsTier2; // 레벨 2 적 체력 배열
     public int[] enemyHealthsTier3; // 레벨 3 적 체력 배열
+    public GameObject[] enemiesTier4; // 레벨 4에 등장하는 적의 프리팹 배열
+    public int[] enemyHealthsTier4; // 레벨 4 적 체력 배열
 
 
 
     void Start()
     {
         StartCoroutine(SpawnEnemyRoutine());
-        
+
         nextDifficultyIncreaseTime = Time.time + difficultyTimeStep;
     }
 
@@ -45,7 +47,13 @@ public class Spawner : MonoBehaviour
             difficultyLevel++;
             nextDifficultyIncreaseTime = Time.time + difficultyTimeStep;
         }
+
+        if (difficultyLevel >= 3) // 난이도 레벨이 2 이상인 경우
+        {
+            spawnInterval = 1f; // 스폰 속도를 1초로 설정
+        }
     }
+
 
 
 
@@ -74,10 +82,20 @@ public class Spawner : MonoBehaviour
             currentEnemies = enemiesTier2;
             currentEnemyHealths = enemyHealthsTier2;
         }
-        else
+        else if (difficultyLevel == 2)
         {
             currentEnemies = enemiesTier3;
             currentEnemyHealths = enemyHealthsTier3;
+        }
+        else if (difficultyLevel == 3)
+        {
+            currentEnemies = enemiesTier4;
+            currentEnemyHealths = enemyHealthsTier4;
+        }
+        else
+        {
+            Debug.LogError("난이도 레벨이 잘못 설정되었습니다.");
+            return;
         }
 
         if (currentEnemies.Length == 0)
@@ -175,7 +193,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        if(health < 0)
+        if (health < 0)
         {
             DestroyEnemy();
         }
