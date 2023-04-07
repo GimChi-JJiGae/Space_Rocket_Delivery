@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0dc6d174d126f174aaae1c9afab03f07
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - timeText: {fileID: 1235532906047087028, guid: e68f20c0af7075a48bafc2df291412b9, type: 3}
+  - recordText: {fileID: 1178933051908429078, guid: 00c66b6f5eb3e53449cd373ade2f0aff, type: 3}
+  - playerInput: {instanceID: 0}
+  - skillTreePrefab: {instanceID: 0}
+  - gameoverCanvasPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

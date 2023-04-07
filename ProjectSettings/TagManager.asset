@@ -3,17 +3,28 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - WayPoint
+  - Edge
+  - Spaceship
+  - Wall
+  - enemy
+  - RangedEnemy
+  - Change
+  - Input
+  - Insert
+  - Produce
+  - Turret
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Module
+  - RangedEnemy
+  - Lazer
   - 
   - 
   - 
