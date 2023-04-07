@@ -176,14 +176,6 @@ public class Module : MonoBehaviour
         // 바닥 재생성 (청사진)
         CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
 
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponent<PlayerInteraction>().respawnObject != null)
-            {
-                player.GetComponent<PlayerMovement>().Respawn();
-            }
-        }
-
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);
     }

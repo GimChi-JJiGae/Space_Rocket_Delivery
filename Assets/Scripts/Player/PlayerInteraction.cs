@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Module;
 using static Supplier;
-//using static ResourceChanger;
 
 public class PlayerInteraction : MonoBehaviour
 {
-
     private PlayerInput playerInput;
     private Animator playerAnimator;
     private Vector3 playerPosition;
@@ -16,6 +14,11 @@ public class PlayerInteraction : MonoBehaviour
     private GameObject playerHead;
 
     private Spaceship spaceship;
+
+    private Multiplayer multiplayer;
+    private MultiSpaceship multiSpaceship;
+
+    private Controller controller;
 
     public List<string> HoldableObjects = new();
 
@@ -308,49 +311,65 @@ public class PlayerInteraction : MonoBehaviour
                 else if (resourceObject != null)
                 {
                     resourceObject.GetComponent<Supplier>().SwitchResource();
-
-                    if (resourceObject.GetComponentInParent<Supplier>() != null)
-                    {
-                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
-                    }
                 }
                 else if (produceObject != null)
                 {
-                    produceObject.GetComponentInParent<Factory>().SwitchModule();
-                    }
+                    produceObject.GetComponentInParent<Factory>().SwitchModule(controller.userId);
                 }
-            else
-            {
-                if (targetObject != null)
+                else
                 {
-                    if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
+                    if (targetObject != null)
                     {
-                        if (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield")
+                        if (targetObject.GetComponent<Module>().moduleType == ModuleType.Blueprint)
                         {
-                            MakeModule(currentObject.name);
-                            InsertObject(currentObject);
-                            collideObject = null;
-                            currentObject = null;
-                        }
-                        else
-                        {
-                            DropObject(currentObject);
-                            collideObject = null;
-                            currentObject = null;
-                        }
-                    }
-                }
-                else if (inputObject != null)
-                {
-                    if (inputObject.GetComponentInParent<Oxygenator>())
-                    {
-                        if (currentObject.name == "Fuel")
-                        {
-                            FindAnyObjectByType<Oxygenator>().Increase();
-                            InsertObject(currentObject);
-                            collideObject = null;
-                            currentObject = null;
+                            if (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield")
+                            {
+                                MakeModule(currentObject.name);
+                                InsertObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
                             }
+                            else
+                            {
+                                DropObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
+                            }
+                        }
+                    }
+                    else if (inputObject != null)
+                    {
+                        if (inputObject.GetComponentInParent<Oxygenator>())
+                        {
+                            if (currentObject.name == "Fuel")
+                            {
+                                FindAnyObjectByType<Oxygenator>().Increase();
+                                InsertObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
+                            }
+                            else
+                            {
+                                DropObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
+                            }
+                        }
+                        else if (inputObject.GetComponentInParent<Factory>())
+                        {
+                            if (currentObject.name == "Fuel" || currentObject.name == "Ore")
+                            {
+                                SaveObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
+                            }
+                            else
+                            {
+                                DropObject(currentObject);
+                                collideObject = null;
+                                currentObject = null;
+                            }
+                        }
                         else
                         {
                             DropObject(currentObject);
@@ -358,20 +377,12 @@ public class PlayerInteraction : MonoBehaviour
                             currentObject = null;
                         }
                     }
-                    else if (inputObject.GetComponentInParent<Factory>())
+                    else if (upgradeObject != null)
                     {
-                        if (currentObject.name == "Fuel" || currentObject.name == "Ore")
-                        {
-                            SaveObject(currentObject);
-                            collideObject = null;
-                            currentObject = null;
-                        }
-                        else
-                        {
-                            DropObject(currentObject);
-                            collideObject = null;
-                            currentObject = null;
-                        }
+                        UpgradeModule();
+                        InsertObject(currentObject);
+                        collideObject = null;
+                        currentObject = null;
                     }
                     else
                     {
@@ -380,43 +391,30 @@ public class PlayerInteraction : MonoBehaviour
                         currentObject = null;
                     }
                 }
-                else if (upgradeObject != null)
-                {
-                    UpgradeModule();
-                    InsertObject(currentObject);
-                    collideObject = null;
-                    currentObject = null;
-                }
-                else
-                {
-                    DropObject(currentObject);
-                    collideObject = null;
-                    currentObject = null;
-                }
             }
-        }
 
-        if (playerInput.RepairModule)
-        {
-            playerPosition = transform.position;
-
-            int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
-            int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
-
-            struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
-
-            playerAnimator.SetBool("Repairing", true);
-
-            if (struckModule.hp < struckModule.maxHp)
+            if (playerInput.RepairModule)
             {
-                Debug.Log("수리중");
-                struckModule.hp += repairSpeed * Time.deltaTime; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
-                struckModule.Checked();
+                playerPosition = transform.position;
+
+                int playerX = (int)(Math.Round(playerPosition.x / 5) + 10);
+                int playerZ = (int)(Math.Round(playerPosition.z / 5) + 10);
+
+                struckModule = spaceship.modules[playerZ, playerX].GetComponent<Module>();
+
+                playerAnimator.SetBool("Repairing", true);
+
+                if (struckModule.hp < struckModule.maxHp)
+                {
+                    Debug.Log("수리중");
+                    struckModule.hp += repairSpeed * Time.deltaTime; // 기본 수리량 0.1f 에 증가량 더해서 총 수리량 계산
+                    struckModule.Checked();
                 }
             }
-        else
-        {
-            playerAnimator.SetBool("Repairing", false);
-        }
+            else
+            {
+                playerAnimator.SetBool("Repairing", false);
             }
+        }
+    }
 }
