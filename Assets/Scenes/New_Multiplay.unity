@@ -569,6 +569,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5230631351222402156, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 964950681899091939, guid: 5c583b167c584a34385066894786d099, type: 3}
     - target: {fileID: 8074134912999473737, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
       propertyPath: m_Name
       value: Player3
@@ -1830,6 +1834,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5230631351222402156, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 3308960370967651984, guid: 4bba3e69bee1ac3419e9b05e13cecd41, type: 3}
     - target: {fileID: 8074134912999473737, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
       propertyPath: m_Name
       value: Player1
@@ -23849,6 +23857,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 84
       objectReference: {fileID: 0}
+    - target: {fileID: 5230631351222402156, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -4968518958633997398, guid: a4798975bf822ee44802839f05069953, type: 3}
     - target: {fileID: 8074134912999473737, guid: 64969595ba4584847bfa2bedbb6f79df, type: 3}
       propertyPath: m_Name
       value: Player2

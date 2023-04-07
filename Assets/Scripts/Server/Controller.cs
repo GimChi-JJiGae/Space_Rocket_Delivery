@@ -32,7 +32,7 @@ public enum PacketType
     CURRENT_POSITION,
     ENEMY_MOVE,
     TURRET_STATUS,
-    BASIC_TURRET,
+    BASIC_TURRET,       // 데이터 roomId, int userId, float rx1, float ry1, float rz1, float rw1, float rx, float ry, float rz, float rw
 
     MODULE_CREATE,      // 데이터 roomId, int moduleCode(1,2,3), int userId, int x, y     받는거: 그대로 받는다.
     MODULE_INTERACTION, // 데이터 roomId, int userId, int activeNum, 받는 거: 그대로 받는다.
@@ -118,6 +118,37 @@ public class DTOinteractionModule
     public int moduletype;
     public int activeNum;
 }
+
+public class DTOmoduleReapair  // 데이터 roomId, int userId, int x, int z,
+{
+    public string roomName;
+    public int userId;
+    public int x;
+    public int z;
+}
+
+public class DTOmoduleUpgrade
+{
+    public string roomName;
+    public int userId;
+    public int x;
+    public int z;
+}
+
+public class DTObasicTurret
+{
+    public string roomName;
+    public int userId;
+    public float rx1;
+    public float ry1;
+    public float rz1;
+    public float rw1;
+
+    public float rx2;
+    public float ry2;
+    public float rz2;
+    public float rw2;
+}
 public class Controller : MonoBehaviour
 {
 
@@ -135,6 +166,9 @@ public class Controller : MonoBehaviour
     GameStartController gameStartController;
     // 포지션 변경을 위한 변수
     PlayerPositionController playerPositionController;
+
+    // 기본 포탑 각도 변경
+    BasicTurretControll basicTurretControll;
 
 
     /// =========================================
@@ -155,6 +189,13 @@ public class Controller : MonoBehaviour
 
     SocketClient socketClient;
     MutiplayWaitingRoom waitingRoom;
+
+
+    BasicTurretController basicTurretController;
+    BasicTurretSpinController basicTurretSpinController;
+
+    GameObject BasicTurret;
+    GameObject BasicTurretHead;
 
 
     private void Awake()
@@ -185,6 +226,7 @@ public class Controller : MonoBehaviour
         moveResourceController = new MoveResourceController();
         moveEnemyController = new MoveEnemyController();
         gameStartController = new GameStartController();
+        basicTurretControll = new BasicTurretControll();
 
         factoryOutputController = new FactoryOutputController();
 
@@ -252,6 +294,11 @@ public class Controller : MonoBehaviour
             }
         }
         
+        BasicTurret = GameObject.Find("TurretHead");
+        BasicTurretHead = GameObject.Find("TurretShooting");
+
+        basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
+        basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -300,8 +347,6 @@ public class Controller : MonoBehaviour
                         PlayerPrefs.SetString("roomCode", createRoom.roomName);
                         Debug.Log(PlayerPrefs.GetString("roomCode"));
 
-                        
-                        
                         Debug.Log("컨트롤러에서 정보확인:" + roomCode);
                         SceneManager.LoadScene("WaitingRoom");
                     });
@@ -437,14 +482,65 @@ public class Controller : MonoBehaviour
                     //interactionModuleController.SetAct(true);
                     break;
                 case PacketType.MODULE_REPAIR:
-                    repairController.ReceiveDTO(data);
-                    repairController.SetAct(true);
+
+                    Debug.Log("모듈 수리 수신");
+                    DTOmoduleReapair moduleRepair = new DTOmoduleReapair();
+                    int moduleRepairHead = 0;
+                    repairController.newReceiveDTO(data, moduleRepair, ref moduleRepairHead);
+
+                    repairController.roomId = moduleRepair.roomName;
+                    repairController.id = moduleRepair.userId;
+                    repairController.xIdx = moduleRepair.x;
+                    repairController.zIdx = moduleRepair.z;
+
+                    //repairController.ReceiveDTO(data);
+                    //repairController.SetAct(true);
                     break;
 
 
                 case PacketType.MODULE_UPGRADE:
-                    moduleUpgradeController.ReceiveDTO(data);
-                    moduleUpgradeController.SetAct(true);
+                    Debug.Log("모듈 업그레이드 수신");
+
+                    DTOmoduleUpgrade moduleUpgradeDto = new DTOmoduleUpgrade();
+                    int moduleUpgradeHead = 0;
+                    moduleUpgradeController.newReceiveDTO(data, moduleUpgradeDto, ref moduleUpgradeHead);
+
+                    moduleUpgradeController.roomId = moduleUpgradeDto.roomName;
+                    moduleUpgradeController.id = moduleUpgradeDto.userId;
+                    moduleUpgradeController.x = moduleUpgradeDto.x;
+                    moduleUpgradeController.z = moduleUpgradeDto.z;
+                    //moduleUpgradeController.ReceiveDTO(data);
+                    //moduleUpgradeController.SetAct(true);
+                    break;
+
+                case PacketType.BASIC_TURRET:
+                    Debug.Log("베이스 터렛 수신");
+                    DTObasicTurret basicTurretDto = new DTObasicTurret();
+                    int basicTurretHead = 0;
+                    Debug.Log("--------");
+                    Debug.Log(basicTurretDto.roomName);
+                    Debug.Log(basicTurretDto.userId);
+                    Debug.Log(basicTurretDto.rx1);
+                    Debug.Log(basicTurretDto.ry1);
+                    Debug.Log(basicTurretDto.rz1);
+                    Debug.Log(basicTurretDto.rw1);
+                    Debug.Log(basicTurretDto.rx2);
+                    Debug.Log(basicTurretDto.ry2);
+                    Debug.Log(basicTurretDto.rz2);
+                    Debug.Log(basicTurretDto.rw2);
+                    basicTurretControll.newReceiveDTO(data, basicTurretDto, ref basicTurretHead);
+                    if(userId != basicTurretDto.userId)
+                    {
+                        Debug.Log("베이스터렛 이동란에 들어옵니까?");
+
+                        
+
+
+                        Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
+                        Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
+                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,100.0f * Time.deltaTime);   // 수평이동
+                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 100.0f * Time.deltaTime);   // 수직이동
+                    }
                     break;
             }
 
@@ -663,6 +759,7 @@ public class InteractionModuleController : ReceiveController
 
 public class RepairController : ReceiveController
 {
+    public string roomId;
     public int id;
     public int xIdx;
     public int zIdx;
@@ -683,6 +780,7 @@ public class RepairController : ReceiveController
 
 public class ModuleUpgradeController : ReceiveController
 {
+    public string roomId;
     public int id;
     public int x;
     public int z;
@@ -765,6 +863,11 @@ public class FactoryOutputController : ReceiveController
     }
 }
 
+public class BasicTurretControll : ReceiveController
+{
+
+}
+
 // 컨트롤러 정의
 public class ReceiveController
 {
@@ -828,7 +931,9 @@ public class ReceiveController
                 string stringValue = Encoding.UTF8.GetString(stringBytes);
                 field.SetValue(this, stringValue);
 
-                Debug.Log(stringValue);
+      
+                
+
             }
         }
     }
