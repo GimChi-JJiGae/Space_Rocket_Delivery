@@ -115,7 +115,6 @@ public class DTOinteractionModule
 {
     public string roomName;
     public int userId;
-    public int moduletype;
     public int activeNum;
 }
 
@@ -716,7 +715,6 @@ public class InteractionModuleController : ReceiveController
 {
     public string roomId;
     public int id;
-    public int moduleType;
     public int activeNum;
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
@@ -724,10 +722,9 @@ public class InteractionModuleController : ReceiveController
         Debug.Log("모듈 인터랙션 클래스 진입");
         if (GetAct())
         {
-            Debug.Log("InteractionModule : 상호작용 함수 진입");
+            Debug.Log("InteractionModule : 상호작용 함수 진입"); 
             Debug.Log(roomId);
             Debug.Log(id);
-            Debug.Log(moduleType);
             Debug.Log(activeNum);
 
             switch (activeNum)
@@ -945,10 +942,12 @@ public class ReceiveController
             if (t.Equals(typeof(int)))
             {
                 //Console.WriteLine("인트형");
-
+                
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] intByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToInt32(intByte));
+                Debug.Log("인트");
+                Debug.Log(BitConverter.ToInt32(intByte));
 
                 //헤드 올림
                 mHead += sizeof(int);
@@ -961,7 +960,8 @@ public class ReceiveController
                 //배열 헤드부터 4바이트 만큼 자름
                 byte[] floatByte = SplitArray(data, mHead, 4);
                 field.SetValue(c, BitConverter.ToSingle(floatByte));
-
+                Debug.Log("플로트");
+                Debug.Log(BitConverter.ToInt32(floatByte));
                 //헤드 올림
                 mHead += sizeof(float);
                 //field.SetValue(c, 100);
@@ -980,6 +980,8 @@ public class ReceiveController
                 byte[] stringByte = SplitArray(data, mHead, size);
                 string stringValue = Encoding.UTF8.GetString(stringByte);
                 field.SetValue(c, stringValue);
+                Debug.Log("스트링");
+                Debug.Log(Encoding.UTF8.GetString(stringByte));
 
                 mHead += size;
             }
