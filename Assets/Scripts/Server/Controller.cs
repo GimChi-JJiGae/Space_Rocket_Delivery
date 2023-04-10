@@ -297,8 +297,8 @@ public class Controller : MonoBehaviour
         BasicTurret = GameObject.Find("TurretHead");
         BasicTurretHead = GameObject.Find("TurretShooting");
 
-        basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
-        basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
+        //basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
+        //basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -407,7 +407,6 @@ public class Controller : MonoBehaviour
                     break;
 
                 case PacketType.MOVE:
-                    
                     playerPositionController.ReceiveDTO(data);
                     playerPositionController.SetAct(true);
                     break;
@@ -476,6 +475,7 @@ public class Controller : MonoBehaviour
                     interactionModuleController.roomId = interactionModuleDto.roomName;
                     interactionModuleController.moduleType = interactionModuleDto.moduletype;
                     interactionModuleController.activeNum = interactionModuleDto.activeNum;
+
                     interactionModuleController.SetAct(true);
 
                     //interactionModuleController.ReceiveDTO(data);
@@ -532,9 +532,6 @@ public class Controller : MonoBehaviour
                     if(userId != basicTurretDto.userId)
                     {
                         Debug.Log("베이스터렛 이동란에 들어옵니까?");
-
-                        
-
 
                         Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
                         Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
