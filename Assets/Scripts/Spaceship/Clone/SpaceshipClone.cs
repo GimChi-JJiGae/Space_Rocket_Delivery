@@ -106,14 +106,29 @@ public class SpaceshipClone : MonoBehaviour
 
     void CreateDefaultWall()
     {
-        for (int x = 9; x <= rows / 2 + 1; x++)
-        {
-            for (int z = 9; z <= cols / 2 + 1; z++)
-            {
-                GameObject temp = modules[z, x];
-                MakeWall(temp);
-            }
-        }
+        MakeWall(modules[9, 8]);
+        MakeWall(modules[9, 7]);
+        MakeWall(modules[10, 7]);
+        MakeWall(modules[11, 7]);
+        MakeWall(modules[11, 8]);
+
+        MakeWall(modules[8, 9]);
+        MakeWall(modules[7, 9]);
+        MakeWall(modules[7, 10]);
+        MakeWall(modules[7, 11]);
+        MakeWall(modules[8, 11]);
+
+        MakeWall(modules[9, 12]);
+        MakeWall(modules[9, 13]);
+        MakeWall(modules[10, 13]);
+        MakeWall(modules[11, 13]);
+        MakeWall(modules[11, 12]);
+
+        MakeWall(modules[12, 11]);
+        MakeWall(modules[13, 11]);
+        MakeWall(modules[13, 10]);
+        MakeWall(modules[13, 9]);
+        MakeWall(modules[12, 9]);
     }
 
     // Gets

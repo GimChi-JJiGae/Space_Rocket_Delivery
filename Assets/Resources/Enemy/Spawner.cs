@@ -87,7 +87,7 @@ public class Spawner : MonoBehaviour
             currentEnemies = enemiesTier3;
             currentEnemyHealths = enemyHealthsTier3;
         }
-        else if (difficultyLevel == 3)
+        else if (difficultyLevel >= 3)
         {
             currentEnemies = enemiesTier4;
             currentEnemyHealths = enemyHealthsTier4;
