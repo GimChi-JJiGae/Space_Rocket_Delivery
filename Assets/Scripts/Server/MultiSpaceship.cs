@@ -91,7 +91,7 @@ public class MultiSpaceship : MonoBehaviour
             spaceship.MakeWall(targetObject);
         }
     }
-
+    
     public void ChangeResource_SEND(int id)
     {
         // Packet 번호가 없다.
@@ -99,32 +99,15 @@ public class MultiSpaceship : MonoBehaviour
     }
 
     public void ChangeResource_RECEIVE(int id)
-    {        
+    {
         if (controller.userId != id)
         {
-            switch (resourceType)
-            {
-                case ResourceType.Fuel:
-                    supplier.fuelObject.SetActive(false);
-                    resourceType = ResourceType.Ore;
-                    supplier.oreObject.SetActive(true);
-                    break;
-                case ResourceType.Ore:
-                    supplier.oreObject.SetActive(false);
-                    resourceType = ResourceType.Fuel;
-                    supplier.fuelObject.SetActive(true);
-                    break;
-            }
+            FindAnyObjectByType<Supplier>().SwitchResource(id);
         }
-        
     }
 
     public void ChangeModule_SEND(int id)
     {
-        Debug.Log("11111111111111111");
-        Debug.Log(id);
-        Debug.Log(controller.userId);
-        Debug.Log(controller.roomCode);
         controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.FACTORY_CHANGE);
     }
 
@@ -173,7 +156,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void Respawn_SEND(int id, int activeNum)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode,id, activeNum);
+        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, activeNum);
     }
 
     public void Respawn_RECEIVE(int id)
@@ -191,14 +174,18 @@ public class MultiSpaceship : MonoBehaviour
 
     public void FactoryInput_RECEIVE(int ore, int fuel, bool isMade, int type)
     {
+        Factory factory = FindAnyObjectByType<Factory>();
+
         if (isMade)
         {
-            FindAnyObjectByType<Factory>().ProduceModule(type);
+            factory.ProduceModule(type);
+            factory.destroyOre = ore;
+            factory.destroyFuel = fuel;
         }
         else
         {
-            FindAnyObjectByType<Factory>().destroyOre = ore;
-            FindAnyObjectByType<Factory>().destroyFuel = fuel;
+            factory.destroyOre = ore;
+            factory.destroyFuel = fuel;
         }
     }
 

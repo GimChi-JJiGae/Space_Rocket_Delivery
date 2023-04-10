@@ -44,35 +44,6 @@ public enum PacketType
 
     FACTORY_INPUT, // 데이터 roomId, int userId, int resourceType
     FACTORY_OUTPUT, // 데이터 roomId, int userId, int ore, int fuel,
-
-    //NONE,
-    //HELLO,
-    //BYE,
-    //CREATE_ROOM,
-    //PARTICIPATE_USER, // 유저가 방에 입장한다는 것
-    //DEPARTURE_USER,
-    //PARTICIPATE_ROOM, // 방안에 있는 유저목록을 반환
-    //MOVE,
-    //MODULE_CONTROL,
-    //REPLICATION,
-
-    //OBJECT_MOVE,
-    //OBJECT_CONTROL, 
-
-    //MODULE_STATUS,
-    //CURRENT_POSITION,
-    ////ENEMY_MOVE,
-    //TURRET_STATUS,
-    //BASIC_TURRET,
-
-    //ENEMY_MOVE = 199, // 적 생성
-    //MODULE_CREATE = 200, // 모듈 생성
-    //SUPPLIER_CREATE = 210, // SUPPLIER 오브젝트 생성
-    //SUPPLIER_CHANGE = 211, // SUPPLIER 오브젝트 변경
-    //RESOURCE_MOVE = 212, // 리소스 움직임
-
-    //ENEMY_CREATE = 220, // 적 생성
-
 };
 
 
@@ -463,9 +434,7 @@ public class Controller : MonoBehaviour
                     }
                     break;
 
-
                 case PacketType.MODULE_INTERACTION:
-
                     Debug.Log("모듈 인터랙션 수신");
                     DTOinteractionModule interactionModuleDto = new();
                     int interactionHead = 0;
@@ -494,7 +463,6 @@ public class Controller : MonoBehaviour
                     //repairController.ReceiveDTO(data);
                     //repairController.SetAct(true);
                     break;
-
 
                 case PacketType.MODULE_UPGRADE:
                     Debug.Log("모듈 업그레이드 수신");
@@ -538,7 +506,6 @@ public class Controller : MonoBehaviour
                     }
                     break;
             }
-
         }
         catch (Exception ex)
         {
@@ -735,12 +702,9 @@ public class InteractionModuleController : ReceiveController
                     multiSpaceship.ChangeModule_RECEIVE(id);
                     break;
                 case 2:
-                    //multiSpaceship.ProduceModule_RECEIVE(id);
-                    break;
-                case 3:
                     multiSpaceship.IncreaseOxygen_RECEIVE(id);
                     break;
-                case 4:
+                case 3:
                     multiSpaceship.Respawn_RECEIVE(id);
                     break;
             }
@@ -923,10 +887,6 @@ public class ReceiveController
                 
                 string stringValue = Encoding.UTF8.GetString(stringBytes);
                 field.SetValue(this, stringValue);
-
-      
-                
-
             }
         }
     }

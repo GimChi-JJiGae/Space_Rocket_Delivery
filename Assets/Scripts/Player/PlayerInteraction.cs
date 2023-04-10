@@ -21,7 +21,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private Spaceship spaceship;
 
-    private Multiplayer multiplayer;
     private MultiSpaceship multiSpaceship;
 
     public List<string> HoldableObjects = new();

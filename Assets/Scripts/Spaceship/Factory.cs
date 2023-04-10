@@ -54,7 +54,7 @@ public class Factory : MonoBehaviour
         shieldObject.SetActive(false);
         laserObject.SetActive(false);
 
-        currentType = PrintType.Kit;
+        currentType = PrintType.Shotgun;
         currentModule = null;
 
         kitModule = Resources.Load<GameObject>("Resources/Kit");
@@ -78,25 +78,33 @@ public class Factory : MonoBehaviour
     {
         switch (currentType)
         {
-            case PrintType.Kit:
-                kitObject.SetActive(false);
-                currentType = PrintType.Shotgun;
-                shotgunObject.SetActive(true);
-                break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
                 currentType = PrintType.Laser;
                 laserObject.SetActive(true);
+                neededOre = 2;
+                neededFuel = 1;
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);
                 currentType = PrintType.Shield;
                 shieldObject.SetActive(true);
+                neededOre = 0;
+                neededFuel = 3;
                 break;
             case PrintType.Shield:
                 shieldObject.SetActive(false);
                 currentType = PrintType.Kit;
                 kitObject.SetActive(true);
+                neededOre = 1;
+                neededFuel = 1;
+                break;
+            case PrintType.Kit:
+                kitObject.SetActive(false);
+                currentType = PrintType.Shotgun;
+                shotgunObject.SetActive(true);
+                neededOre = 1;
+                neededFuel = 2;
                 break;
         }
 
