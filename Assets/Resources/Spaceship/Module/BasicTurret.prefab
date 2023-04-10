@@ -1603,6 +1603,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 5852779885820675954}
     m_Modifications:
     - target: {fileID: 976024461796281258, guid: ef32593690a49f84da51510576fc92a2, type: 3}
+      propertyPath: m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 335be516053c2e6449629a200258f205, type: 3}
+    - target: {fileID: 976024461796281258, guid: ef32593690a49f84da51510576fc92a2, type: 3}
       propertyPath: m_Text
       value: "\uAE30\uBCF8 \uD130\uB81B \uD0D1\uC2B9\n(SpaceBar)"
       objectReference: {fileID: 0}
@@ -1654,6 +1658,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6248484550398374106, guid: ef32593690a49f84da51510576fc92a2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 335be516053c2e6449629a200258f205, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef32593690a49f84da51510576fc92a2, type: 3}
 --- !u!4 &8162070109432766995 stripped
