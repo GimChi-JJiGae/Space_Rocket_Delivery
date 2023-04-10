@@ -13,10 +13,16 @@ public class Oxygenator : MonoBehaviour
     private Multiplayer multiplayer;
 
     private Controller controller;
+    private GameObject socketObj;
 
     // Start is called before the first frame update
     private void Start()
     {
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
         InvokeRepeating(nameof(Decrease), 1.0f, 1.0f);
         oxygenBarFilled = FindAnyObjectByType<FindO2Fill>().gameObject.GetComponent<Image>();
     }

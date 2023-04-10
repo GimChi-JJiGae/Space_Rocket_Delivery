@@ -4,7 +4,9 @@ using UnityEngine;
 public class Supplier : MonoBehaviour
 {
     private MultiSpaceship multiSpaceship;
+
     private Controller controller;
+    private GameObject socketObj; 
 
     public GameObject fuelObject;
     public GameObject oreObject;
@@ -30,6 +32,11 @@ public class Supplier : MonoBehaviour
     //Start is called before the first frame update
     void Start()
     {
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
         popAnimator = GetComponent<Animator>();
 
         fuelObject = transform.Find("Resource").gameObject.transform.Find("FuelBlueprint").gameObject;

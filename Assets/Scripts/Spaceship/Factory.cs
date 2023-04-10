@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
-    private Multiplayer multiplayer;
     private MultiSpaceship multiSpaceship;
 
     private Controller controller;
+    private GameObject socketObj;
 
     public enum PrintType
     {
@@ -42,6 +42,9 @@ public class Factory : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
         kitObject = transform.Find("KitBlueprint").gameObject;
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
@@ -61,6 +64,8 @@ public class Factory : MonoBehaviour
 
         neededOre = 1;
         neededFuel = 1;
+
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
     }
     // Update is called once per frame
     private void Update()
@@ -94,6 +99,10 @@ public class Factory : MonoBehaviour
                 kitObject.SetActive(true);
                 break;
         }
+
+        Debug.Log(id);
+        Debug.Log(controller.userId);
+        Debug.Log("=============================================");
 
         if (controller.userId == id)
         {

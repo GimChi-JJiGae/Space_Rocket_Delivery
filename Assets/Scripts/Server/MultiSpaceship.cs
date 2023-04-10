@@ -45,12 +45,13 @@ public class MultiSpaceship : MonoBehaviour
 
     void Start()
     {
+        controller = FindAnyObjectByType<Controller>();                   // 컨트롤러 연결하기
+
         player = GameObject.Find("Player" + controller.userId);
         playerInteraction = player.transform.GetComponentInChildren<PlayerInteraction>();
 
         spaceship = FindAnyObjectByType<Spaceship>();
-        socketObj = GameObject.Find("SocketClient");
-        controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
+
         multiplayer = GetComponent<Multiplayer>();
 
         //StartCoroutine(SendCreateResource());
@@ -120,6 +121,10 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ChangeModule_SEND(int id)
     {
+        Debug.Log("11111111111111111");
+        Debug.Log(id);
+        Debug.Log(controller.userId);
+        Debug.Log(controller.roomCode);
         controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, (int)ActiveNum.FACTORY_CHANGE);
     }
 
