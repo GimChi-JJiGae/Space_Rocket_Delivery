@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Supplier : MonoBehaviour
 {
-    private GameObject fuelObject;
-    private GameObject oreObject;
+    private MultiSpaceship multiSpaceship;
+    private Controller controller;
+
+    public GameObject fuelObject;
+    public GameObject oreObject;
 
     public enum ResourceType
     {
@@ -49,7 +52,7 @@ public class Supplier : MonoBehaviour
         respawnTime = newRespawnTime;
     }
 
-    public void SwitchResource()
+    public void SwitchResource(int id)
     {
         switch (resourceType)
         {
@@ -63,6 +66,11 @@ public class Supplier : MonoBehaviour
                 resourceType = ResourceType.Fuel;
                 fuelObject.SetActive(true);
                 break;
+        }
+
+        if (controller.userId == id)
+        {
+            multiSpaceship.ChangeResource_SEND(id);
         }
     }
 

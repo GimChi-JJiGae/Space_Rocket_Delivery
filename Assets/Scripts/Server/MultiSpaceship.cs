@@ -14,20 +14,25 @@ public class MultiSpaceship : MonoBehaviour
         RESPAWN,
     }
 
-    Multiplayer multiplayer; // 멀티플레이인지 확인하는 변수
+    private Supplier supplier;
+    private Oxygenator oxygenator;
 
-    GameObject socketObj;
-    Spaceship spaceship;
-    Controller controller;
+    private Multiplayer multiplayer; // 멀티플레이인지 확인하는 변수
 
-    GameObject player;
-    PlayerInteraction playerInteraction;
+    private GameObject socketObj;
+    private Spaceship spaceship;
+    private Controller controller;
+
+    private GameObject player;
+
+    private ResourceType resourceType;
+
+    private PlayerInteraction playerInteraction;
 
 
     public GameObject[] resourceList = new GameObject[10000]; 
     public Vector3[] targetPosition = new Vector3[10000];
     public Quaternion[] targetRotation = new Quaternion[10000];
-    //bool[] putResource = new bool[10000];
 
     public delegate void EventResourceSpownHandler(int idxR);           // 리소스 생성 이벤트
     public event EventResourceSpownHandler eventResourceSpown;
@@ -93,12 +98,22 @@ public class MultiSpaceship : MonoBehaviour
     }
 
     public void ChangeResource_RECEIVE(int id)
-    {
-        // 인덱스가 없다.
-        
+    {        
         if (controller.userId != id)
         {
-            FindAnyObjectByType<Supplier>().SwitchResource();
+            switch (resourceType)
+            {
+                case ResourceType.Fuel:
+                    supplier.fuelObject.SetActive(false);
+                    resourceType = ResourceType.Ore;
+                    supplier.oreObject.SetActive(true);
+                    break;
+                case ResourceType.Ore:
+                    supplier.oreObject.SetActive(false);
+                    resourceType = ResourceType.Fuel;
+                    supplier.fuelObject.SetActive(true);
+                    break;
+            }
         }
         
     }
@@ -113,7 +128,6 @@ public class MultiSpaceship : MonoBehaviour
         if (controller.userId != id)
         {
             FindAnyObjectByType<Factory>().SwitchModule(id);
-            
         }
         
     }
@@ -126,10 +140,9 @@ public class MultiSpaceship : MonoBehaviour
 
     public void IncreaseOxygen_RECEIVE(int id)
     {
-        
         if (controller.userId != id)
         {
-            FindAnyObjectByType<Oxygenator>().Increase();
+            FindAnyObjectByType<Oxygenator>().Increase(id);
         }
     }
 
@@ -191,7 +204,6 @@ public class MultiSpaceship : MonoBehaviour
 
     public void ModuleUpgrade_RECEIVE(int id, int x, int z)
     {
-        
         if (controller.userId != id)
         {
             Module module = spaceship.modules[z, x].GetComponent<Module>();
