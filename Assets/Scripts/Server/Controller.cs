@@ -472,7 +472,6 @@ public class Controller : MonoBehaviour
                     interactionModuleController.newReceiveDTO(data, interactionModuleDto, ref interactionHead);
                     
                     interactionModuleController.roomId = interactionModuleDto.roomName;
-                    interactionModuleController.moduleType = interactionModuleDto.moduletype;
                     interactionModuleController.activeNum = interactionModuleDto.activeNum;
 
                     interactionModuleController.SetAct(true);
