@@ -13,6 +13,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private ModuleType currentType;
 
+    public Controller controller;
+    public GameObject socketObj;
+
     // Holdable 오브젝트를 달 위치 Object
     private GameObject playerHead;
 
@@ -20,8 +23,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private Multiplayer multiplayer;
     private MultiSpaceship multiSpaceship;
-
-    private Controller controller;
 
     public List<string> HoldableObjects = new();
 
@@ -61,6 +62,9 @@ public class PlayerInteraction : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
+
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
 
         spaceship = FindAnyObjectByType<Spaceship>();
 

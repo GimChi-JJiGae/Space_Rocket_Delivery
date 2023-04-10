@@ -97,9 +97,7 @@ public class Factory : MonoBehaviour
 
         if (controller.userId == id)
         {
-            int playerId = controller.userId;
-
-            multiSpaceship.ChangeModule_SEND(playerId);
+            multiSpaceship.ChangeModule_SEND(id);
         }
     }
 
