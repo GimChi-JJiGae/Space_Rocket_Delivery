@@ -51,7 +51,6 @@ public class Module : MonoBehaviour
     void Start()
     {
         maxHp = 3;
-        //spaceship = FindAnyObjectByType<Spaceship>();
         // 벽 찾기
         Transform wallTransform = transform.Find("Wall");
         wallTop = wallTransform.Find("WallTop").gameObject;
@@ -175,8 +174,6 @@ public class Module : MonoBehaviour
 
         // 바닥 재생성 (청사진)
         CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
-
- 
 
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);

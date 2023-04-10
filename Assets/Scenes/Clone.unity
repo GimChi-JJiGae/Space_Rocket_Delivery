@@ -12638,18 +12638,6 @@ MonoBehaviour:
   repairSpeed: 0
   maxHp: 0
   skillTree: {fileID: 0}
---- !u!114 &1599322679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1599322670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1430c55daa5d3a0459709bbf1a26c214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1601039240
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13435,7 +13423,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1738006675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b6ac397a8d87394ca6ac349d5cce624, type: 3}
+  m_Script: {fileID: 11500000, guid: c1c092f68c3ed2a44870a831a661490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1741039928
@@ -14812,49 +14800,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1739733287404381893, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.054418273
-      objectReference: {fileID: 0}
-    - target: {fileID: 1739733287404381893, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.009300943
-      objectReference: {fileID: 0}
     - target: {fileID: 2205704392875011112, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
-      objectReference: {fileID: 0}
-    - target: {fileID: 4756905889323632115, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.8256556
-      objectReference: {fileID: 0}
-    - target: {fileID: 4756905889323632115, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.16439328
-      objectReference: {fileID: 0}
-    - target: {fileID: 4756905889323632115, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.5304714
-      objectReference: {fileID: 0}
-    - target: {fileID: 4756905889323632115, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.09933713
-      objectReference: {fileID: 0}
-    - target: {fileID: 5533646563238766623, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.06940029
-      objectReference: {fileID: 0}
-    - target: {fileID: 5533646563238766623, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.0032969126
-      objectReference: {fileID: 0}
-    - target: {fileID: 6451844651265378391, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.054418232
-      objectReference: {fileID: 0}
-    - target: {fileID: 6451844651265378391, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.009300624
       objectReference: {fileID: 0}
     - target: {fileID: 6878477196426667652, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
       propertyPath: m_Constraints
@@ -14863,14 +14811,6 @@ PrefabInstance:
     - target: {fileID: 6878477196426667773, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
       propertyPath: m_Force.y
       value: -30000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7481545668893595922, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.06940032
-      objectReference: {fileID: 0}
-    - target: {fileID: 7481545668893595922, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.0032968759
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6878477196426667772, guid: d061b78a8fb300a46b967e59530d4a0f, type: 3}
@@ -15876,11 +15816,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: spawnInterval
-      value: 3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: difficultyTimeStep
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4574894504240720203, guid: af09df4d1156cc64c95e770e38114c12, type: 3}
       propertyPath: enemies.Array.size

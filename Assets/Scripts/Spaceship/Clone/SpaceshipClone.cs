@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spaceship : MonoBehaviour
+public class SpaceshipClone : MonoBehaviour
 {
     public static int rows = 21; // 바닥의 행 개수
     public static int cols = 21; // 바닥의 열 개수
@@ -44,6 +44,36 @@ public class Spaceship : MonoBehaviour
         // 엔진
         CreateDefaultModule(10, 9, Module.ModuleType.Engine);
 
+        // Shield
+        CreateDefaultModule(10, 12, Module.ModuleType.ShieldTurret);
+        CreateDefaultModule(10, 8, Module.ModuleType.ShieldTurret);
+        CreateDefaultModule(8, 10, Module.ModuleType.ShieldTurret);
+        CreateDefaultModule(12, 10, Module.ModuleType.ShieldTurret);
+
+        // Laser
+        CreateDefaultModule(7, 9, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(7, 11, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(9, 7, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(11, 7, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(9, 13, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(11, 13, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(13, 9, Module.ModuleType.LaserTurret);
+        CreateDefaultModule(13, 11, Module.ModuleType.LaserTurret);
+
+        // Shotgun
+        CreateDefaultModule(7, 10, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(8, 9, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(8, 11, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(10, 13, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(9, 12, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(11, 12, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(13, 10, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(12, 9, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(12, 11, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(10, 7, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(9, 8, Module.ModuleType.ShotgunTurret);
+        CreateDefaultModule(11, 8, Module.ModuleType.ShotgunTurret);
+
         yield return new WaitForSeconds(1.0f);
         CreateDefaultWall();
         yield return null;
@@ -62,7 +92,7 @@ public class Spaceship : MonoBehaviour
         Quaternion rotation = Quaternion.identity;                           // 바닥 타일의 회전
 
         // 모듈 생성하고 space의 배열에 할당시키기
-        GameObject module = Instantiate(modulePrefab, position, rotation);  
+        GameObject module = Instantiate(modulePrefab, position, rotation);
         module.transform.parent = transform;            // 모듈 위치를 Spaceship아래로 내려주기
         module.name = modulePrefab.name;                // 모듈 이름 변경
         modules[z, x] = module;                         // 모듈 넣기
@@ -76,7 +106,7 @@ public class Spaceship : MonoBehaviour
 
     void CreateDefaultWall()
     {
-        for (int x = 9; x <= rows / 2 + 1 ; x++)
+        for (int x = 9; x <= rows / 2 + 1; x++)
         {
             for (int z = 9; z <= cols / 2 + 1; z++)
             {
