@@ -100,10 +100,6 @@ public class Factory : MonoBehaviour
                 break;
         }
 
-        Debug.Log(id);
-        Debug.Log(controller.userId);
-        Debug.Log("=============================================");
-
         if (controller.userId == id)
         {
             multiSpaceship.ChangeModule_SEND(id);
