@@ -875,7 +875,6 @@ public class ReceiveController
 
             if (type.Equals(typeof(int)))
             {
-
                 byte[] result = new byte[sizeof(int)];
                 Array.Copy(data, n, result, 0, sizeof(int));
                 field.SetValue(this, BitConverter.ToInt32(result));
@@ -887,6 +886,13 @@ public class ReceiveController
                 Array.Copy(data, n, result, 0, sizeof(float));
                 field.SetValue(this, BitConverter.ToSingle(result));
                 n += sizeof(float);
+            }
+            else if (type.Equals(typeof(bool)))
+            {
+                byte[] result = new byte[sizeof(bool)];
+                Array.Copy(data, n, result, 0, sizeof(bool));
+                field.SetValue(this, BitConverter.ToBoolean(result));
+                n += sizeof(bool);
             }
             else if (type.Equals(typeof(double)))
             {
