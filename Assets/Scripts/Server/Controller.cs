@@ -955,6 +955,14 @@ public class ReceiveController
                 mHead += sizeof(float);
                 //field.SetValue(c, 100);
             }
+            else if (t.Equals(typeof(bool)))
+            {
+                byte[] boolByte = SplitArray(data, mHead, 1);
+                field.SetValue(c, BitConverter.ToString(boolByte));
+                Debug.Log("불리안");
+                Debug.Log(BitConverter.ToString(boolByte));
+                mHead += sizeof(bool);
+            }
             else if (t.Equals(typeof(string)))
             {
                 //Console.WriteLine("문자열");
