@@ -955,15 +955,15 @@ public class ReceiveController
                 mHead += sizeof(float);
                 //field.SetValue(c, 100);
             }
-            //else if (t.Equals(typeof(bool)))
-            //{
-            //    byte[] boolByte = SplitArray(data, mHead, 1);
-            //    Debug.Log(boolByte[0]);
-            //    field.SetValue(c, BitConverter.ToBoolean(boolByte));
-            //    Debug.Log("불리안");
-            //    Debug.Log(BitConverter.ToBoolean(boolByte));
-            //    mHead += sizeof(bool);
-            //}
+            else if (t.Equals(typeof(bool)))
+            {
+                byte[] boolByte = SplitArray(data, mHead, 1);
+                Debug.Log(boolByte[0]);
+                field.SetValue(c, BitConverter.ToBoolean(boolByte));
+                Debug.Log("불리안");
+                Debug.Log(BitConverter.ToBoolean(boolByte));
+                mHead += sizeof(bool);
+            }
             else if (t.Equals(typeof(string)))
             {
                 //Console.WriteLine("문자열");
