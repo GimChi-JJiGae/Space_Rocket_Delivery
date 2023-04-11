@@ -958,9 +958,9 @@ public class ReceiveController
             else if (t.Equals(typeof(bool)))
             {
                 byte[] boolByte = SplitArray(data, mHead, 1);
-                field.SetValue(c, BitConverter.ToString(boolByte));
+                field.SetValue(c, BitConverter.ToBoolean(boolByte));
                 Debug.Log("불리안");
-                Debug.Log(BitConverter.ToString(boolByte));
+                Debug.Log(BitConverter.ToBoolean(boolByte));
                 mHead += sizeof(bool);
             }
             else if (t.Equals(typeof(string)))
