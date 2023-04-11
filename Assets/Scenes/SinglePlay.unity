@@ -8757,19 +8757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b346ccdd3bb201a4ea860e4786fe7e91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HoldableObjects: []
-  isHoldingObject: 0
-  currentObject: {fileID: 0}
-  matchObject: {fileID: 0}
-  targetObject: {fileID: 0}
-  resourceObject: {fileID: 0}
-  inputObject: {fileID: 0}
-  produceObject: {fileID: 0}
-  upgradeObject: {fileID: 0}
-  respawnObject: {fileID: 0}
-  repairSpeed: 0
-  maxHp: 0
-  skillTree: {fileID: 0}
 --- !u!1001 &1601039240
 PrefabInstance:
   m_ObjectHideFlags: 0

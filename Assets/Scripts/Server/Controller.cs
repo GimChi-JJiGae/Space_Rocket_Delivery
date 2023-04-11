@@ -288,14 +288,11 @@ public class Controller : MonoBehaviour
 
         //basicTurretSpinController = BasicTurret.GetComponent<BasicTurretSpinController>();
         //basicTurretController = BasicTurretHead.GetComponent<BasicTurretController>();
-    }
-    // Update is called once per frame
-    void FixedUpdate()
-    {
+
         createRoomController.Service();
         enterRoomController.Service();
         playerPositionController.Service(multiplayer);
-        
+
         //createResourceController.Service(multiSpaceship);
         //moveResourceController.Service();
         //moveEnemyController.Service();
@@ -308,8 +305,8 @@ public class Controller : MonoBehaviour
             moduleUpgradeController.Service(multiSpaceship);
             factoryOutputController.Service(multiSpaceship);
         }
-
     }
+    // Update is called once per frame
 
     public void Receive(PacketType header, byte[] data)
     {
@@ -356,7 +353,7 @@ public class Controller : MonoBehaviour
                         if (user.userNickName.Equals(userNickname))
                         {
                             userId = user.userId;
-                            Debug.Log("반복문 돌면서 확인 몇번이나 찍히나");
+                            Debug.Log("반복문 돌면서 확인 몇번이나 찍히나"); 
                             Debug.Log(userId);
                         }
                         //Debug.Log(user.userNickName);
