@@ -298,16 +298,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         else if (upgradeObject.transform.GetComponentInChildren<ShieldTurret>())
         {
-            float health = upgradeObject.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth;
-
-            if (health == 20f)
-            {
-                health = 30f;
-            }
-            else if (health == 30f)
-            {
-                health = 40f;
-            }
+            upgradeObject.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth += 10;
         }
     }
 
@@ -438,9 +429,100 @@ public class PlayerInteraction : MonoBehaviour
             playerAnimator.SetBool("Repairing", false);
         }
 
-        //if (respawnObject != null)
-        //{
-        //    transform.GetComponent<PlayerMovement>().Respawn();
-        //}
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            spaceship.modules[10, 9].GetComponent<Module>().wallLeft.SetActive(false);
+            spaceship.modules[11, 10].GetComponent<Module>().wallTop.SetActive(false);
+            spaceship.modules[10, 11].GetComponent<Module>().wallRight.SetActive(false);
+            spaceship.modules[9, 10].GetComponent<Module>().wallBottom.SetActive(true);
+
+            spaceship.modules[11, 11].GetComponent<Module>().wallTop.SetActive(false);
+            spaceship.modules[11, 11].GetComponent<Module>().wallRight.SetActive(false);
+            spaceship.modules[11, 9].GetComponent<Module>().wallTop.SetActive(false);
+            spaceship.modules[11, 9].GetComponent<Module>().wallLeft.SetActive(false);
+            spaceship.modules[9, 9].GetComponent<Module>().wallBottom.SetActive(false);
+            spaceship.modules[9, 9].GetComponent<Module>().wallLeft.SetActive(false);
+            spaceship.modules[9, 11].GetComponent<Module>().wallBottom.SetActive(false);
+            spaceship.modules[9, 11].GetComponent<Module>().wallRight.SetActive(false);
+
+            // Shield
+            spaceship.modules[12, 10].GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+            spaceship.modules[8, 10].GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+            spaceship.modules[10, 8].GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+            spaceship.modules[10, 12].GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+
+            // Laser
+            spaceship.modules[11, 7].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[11, 7].GetComponent<Module>().wallTop.SetActive(true);
+            spaceship.modules[11, 7].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[13, 9].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[13, 9].GetComponent<Module>().wallTop.SetActive(true);
+            spaceship.modules[13, 9].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[13, 11].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[13, 11].GetComponent <Module>().wallTop.SetActive(true);
+            spaceship.modules[13, 11].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[11, 13].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[11, 13].GetComponent<Module>().wallTop.SetActive(true);
+            spaceship.modules[11, 13].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[9, 13].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[9, 13].GetComponent<Module>().wallBottom.SetActive(true);
+            spaceship.modules[9, 13].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[7, 11].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[7, 11].GetComponent <Module>().wallBottom.SetActive(true);
+            spaceship.modules[7, 11].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[7, 9].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[7, 9].GetComponent<Module>().wallBottom.SetActive(true);
+            spaceship.modules[7, 9].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[9, 7].GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
+            spaceship.modules[9, 7].GetComponent<Module>().wallBottom.SetActive(true);
+            spaceship.modules[9, 7].GetComponent<Module>().wallLeft.SetActive(true);
+
+            // Shotgun
+            spaceship.modules[10, 7].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[10, 7].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[12, 9].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[12, 9].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[8, 9].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[8, 9].GetComponent<Module>().wallLeft.SetActive(true);
+
+            spaceship.modules[13, 10].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[13, 10].GetComponent<Module>().wallTop.SetActive(true);
+
+            spaceship.modules[11, 8].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[11, 8].GetComponent<Module>().wallTop.SetActive(true);
+
+            spaceship.modules[11, 12].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[11, 12].GetComponent<Module>().wallTop.SetActive(true);
+
+            spaceship.modules[7, 10].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[7, 10].GetComponent<Module>().wallBottom.SetActive(true);
+
+            spaceship.modules[9, 12].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[9, 12].GetComponent<Module>().wallBottom.SetActive(true);
+
+            spaceship.modules[9, 8].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[9, 8].GetComponent<Module>().wallBottom.SetActive(true);
+
+            spaceship.modules[10, 13].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[10, 13].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[8, 11].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[8, 11].GetComponent<Module>().wallRight.SetActive(true);
+
+            spaceship.modules[12, 11].GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
+            spaceship.modules[12, 11].GetComponent<Module>().wallRight.SetActive(true);
+
+            FindAnyObjectByType<Spawner>().spawnInterval = 0.1f;
+            FindAnyObjectByType<Spawner>().difficultyTimeStep = 1f;
+        }
     }
 }
