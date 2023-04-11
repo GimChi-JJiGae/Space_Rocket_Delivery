@@ -169,7 +169,7 @@ public class MultiSpaceship : MonoBehaviour
 
     public void FactoryInput_SEND(int id, int resourceType)
     {
-        controller.Send(PacketType.MODULE_INTERACTION, controller.roomCode, id, resourceType);
+        controller.Send(PacketType.FACTORY_INPUT, controller.roomCode, id, resourceType);
     }
 
     public void FactoryInput_RECEIVE(int ore, int fuel, bool isMade, int type)
