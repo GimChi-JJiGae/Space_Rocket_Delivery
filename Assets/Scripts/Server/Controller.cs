@@ -89,6 +89,16 @@ public class DTOinteractionModule
     public int activeNum;
 }
 
+public class DTOfactoryOutput
+{
+    public string roomCode;
+    public int userId;
+    public int ore;
+    public int fuel;
+    public bool isMade;
+    public int type;
+}
+
 public class DTOmoduleReapair  // 데이터 roomId, int userId, int x, int z,
 {
     public string roomName;
@@ -320,7 +330,7 @@ public class Controller : MonoBehaviour
                     });
 
                     Debug.Log("방생성 수신");
-                    
+
                     break;
                 case PacketType.PARTICIPATE_ROOM:
                     byte[] isSucess = SplitArray(data, 0, 1);
@@ -329,7 +339,7 @@ public class Controller : MonoBehaviour
                     //waitingRoom.userStringList = new List<string>();
                     for (int i = 0; i < BitConverter.ToInt32(userCount, 0); i++)
                     {
-                        
+
                         DTOuser user = new();
                         enterRoomController.newReceiveDTO(data, user, ref head);
                         //waitingRoom.userStringList.Add(user.userNickName);
@@ -363,10 +373,10 @@ public class Controller : MonoBehaviour
                         //Debug.Log(PlayerPrefs.GetString("roomCode"));
                         Debug.Log(gameStart.roomCode);
                         Debug.Log("======");
-                        
+
                         SceneManager.LoadScene("New_Multiplay");
-                        
-                        
+
+
                     });
                     break;
 
@@ -437,7 +447,7 @@ public class Controller : MonoBehaviour
                     DTOinteractionModule interactionModuleDto = new();
                     int interactionHead = 0;
                     interactionModuleController.newReceiveDTO(data, interactionModuleDto, ref interactionHead);
-                    
+
                     interactionModuleController.roomId = interactionModuleDto.roomName;
                     interactionModuleController.activeNum = interactionModuleDto.activeNum;
 
@@ -493,15 +503,29 @@ public class Controller : MonoBehaviour
                     Debug.Log(basicTurretDto.rz2);
                     Debug.Log(basicTurretDto.rw2);
                     basicTurretControll.newReceiveDTO(data, basicTurretDto, ref basicTurretHead);
-                    if(userId != basicTurretDto.userId)
+                    if (userId != basicTurretDto.userId)
                     {
                         Debug.Log("베이스터렛 이동란에 들어옵니까?");
 
                         Quaternion target1 = new Quaternion(basicTurretDto.rx1, basicTurretDto.ry1, basicTurretDto.rz1, basicTurretDto.rw1);
                         Quaternion target2 = new Quaternion(basicTurretDto.rx2, basicTurretDto.ry2, basicTurretDto.rz2, basicTurretDto.rw2);
-                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1,100.0f * Time.deltaTime);   // 수평이동
-                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2 , 100.0f * Time.deltaTime);   // 수직이동
+                        BasicTurret.transform.rotation = Quaternion.Lerp(BasicTurret.transform.rotation, target1, 100.0f * Time.deltaTime);   // 수평이동
+                        BasicTurretHead.transform.rotation = Quaternion.Lerp(BasicTurretHead.transform.rotation, target2, 100.0f * Time.deltaTime);   // 수직이동
                     }
+                    break;
+
+                case PacketType.FACTORY_OUTPUT:
+                    Debug.Log("팩토리 아웃풋 수신");
+                    DTOfactoryOutput factoryOutputDTO = new();
+                    int outputHead = 0;
+                    factoryOutputController.newReceiveDTO(data, factoryOutputDTO, ref outputHead);
+
+                    factoryOutputController.roomCode = factoryOutputDTO.roomCode;
+                    factoryOutputController.userId = factoryOutputDTO.userId;
+                    factoryOutputController.ore = factoryOutputDTO.ore;
+                    factoryOutputController.fuel = factoryOutputDTO.fuel;
+                    factoryOutputController.isMade = factoryOutputDTO.isMade;
+                    factoryOutputController.type = factoryOutputDTO.type;
                     break;
             }
         }
@@ -803,10 +827,12 @@ public class MoveEnemyController : ReceiveController
 
 public class FactoryOutputController : ReceiveController
 {
+    public string roomCode;
+    public int userId;
     public int ore;
     public int fuel;
     public bool isMade;
-    public int type = 4;
+    public int type;
 
     public void Service(MultiSpaceship multiSpaceship)
     {
