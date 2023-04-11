@@ -89,6 +89,15 @@ public class DTOinteractionModule
     public int activeNum;
 }
 
+public class DTOcreateModule
+{
+    public string roomCode;
+    public int userId;
+    public int xIdx;
+    public int zIdx;
+    public int moduleType;
+}
+
 public class DTOfactoryOutput
 {
     public string roomCode;
@@ -390,8 +399,19 @@ public class Controller : MonoBehaviour
                     playerPositionController.SetAct(true);
                     break;
                 case PacketType.MODULE_CREATE:
-                    createModuleController.ReceiveDTO(data);
+                    DTOcreateModule createModuleDTO = new();
+                    int moduleHead = 0;
+
+                    createModuleController.newReceiveDTO(data, createModuleDTO, ref moduleHead);
+
+                    createModuleController.roomCode = createModuleDTO.roomCode;
+                    createModuleController.id = createModuleDTO.userId;
+                    createModuleController.xIdx = createModuleDTO.xIdx;
+                    createModuleController.zIdx = createModuleDTO.zIdx;
+                    createModuleController.moduleType = createModuleDTO.moduleType;
+
                     createModuleController.SetAct(true);
+
                     break;
                 case PacketType.RESOURCE_CREATE:
                     createResourceController.ReceiveDTO(data);
@@ -485,7 +505,8 @@ public class Controller : MonoBehaviour
                     moduleUpgradeController.x = moduleUpgradeDto.x;
                     moduleUpgradeController.z = moduleUpgradeDto.z;
                     //moduleUpgradeController.ReceiveDTO(data);
-                    //moduleUpgradeController.SetAct(true);
+                    
+                    moduleUpgradeController.SetAct(true);
                     break;
 
                 case PacketType.BASIC_TURRET:
@@ -685,6 +706,7 @@ public class EnterRoomController : ReceiveController
 // 모듈 컨트롤러
 public class CreateModuleController : ReceiveController
 {
+    public string roomCode;
     public int id;
     public int xIdx;           // 위치
     public int zIdx;
@@ -693,11 +715,11 @@ public class CreateModuleController : ReceiveController
 
     public void Service(MultiSpaceship multiSpaceship) // isAct가 활성화 되었을 때 실행할 로직
     {
-        if (this.GetAct())
+        if (GetAct())
         {
             Debug.Log("CreateModuleController : " + xIdx +", "+ zIdx + ", " + moduleType);
             multiSpaceship.CreateModule_RECEIVE(id, xIdx, zIdx, moduleType);
-            this.SetAct(false);
+            SetAct(false);
         }
     }
 }
