@@ -93,8 +93,8 @@ public class DTOfactoryOutput
 {
     public string roomCode;
     public int userId;
-    public int ore;
     public int fuel;
+    public int ore;
     public bool isMade;
     public int type;
 }
@@ -297,6 +297,7 @@ public class Controller : MonoBehaviour
             interactionModuleController.Service(multiSpaceship);
             repairController.Service(multiSpaceship);
             moduleUpgradeController.Service(multiSpaceship);
+            factoryOutputController.Service(multiSpaceship);
         }
 
     }
@@ -522,23 +523,10 @@ public class Controller : MonoBehaviour
 
                     factoryOutputController.roomCode = factoryOutputDTO.roomCode;
                     factoryOutputController.userId = factoryOutputDTO.userId;
-                    factoryOutputController.ore = factoryOutputDTO.ore;
                     factoryOutputController.fuel = factoryOutputDTO.fuel;
+                    factoryOutputController.ore = factoryOutputDTO.ore;
                     factoryOutputController.isMade = factoryOutputDTO.isMade;
                     factoryOutputController.type = factoryOutputDTO.type;
-
-                    Debug.Log(factoryOutputController.roomCode);
-                    Debug.Log(factoryOutputController.userId);
-                    Debug.Log(factoryOutputController.ore);
-                    Debug.Log(factoryOutputController.fuel);
-                    Debug.Log(factoryOutputController.isMade);
-                    Debug.Log(factoryOutputController.type);
-                    Debug.Log(factoryOutputDTO.roomCode);
-                    Debug.Log(factoryOutputDTO.userId);
-                    Debug.Log(factoryOutputDTO.ore);
-                    Debug.Log(factoryOutputDTO.fuel);
-                    Debug.Log(factoryOutputDTO.isMade);
-                    Debug.Log(factoryOutputDTO.type);
 
                     factoryOutputController.SetAct(true);
                     break;
@@ -844,8 +832,8 @@ public class FactoryOutputController : ReceiveController
 {
     public string roomCode;
     public int userId;
-    public int ore;
     public int fuel;
+    public int ore;
     public bool isMade;
     public int type;
 
