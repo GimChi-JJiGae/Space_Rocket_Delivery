@@ -293,13 +293,11 @@ public class Controller : MonoBehaviour
 
     public void Receive(PacketType header, byte[] data)
     {
-        
         try
         {
             Debug.Log("받았당" + (PacketType)header);
             switch (header)
             {
-                
                 case PacketType.CREATE_ROOM:
                     //createRoomController.ReceiveDTO(data);
                     //createRoomController.SetAct(true);

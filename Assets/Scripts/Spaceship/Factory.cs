@@ -45,25 +45,25 @@ public class Factory : MonoBehaviour
         socketObj = GameObject.Find("SocketClient");
         controller = socketObj.GetComponent<Controller>();
 
-        kitObject = transform.Find("KitBlueprint").gameObject;
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
         laserObject = transform.Find("LaserBlueprint").gameObject;
+        kitObject = transform.Find("KitBlueprint").gameObject;
 
-        shotgunObject.SetActive(false);
         shieldObject.SetActive(false);
         laserObject.SetActive(false);
+        kitObject.SetActive(false);
 
         currentType = PrintType.Shotgun;
         currentModule = null;
 
-        kitModule = Resources.Load<GameObject>("Resources/Kit");
         shotgunModule = Resources.Load<GameObject>("Resources/Shotgun");
         laserModule = Resources.Load<GameObject>("Resources/Laser");
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
+        kitModule = Resources.Load<GameObject>("Resources/Kit");
 
         neededOre = 1;
-        neededFuel = 1;
+        neededFuel = 2;
 
         multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
     }

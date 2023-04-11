@@ -310,7 +310,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
                 else if (resourceObject != null)
                 {
-                    resourceObject.GetComponent<Supplier>().SwitchResource(controller.userId);
+                    resourceObject.GetComponentInParent<Supplier>().SwitchResource(controller.userId);
                 }
                 else if (produceObject != null)
                 {
