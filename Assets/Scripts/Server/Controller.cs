@@ -526,6 +526,8 @@ public class Controller : MonoBehaviour
                     factoryOutputController.fuel = factoryOutputDTO.fuel;
                     factoryOutputController.isMade = factoryOutputDTO.isMade;
                     factoryOutputController.type = factoryOutputDTO.type;
+
+                    factoryOutputController.SetAct(true);
                     break;
             }
         }
@@ -838,6 +840,7 @@ public class FactoryOutputController : ReceiveController
     {
         if (GetAct())
         {
+            Debug.Log("팩토리 아웃풋 함수 진입");
             multiSpaceship.FactoryInput_RECEIVE(ore, fuel, isMade, type);
             SetAct(false);
         }
