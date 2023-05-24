@@ -436,6 +436,7 @@ GameObject:
   - component: {fileID: 1288852473}
   - component: {fileID: 1288852470}
   - component: {fileID: 1288852471}
+  - component: {fileID: -8510650209424938749}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -554,6 +555,20 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!136 &-8510650209424938749
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6642574241691015670}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.7532599
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: -0.40954828}
 --- !u!1 &7103113340412430965
 GameObject:
   m_ObjectHideFlags: 0

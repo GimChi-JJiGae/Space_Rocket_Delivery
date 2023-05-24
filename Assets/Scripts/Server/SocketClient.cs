@@ -8,10 +8,7 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using Unity.VisualScripting;
+
 using UnityEditor;
 //using UnityEditor.VersionControl;
 using UnityEngine;
@@ -21,6 +18,9 @@ public class SocketClient : MonoBehaviour
 {
     // 소켓 연결과 직렬화 버퍼
     private Socket socket;
+
+
+
     private byte[] buffer = new byte[1024]; // 직렬화 버퍼
 
     // 로직은 컨트롤러에 위임
@@ -31,12 +31,20 @@ public class SocketClient : MonoBehaviour
         controller = GetComponent<Controller>();
 
         // 서버 주소와 포트번호 설정
-        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.30.160"), 5555); // 서버주소, 포트번호
+        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.30.116"), 5555); // 서버주소, 포트번호
 
         // 소켓 생성 및 연결 시도
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         socket.BeginConnect(endPoint, ConnectCallback, null);
 
+        Debug.Log("소켓 실행 테스트");
+
+    }
+
+    private void Awake()
+    {
+        // DontDestroyOnLoad 함수를 사용하여 해당 게임 오브젝트를 삭제하지 않도록 설정합니다.
+        DontDestroyOnLoad(gameObject);
     }
 
     private void ConnectCallback(IAsyncResult result)
@@ -74,7 +82,7 @@ public class SocketClient : MonoBehaviour
     // 직렬화 후 전송
     public void Send(byte[] byteArray)         
     {
-        Debug.Log("보낸다: " + byteArray[0]);
+        //Debug.Log("보낸다: " + byteArray[0]);
         // 전송 시작
         socket.BeginSend(byteArray, 0, byteArray.Length, SocketFlags.None, SendCallback, null);
     }
@@ -82,6 +90,7 @@ public class SocketClient : MonoBehaviour
     // 역직렬화
     private void Receive(byte[] buffer)
     {
+        Debug.Log("데이터 받음");
         byte[] header = SplitArray(buffer, 0, 1);
         //Debug.Log((int)header[0]);
         byte[] data = SplitArray(buffer, 1, buffer.Length - 1);

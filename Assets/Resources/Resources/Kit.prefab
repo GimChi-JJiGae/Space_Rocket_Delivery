@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7073038329844032437}
   - component: {fileID: 952726461}
   - component: {fileID: 952726462}
+  - component: {fileID: 9058538797435593092}
   m_Layer: 0
   m_Name: Kit
   m_TagString: Untagged
@@ -134,3 +135,17 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!136 &9058538797435593092
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7118396946536233239}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 3.5886862
+  m_Height: 7.1773725
+  m_Direction: 1
+  m_Center: {x: 0.06355961, y: 0, z: -2.5000002}

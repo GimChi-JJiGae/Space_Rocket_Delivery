@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,11 +9,22 @@ public class Oxygenator : MonoBehaviour
 
     public Image oxygenBarFilled; // 게이지 UI의 이미지 컴포넌트
 
+    private MultiSpaceship multiSpaceship;
+    private Multiplayer multiplayer;
+
+    private Controller controller;
+    private GameObject socketObj;
+
     // Start is called before the first frame update
     private void Start()
     {
-        oxygenBarFilled = GetComponent<Image>();
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
         InvokeRepeating(nameof(Decrease), 1.0f, 1.0f);
+        oxygenBarFilled = FindAnyObjectByType<FindO2Fill>().gameObject.GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -40,13 +49,20 @@ public class Oxygenator : MonoBehaviour
         oxygen -= decreaseAmount;
     }
 
-    public void Increase()
+    public void Increase(int id)
     {
         oxygen += increaseAmount;
+
+        Debug.Log(oxygen);
 
         if (oxygen > 100)
         {
             oxygen = 100;
+        }
+
+        if (controller.userId == id)
+        {
+            multiSpaceship.IncreaseOxygen_SEND(id);
         }
     }
 }

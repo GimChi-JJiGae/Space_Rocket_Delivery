@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,40 +13,60 @@ public class MutiplayWaitingRoom : MonoBehaviour
     private Button GoBtn;
     private Button QuitRoomBtn;
     private TMP_Text RoomCode;
-    
+    private bool alreadySend;
+    public TMP_Text UserList;
+    public List<string> userStringList = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
+        alreadySend = false;
+        GameObject socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();                   // 컨트롤러 연결하기
 
-        Debug.Log("여기 열리니?");
-        Debug.Log(PlayerPrefs.GetString("roomCode"));
         RoomCode = GameObject.Find("RoomCodeText").GetComponent<TMP_Text>();
-        
+        UserList = GameObject.Find("UserList").GetComponent<TMP_Text>();
 
         GoBtn = GameObject.Find("GoBtn").GetComponent<Button>();    // 게임 시작
-        GoBtn.onClick.AddListener(StartGame);
+        GoBtn.onClick.AddListener(StartNewGame);
 
         QuitRoomBtn = GameObject.Find("QuitRoomBtn").GetComponent<Button>();      // 방 나가기
         QuitRoomBtn.onClick.AddListener(QuitRoom);
+
+        
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(PlayerPrefs.GetString("roomCode"));
+        UserList.text = "";
+       for (int i = 0; i < userStringList.Count; i++)
+        {
+            UserList.text = UserList.text + " " + userStringList[i];
+        }
         RoomCode.text = "RoomCode: " + PlayerPrefs.GetString("roomCode"); // 시작한 이후에 업데이트 해줘야 이전 방이 안뜸
     }
 
-    void StartGame()
+    void StartNewGame()
     {
-//        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
-        
-//        SceneManager.LoadScene("Multiplay");
+        if (!alreadySend)
+        {
+            //        controller.Send(PacketType.게임시작, PlayerPrefs.GetString("roomCode");
+            //controller.Send(PacketType.START_GAME, PlayerPrefs.GetString("roomCode"));
+            //        SceneManager.LoadScene("Multiplay");
+            controller.Send(PacketType.START_GAME, controller.roomCode);
+            alreadySend = true;
+        }
     }
 
     void QuitRoom()
     {
-                //controller.Send(PacketType.DEPARTURE_USER, PlayerPrefs.GetString("roomCode"), PlayerPrefs.GetInt("userId"));
+        Debug.Log(controller);
+        controller.Send(PacketType.OUT_USER);
+        SceneManager.LoadScene("LandingPage");
+
+        //controller.Send(PacketType.DEPARTURE_USER, PlayerPrefs.GetString("roomCode"), PlayerPrefs.GetInt("userId"));
 
         //        SceneManager.LoadScene("LandingPage");
     }

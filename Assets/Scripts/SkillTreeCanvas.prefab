@@ -424,6 +424,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1575e5ad3da4d11489d369e52ed0296d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentModuleCurrentHpLevel: 0
+  currentSupplySpeedLevel: 0
+  currentRepairSpeedLevel: 0
+  currentTurretDamageLevel: 0
+  moduleHpUpgradeLevel: 0
   moduleCurrentHpLevelText: {fileID: 0}
   supplySpeedLevelText: {fileID: 0}
   repairSpeedLevelText: {fileID: 0}
@@ -463,8 +468,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 940, y: 300}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 940, y: 245}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2741588901948972811
 CanvasRenderer:
@@ -718,7 +723,7 @@ GameObject:
   - component: {fileID: 2741588902093746668}
   - component: {fileID: 2741588902093746669}
   m_Layer: 5
-  m_Name: skillTreeCanvas
+  m_Name: SkillTreeCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1318,6 +1323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1575e5ad3da4d11489d369e52ed0296d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentModuleCurrentHpLevel: 0
+  currentSupplySpeedLevel: 0
+  currentRepairSpeedLevel: 0
+  currentTurretDamageLevel: 0
+  moduleHpUpgradeLevel: 0
   moduleCurrentHpLevelText: {fileID: 2741588902470703606}
   supplySpeedLevelText: {fileID: 0}
   repairSpeedLevelText: {fileID: 0}
@@ -1357,8 +1367,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -900, y: 300}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -900, y: 245}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2741588902447324049
 CanvasRenderer:
@@ -1492,8 +1502,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: 300}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -300, y: 245}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2741588902470703601
 CanvasRenderer:
@@ -1627,8 +1637,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 340, y: 300}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 367, y: 245}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2741588902673038325
 CanvasRenderer:
@@ -1873,6 +1883,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1575e5ad3da4d11489d369e52ed0296d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentModuleCurrentHpLevel: 0
+  currentSupplySpeedLevel: 0
+  currentRepairSpeedLevel: 0
+  currentTurretDamageLevel: 0
+  moduleHpUpgradeLevel: 0
   moduleCurrentHpLevelText: {fileID: 0}
   supplySpeedLevelText: {fileID: 0}
   repairSpeedLevelText: {fileID: 2741588902447324055}
@@ -2023,6 +2038,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1575e5ad3da4d11489d369e52ed0296d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentModuleCurrentHpLevel: 0
+  currentSupplySpeedLevel: 0
+  currentRepairSpeedLevel: 0
+  currentTurretDamageLevel: 0
+  moduleHpUpgradeLevel: 0
   moduleCurrentHpLevelText: {fileID: 0}
   supplySpeedLevelText: {fileID: 2741588902673038330}
   repairSpeedLevelText: {fileID: 0}

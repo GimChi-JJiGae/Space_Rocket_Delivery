@@ -25,7 +25,7 @@ public class Module : MonoBehaviour
         ShieldTurret
     }
 
-    public InteractionModule interactionModule;
+    public PlayerInteraction playerInteraction;
 
     public GameObject[] players;
 
@@ -45,10 +45,12 @@ public class Module : MonoBehaviour
     public GameManager gameManager;
 
     public float hp = 0;
+    public float maxHp = 3;
 
     // Start is called before the first frame update
     void Start()
     {
+        maxHp = 3;
         //spaceship = FindAnyObjectByType<Spaceship>();
         // 벽 찾기
         Transform wallTransform = transform.Find("Wall");
@@ -76,7 +78,7 @@ public class Module : MonoBehaviour
     // 모듈 타입을 받아서, 해당 모듈을 생성시킴
     public void CreateFloor(ModuleType t)
     {
-        moduleType = t;                 
+        moduleType = t;
 
         // 예외처리
         if (transform.Find("Floor"))    //바닥이 존재하면 부수고 새로 생성
@@ -120,7 +122,7 @@ public class Module : MonoBehaviour
         floorModule.name = "Floor";                                             // 모듈 이름 변경
         floorModule.transform.parent = transform;                               // 바닥 위치를 Spaceship아래로 내려주기
 
-        hp = 3;
+        hp = maxHp;
         if (t == ModuleType.Blueprint)
         {
             floorModule.SetActive(false);
@@ -147,6 +149,20 @@ public class Module : MonoBehaviour
         }
     }
 
+    public void Checked()
+    {
+        if (hp >= 2)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(false);
+        }
+        else if (hp >= 1)
+        {
+            broken2.SetActive(false);
+            broken1.SetActive(true);
+        }
+    }
+
     // 모듈 초기화시키기
     private void ResetModule()
     {
@@ -159,14 +175,6 @@ public class Module : MonoBehaviour
 
         // 바닥 재생성 (청사진)
         CreateFloor(ModuleType.Blueprint); // Blueprint로 다시 생성하기
-
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponent<InteractionModule>().respawnObject != null)
-            {
-                player.GetComponent<PlayerMovement>().Respawn();
-            }
-        }
 
         // 벽 초기화
         transform.GetComponentInParent<Spaceship>().DestroyWall(gameObject);

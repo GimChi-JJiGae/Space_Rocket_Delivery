@@ -1,18 +1,19 @@
-using UnityEngine;
-using System.Linq;
-using Unity.Profiling.Editor;
 using Unity.VisualScripting;
+using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
     private MultiSpaceship multiSpaceship;
 
+    private Controller controller;
+    private GameObject socketObj;
+
     public enum PrintType
     {
-        Kit,
         Shotgun,
         Laser,
         Shield,
+        Kit,
     }
 
     public PrintType currentType;
@@ -41,56 +42,48 @@ public class Factory : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
 
-        kitObject = transform.Find("KitBlueprint").gameObject;
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
         laserObject = transform.Find("LaserBlueprint").gameObject;
+        kitObject = transform.Find("KitBlueprint").gameObject;
 
-        shotgunObject.SetActive(false);
         shieldObject.SetActive(false);
         laserObject.SetActive(false);
+        kitObject.SetActive(false);
 
-        currentType = PrintType.Kit;
+        currentType = PrintType.Shotgun;
         currentModule = null;
 
-        kitModule = Resources.Load<GameObject>("Resources/Kit");
         shotgunModule = Resources.Load<GameObject>("Resources/Shotgun");
-        laserModule = Resources.Load<GameObject>("Rosources/Laser");
+        laserModule = Resources.Load<GameObject>("Resources/Laser");
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
+        kitModule = Resources.Load<GameObject>("Resources/Kit");
 
         neededOre = 1;
-        neededFuel = 1;
+        neededFuel = 2;
+
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
     }
     // Update is called once per frame
     private void Update()
     {
-        oreText.text = "가스: " + destroyOre + " / " + neededOre;
+        oreText.text = "광석: " + destroyOre + " / " + neededOre;
         fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
-    public void SwitchModule()
+    public void SwitchModule(int id)
     {
         switch (currentType)
         {
-            case PrintType.Kit:
-                kitObject.SetActive(false);
-                currentType = PrintType.Shotgun;
-                shotgunObject.SetActive(true);
-                neededOre = 1;
-                neededFuel = 2;
-                destroyOre = 0;
-                destroyFuel = 0;
-                break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
                 currentType = PrintType.Laser;
                 laserObject.SetActive(true);
                 neededOre = 2;
                 neededFuel = 1;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
             case PrintType.Laser:
                 laserObject.SetActive(false);
@@ -98,8 +91,6 @@ public class Factory : MonoBehaviour
                 shieldObject.SetActive(true);
                 neededOre = 0;
                 neededFuel = 3;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
             case PrintType.Shield:
                 shieldObject.SetActive(false);
@@ -107,48 +98,38 @@ public class Factory : MonoBehaviour
                 kitObject.SetActive(true);
                 neededOre = 1;
                 neededFuel = 1;
-                destroyOre = 0;
-                destroyFuel = 0;
                 break;
+            case PrintType.Kit:
+                kitObject.SetActive(false);
+                currentType = PrintType.Shotgun;
+                shotgunObject.SetActive(true);
+                neededOre = 1;
+                neededFuel = 2;
+                break;
+        }
+
+        if (controller.userId == id)
+        {
+            multiSpaceship.ChangeModule_SEND(id);
         }
     }
 
     // Update is called once per frame
-    public void ProduceModule()
+    public void ProduceModule(int type)
     {
-        switch (currentType)
+        switch (type)
         {
-            case PrintType.Kit:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = kitModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
-                }
+            case (int)PrintType.Kit:
+                currentModule = kitModule;
                 break;
-            case PrintType.Shotgun:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shotgunModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
-                }
+            case (int)PrintType.Shotgun:
+                currentModule = shotgunModule;
                 break;
-            case PrintType.Laser:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = laserModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
-                }
+            case (int)PrintType.Laser:
+                currentModule = laserModule;
                 break;
-            case PrintType.Shield:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shieldModule;
-                    destroyOre = 0;
-                    destroyFuel = 0;
-                }
+            case (int)PrintType.Shield:
+                currentModule = laserModule;
                 break;
         }
 
@@ -163,7 +144,8 @@ public class Factory : MonoBehaviour
             GameObject newModule = Instantiate(currentModule, position, Quaternion.identity);
 
             newModule.name = currentType.ToString();
+
+            currentModule = null;
         }
-        currentModule = null;
     }
 }

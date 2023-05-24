@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     private GameObject skillTreeInstance;
     private Text gameUITimeText; // 추가된 코드
     public GameObject gameoverCanvasPrefab;
-
+    public int skillTreeOpenedCount = 0;
 
     public bool IsGameOver()
     {
@@ -90,6 +90,12 @@ public class GameManager : MonoBehaviour
 
     public void OpenSkillTree()
     {
+        if (skillTreeOpenedCount >= 12)
+        {
+            return;
+        }
+
+        skillTreeOpenedCount++;
         isSkillTreeOpen = true;
         lastSkillTreeOpenTime = surviveTime;
         Time.timeScale = 0;
