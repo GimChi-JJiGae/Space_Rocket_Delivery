@@ -903,6 +903,7 @@ GameObject:
   - component: {fileID: 535776419}
   - component: {fileID: 535776417}
   - component: {fileID: 535776418}
+  - component: {fileID: 8549468695150411669}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Untagged
@@ -1020,3 +1021,17 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!136 &8549468695150411669
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650101396100729584}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.646204
+  m_Height: 5.2531586
+  m_Direction: 1
+  m_Center: {x: 0.03427714, y: 1.4837486, z: -0.3660193}

@@ -5,10 +5,9 @@ using TMPro;
 public class SkillTreeNode : MonoBehaviour
 {
     private GameManager gameManager;
-    public int currentModuleCurrentHpLevel = 0;
-    public int currentSupplySpeedLevel = 0;
-    public float currentRepairSpeedLevel = 0;
-    public int currentTurretDamageLevel = 0;
+    private int currentSupplySpeedLevel = 0;
+    private float currentRepairSpeedLevel = 0;
+    private int currentTurretDamageLevel = 0;
     public int moduleHpUpgradeLevel = 0;
 
     public TextMeshProUGUI moduleCurrentHpLevelText;
@@ -29,30 +28,30 @@ public class SkillTreeNode : MonoBehaviour
     {
         if (moduleHpUpgradeLevel < 3)
         {
-            moduleHpUpgradeLevel++;
-            // 맵 내에 있는 모든 모듈의 체력 증가
-            Module[] modules = FindObjectsOfType<Module>();
-            foreach (Module module in modules)
-            {
-                module.maxHp += 1.0f; // 체력 증가
-                module.hp += 1.0f; // 체력 증가
-            }
-            moduleCurrentHpLevelText.text = moduleHpUpgradeLevel == 3 ? "MAX" : "" + moduleHpUpgradeLevel;
-            gameManager.CloseSkillTree();
+        	moduleHpUpgradeLevel++;
+        // 맵 내에 있는 모든 모듈의 체력 증가
+	        Module[] modules = FindObjectsOfType<Module>();
+	        foreach (Module module in modules)
+	        {
+				module.maxHp += 1.0f; // 체력 증가
+	            module.hp += 1.0f; // 체력 증가
+	        }
+        	moduleCurrentHpLevelText.text = moduleHpUpgradeLevel == 3 ? "MAX" : "" + moduleHpUpgradeLevel;
+        	gameManager.CloseSkillTree();
 
-        }
+    	}
     }
     public void UpgradeRepairSpeed()
     {
         if (currentRepairSpeedLevel < 3)
         {
-            currentRepairSpeedLevel++;
-            repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
+	        currentRepairSpeedLevel++;
+	        repairSpeedLevelText.text = "" + currentRepairSpeedLevel;
             PlayerInteraction playerInteraction = FindAnyObjectByType<PlayerInteraction>();
             playerInteraction.repairSpeed += 0.5f;
             repairSpeedLevelText.text = currentRepairSpeedLevel == 3 ? "MAX" : "" + currentRepairSpeedLevel;
-            gameManager.CloseSkillTree();
-        }
+        	gameManager.CloseSkillTree();
+    	}
     }
 
     public float GetRepairSpeedLevel()

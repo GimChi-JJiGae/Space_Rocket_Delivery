@@ -1,13 +1,19 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Factory : MonoBehaviour
 {
+    private MultiSpaceship multiSpaceship;
+
+    private Controller controller;
+    private GameObject socketObj;
+
     public enum PrintType
     {
-        Kit,
         Shotgun,
         Laser,
         Shield,
+        Kit,
     }
 
     public PrintType currentType;
@@ -36,26 +42,32 @@ public class Factory : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        kitObject = transform.Find("KitBlueprint").gameObject;
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
         shotgunObject = transform.Find("ShotgunBlueprint").gameObject;
         shieldObject = transform.Find("ShieldBlueprint").gameObject;
         laserObject = transform.Find("LaserBlueprint").gameObject;
+        kitObject = transform.Find("KitBlueprint").gameObject;
 
         kitObject.SetActive(false);
         //shotgunObject.SetActive(false);
         shieldObject.SetActive(false);
         laserObject.SetActive(false);
+        kitObject.SetActive(false);
 
         currentType = PrintType.Shotgun;
         currentModule = null;
 
-        kitModule = Resources.Load<GameObject>("Resources/Kit");
         shotgunModule = Resources.Load<GameObject>("Resources/Shotgun");
         laserModule = Resources.Load<GameObject>("Resources/Laser");
         shieldModule = Resources.Load<GameObject>("Resources/Shield");
+        kitModule = Resources.Load<GameObject>("Resources/Kit");
 
         neededOre = 1;
         neededFuel = 2;
+
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
     }
     // Update is called once per frame
     private void Update()
@@ -64,17 +76,10 @@ public class Factory : MonoBehaviour
         fuelText.text = "연료: " + destroyFuel + " / " + neededFuel;
     }
 
-    public void SwitchModule()
+    public void SwitchModule(int id)
     {
         switch (currentType)
         {
-            case PrintType.Kit:
-                kitObject.SetActive(false);
-                currentType = PrintType.Shotgun;
-                shotgunObject.SetActive(true);
-                neededOre = 1;
-                neededFuel = 2;
-                break;
             case PrintType.Shotgun:
                 shotgunObject.SetActive(false);
                 currentType = PrintType.Laser;
@@ -96,45 +101,37 @@ public class Factory : MonoBehaviour
                 neededOre = 1;
                 neededFuel = 1;
                 break;
+            case PrintType.Kit:
+                kitObject.SetActive(false);
+                currentType = PrintType.Shotgun;
+                shotgunObject.SetActive(true);
+                neededOre = 1;
+                neededFuel = 2;
+                break;
+        }
+
+        if (controller.userId == id)
+        {
+            multiSpaceship.ChangeModule_SEND(id);
         }
     }
 
     // Update is called once per frame
-    public void ProduceModule()
+    public void ProduceModule(int type)
     {
-        switch (currentType)
+        switch (type)
         {
-            case PrintType.Kit:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = kitModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Kit:
+                currentModule = kitModule;
                 break;
-            case PrintType.Shotgun:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shotgunModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Shotgun:
+                currentModule = shotgunModule;
                 break;
-            case PrintType.Laser:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = laserModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Laser:
+                currentModule = laserModule;
                 break;
-            case PrintType.Shield:
-                if (destroyOre >= neededOre && destroyFuel >= neededFuel)
-                {
-                    currentModule = shieldModule;
-                    destroyOre -= neededOre;
-                    destroyFuel -= neededFuel;
-                }
+            case (int)PrintType.Shield:
+                currentModule = laserModule;
                 break;
         }
 

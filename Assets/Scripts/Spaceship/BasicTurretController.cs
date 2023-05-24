@@ -16,7 +16,7 @@ public class BasicTurretController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
 
         float vertical = Input.GetAxis("Vertical"); // 수직 입력 값
 
@@ -29,7 +29,7 @@ public class BasicTurretController : MonoBehaviour
         //    // 회전 방향으로 오브젝트 회전
         //    transform.Rotate(rotationDirection * degree * Time.deltaTime);
         //}
-
+        
         if (vertical != 0)
         {
             Vector3 rotationDirection = new Vector3(-vertical, 0, 0f);
@@ -46,9 +46,9 @@ public class BasicTurretController : MonoBehaviour
             //maincam.SetActive(true);
 
 
+            
 
-
-
+            
 
 
             GameObject basicTurret = turretHead.transform.parent.gameObject;
@@ -58,9 +58,9 @@ public class BasicTurretController : MonoBehaviour
                 if (child.name == "TurretEnter")
                 {
                     BasicTurretEnter turretEnter = child.GetComponent<BasicTurretEnter>();
-
+                   
                     PlayerMovement playerMovement = turretEnter.enteredPlayer.GetComponent<PlayerMovement>();
-
+                    
                     turretEnter.isUserIn = false;
                     playerMovement.enabled = true;
 

@@ -1,21 +1,27 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static Module;
-using static ResourceChanger;
+using static Supplier;
 
 public class PlayerInteraction : MonoBehaviour
 {
     private PlayerInput playerInput;
     private Animator playerAnimator;
-
     private Vector3 playerPosition;
+
+    private ModuleType currentType;
+
+    private Controller controller;
+    private GameObject socketObj;
 
     // Holdable 오브젝트를 달 위치 Object
     private GameObject playerHead;
 
     private Spaceship spaceship;
+
+    private MultiSpaceship multiSpaceship;
 
     public List<string> HoldableObjects = new();
 
@@ -43,17 +49,12 @@ public class PlayerInteraction : MonoBehaviour
     // 업그레이드할 모듈
     public GameObject upgradeObject;
 
-    // 모듈이 부서지고 Blueprint 위에 올라간 경우
-    public GameObject respawnObject;
-
     // 맞은 모듈 확인
     private Module struckModule;
 
-    public float repairSpeed;
-    public float maxHp;
-
     // skillTree
     public SkillTreeNode skillTree;
+    public float repairSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -61,13 +62,17 @@ public class PlayerInteraction : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerAnimator = GetComponent<Animator>();
 
-        spaceship = FindAnyObjectByType<Spaceship>();
+        multiSpaceship = GameObject.Find("Server").GetComponent<MultiSpaceship>();
 
-        repairSpeed = 0.5f;
+        socketObj = GameObject.Find("SocketClient");
+        controller = socketObj.GetComponent<Controller>();
+
+        spaceship = FindAnyObjectByType<Spaceship>();
 
         playerHead = transform.Find("PlayerHead").gameObject;
 
         skillTree = GetComponent<SkillTreeNode>();
+		repairSpeed = 0.5f;
 
         try
         {
@@ -98,53 +103,38 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!isHoldingObject && HoldableObjects.Contains(collision.gameObject.name))
-        {
-            collideObject = collision.gameObject;
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collideObject != null)
-        {
-            collideObject = null;
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Edge"))
+        if (!isHoldingObject && HoldableObjects.Contains(other.gameObject.name))
         {
-            if(currentObject != null && (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield"))
+            collideObject = other.gameObject;
+        }
+        else if (other.gameObject.CompareTag("Edge"))
+        {
+            matchObject = other.gameObject;
+            Module module = matchObject.GetComponentInParent<Module>();
+
+            int idxZ = module.idxZ;
+            int idxX = module.idxX;
+
+            switch (other.gameObject.name)
             {
-                matchObject = other.gameObject;
-                Module module = matchObject.GetComponentInParent<Module>();
-
-                int idxZ = module.idxZ;
-                int idxX = module.idxX;
-
-                switch (other.gameObject.name)
-                {
-                    case "EdgeTop":
-                        idxZ += 1;
-                        break;
-                    case "EdgeBottom":
-                        idxZ -= 1;
-                        break;
-                    case "EdgeRight":
-                        idxX += 1;
-                        break;
-                    case "EdgeLeft":
-                        idxX -= 1;
-                        break;
-                }
-
-                targetObject = spaceship.modules[idxZ, idxX];
-                targetObject.GetComponent<Module>().floorModule.SetActive(true);
+                case "EdgeTop":
+                    idxZ += 1;
+                    break;
+                case "EdgeBottom":
+                    idxZ -= 1;
+                    break;
+                case "EdgeRight":
+                    idxX += 1;
+                    break;
+                case "EdgeLeft":
+                    idxX -= 1;
+                    break;
             }
+
+            targetObject = spaceship.modules[idxZ, idxX];
+            targetObject.GetComponent<Module>().floorModule.SetActive(true);
         }
         else if (other.gameObject.CompareTag("Input"))
         {
@@ -162,15 +152,15 @@ public class PlayerInteraction : MonoBehaviour
         {
             upgradeObject = other.gameObject;
         }
-        else if (other.gameObject.CompareTag("Respawn"))
-        {
-            respawnObject = other.gameObject;
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Edge") && targetObject != null)
+        if (!isHoldingObject && HoldableObjects.Contains(other.gameObject.name))
+        {
+            collideObject = null;
+        }
+        else if (other.gameObject.CompareTag("Edge") && targetObject != null)
         {
             Module module = targetObject.GetComponentInParent<Module>();
 
@@ -197,10 +187,6 @@ public class PlayerInteraction : MonoBehaviour
         else if (other.gameObject.CompareTag("Turret"))
         {
             upgradeObject = null;
-        }
-        else if (other.gameObject.CompareTag("Respawn"))
-        {
-            respawnObject = null;
         }
     }
 
@@ -250,47 +236,51 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SaveObject(GameObject obj)
     {
-        Factory factory = FindAnyObjectByType<Factory>();
+        int playerId = controller.userId;
 
         if (obj.name == "Fuel")
         {
-            factory.destroyFuel++;
+            multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Fuel);
         }
         else if (obj.name == "Ore")
         {
-            factory.destroyOre++;
+            multiSpaceship.FactoryInput_SEND(playerId, (int)ResourceType.Ore);
         }
 
         Destroy(obj);
 
         isHoldingObject = false;
+        }
 
-        factory.ProduceModule();
-    }
-
-    public void MakeModule(string name)
+    public void MakeModule(int id, string name)
     {
-        if (name == "Laser")
+        switch (name)
         {
-            targetObject.GetComponent<Module>().CreateFloor(ModuleType.LaserTurret);
-        }
-        else if (name == "Shotgun")
-        {
-            targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShotgunTurret);
-        }
-        else if (name == "Shield")
-        {
-            targetObject.GetComponent<Module>().CreateFloor(ModuleType.ShieldTurret);
+            case "Laser":
+                currentType = ModuleType.LaserTurret;
+                break;
+            case "Shotgun":
+                currentType = ModuleType.ShotgunTurret;
+                break;
+            case "Shield":
+                currentType = ModuleType.ShieldTurret;
+                break;
         }
 
+        targetObject.GetComponent<Module>().CreateFloor(currentType);
         spaceship.MakeWall(targetObject);
+
+        if (controller.userId == id)
+        {
+            multiSpaceship.CreateModule_SEND(id, targetObject.GetComponent<Module>().idxX, targetObject.GetComponent<Module>().idxZ, (int)currentType);
+        }
     }
 
-    public void UpgradeModule()
+    public void UpgradeModule(int id)
     {
         if (upgradeObject.transform.GetComponentInChildren<ParticleController>())
         {
-            upgradeObject.transform.GetComponentInChildren<ParticleController>().damage += 1;
+            upgradeObject.transform.GetComponentInChildren<ParticleController>().damage += 1; 
         }
         else if (upgradeObject.transform.GetComponentInChildren<ShotgunBullet>())
         {
@@ -298,16 +288,12 @@ public class PlayerInteraction : MonoBehaviour
         }
         else if (upgradeObject.transform.GetComponentInChildren<ShieldTurret>())
         {
-            float health = upgradeObject.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth;
+            upgradeObject.transform.GetComponentInChildren<ShieldTurret>().maxShieldHealth += 10;
+        }
 
-            if (health == 20f)
-            {
-                health = 30f;
-            }
-            else if (health == 30f)
-            {
-                health = 40f;
-            }
+        if (controller.userId == id)
+        {
+            multiSpaceship.ModuleUpgrade_SEND(id, upgradeObject.GetComponentInParent<Module>().idxX, upgradeObject.GetComponentInParent<Module>().idxZ);
         }
     }
 
@@ -324,19 +310,12 @@ public class PlayerInteraction : MonoBehaviour
                 }
                 else if (resourceObject != null)
                 {
-                    resourceObject.GetComponent<ResourceChanger>().SwitchResource();
-
-                    if (resourceObject.GetComponentInParent<Supplier>() != null)
-                    {
-                        resourceObject.GetComponentInParent<Supplier>().currentResource = resourceObject.GetComponent<ResourceChanger>().resourceType;
-                    }
+                    resourceObject.GetComponentInParent<Supplier>().SwitchResource(controller.userId);
                 }
                 else if (produceObject != null)
                 {
-                    produceObject.GetComponentInParent<Factory>().SwitchModule();
-                    produceObject.GetComponentInParent<Factory>().ProduceModule();
+                    produceObject.GetComponentInParent<Factory>().SwitchModule(controller.userId);
                 }
-                
             }
             else
             {
@@ -346,7 +325,7 @@ public class PlayerInteraction : MonoBehaviour
                     {
                         if (currentObject.name == "Laser" || currentObject.name == "Shotgun" || currentObject.name == "Shield")
                         {
-                            MakeModule(currentObject.name);
+                            MakeModule(controller.userId, currentObject.name);
                             InsertObject(currentObject);
                             collideObject = null;
                             currentObject = null;
@@ -359,13 +338,13 @@ public class PlayerInteraction : MonoBehaviour
                         }
                     }
                 }
-                if (inputObject != null)
+                else if (inputObject != null)
                 {
                     if (inputObject.GetComponentInParent<Oxygenator>())
                     {
                         if (currentObject.name == "Fuel")
                         {
-                            FindAnyObjectByType<Oxygenator>().Increase();
+                            FindAnyObjectByType<Oxygenator>().Increase(controller.userId);
                             InsertObject(currentObject);
                             collideObject = null;
                             currentObject = null;
@@ -401,7 +380,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
                 else if (upgradeObject != null)
                 {
-                    UpgradeModule();
+                    UpgradeModule(controller.userId);
                     InsertObject(currentObject);
                     collideObject = null;
                     currentObject = null;
@@ -437,10 +416,5 @@ public class PlayerInteraction : MonoBehaviour
         {
             playerAnimator.SetBool("Repairing", false);
         }
-
-        //if (respawnObject != null)
-        //{
-        //    transform.GetComponent<PlayerMovement>().Respawn();
-        //}
     }
 }

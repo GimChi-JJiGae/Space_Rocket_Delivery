@@ -423,10 +423,9 @@ GameObject:
   - component: {fileID: 6878477196426667653}
   - component: {fileID: 6878477196426667773}
   - component: {fileID: 6878477196426667771}
-  - component: {fileID: 6878477196426667769}
   - component: {fileID: 6878477196426667775}
-  - component: {fileID: 6878477196426667772}
-  - component: {fileID: 6878477196426667763}
+  - component: {fileID: 6878477196426667769}
+  - component: {fileID: 6305287069369950389}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -514,21 +513,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &6878477196426667769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205704392875011112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b37b3e8872c8e294da8393892857c546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 3
-  rotateSpeed: 10
-  player: {fileID: 0}
 --- !u!114 &6878477196426667775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,10 +527,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move1AxisName: Vertical
   move2AxisName: Horizontal
+  teleportButtonName: Dash
   interactionButtonName: Interaction
   repairButtonName: Repair
-  destroyButtonName: Destroy
---- !u!114 &6878477196426667772
+  submitButtonName: Submit
+--- !u!114 &6878477196426667769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -555,22 +540,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 2205704392875011112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: def445a42c43f9f479356198d4b980c8, type: 3}
+  m_Script: {fileID: 11500000, guid: b37b3e8872c8e294da8393892857c546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 3
+  rotateSpeed: 10
+--- !u!114 &6305287069369950389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2205704392875011112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5f5988833bc4f4fa3610b45defda1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiplayer: {fileID: 0}
+  multiSpaceship: {fileID: 0}
+  socketObj: {fileID: 0}
+  controller: {fileID: 0}
   HoldableObjects: []
---- !u!114 &6878477196426667763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2205704392875011112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4348db7eae927134b9eca9652e0fbfe3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  isHoldingObject: 0
+  currentObject: {fileID: 0}
+  matchObject: {fileID: 0}
+  targetObject: {fileID: 0}
+  resourceObject: {fileID: 0}
+  inputObject: {fileID: 0}
+  produceObject: {fileID: 0}
+  upgradeObject: {fileID: 0}
+  respawnObject: {fileID: 0}
+  skillTree: {fileID: 0}
+  repairSpeed: 0
 --- !u!1 &2222154811952424446
 GameObject:
   m_ObjectHideFlags: 0
