@@ -533,11 +533,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7281680282997869015}
   - component: {fileID: 8846829480226929028}
-  - component: {fileID: 7548906653508612789}
   - component: {fileID: 9210043556691818759}
   m_Layer: 0
   m_Name: Supplier
-  m_TagString: Building
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -574,20 +573,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popAnimator: {fileID: 0}
---- !u!136 &7548906653508612789
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7281680282997869032}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.77320004
-  m_Height: 3.4226556
-  m_Direction: 1
-  m_Center: {x: 1.8749835, y: 0, z: -0.7936574}
+  currentPrefab: {fileID: 0}
+  currentResource: 0
 --- !u!95 &9210043556691818759
 Animator:
   serializedVersion: 5

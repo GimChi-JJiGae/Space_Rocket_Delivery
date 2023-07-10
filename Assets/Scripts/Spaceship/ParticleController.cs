@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class ParticleController : MonoBehaviour
 {
-
-  
-
     private ParticleSystem lazerParticleSystem;
 
     public float delay = 0.2f; // 딜레이 시간
     public float interval = 7f; // 반복 주기
     public float miniInterval = 0.5f;
+
+    public int damage = 1;
+
+    public float damageInterval = 0.2f;
+    public float timeAfterDamaged = 0f;
 
     public GameObject turretLazer;
 
@@ -22,19 +24,40 @@ public class ParticleController : MonoBehaviour
         lazerParticleSystem = GetComponent<ParticleSystem>();
         StartCoroutine(RepeatParticleSystem());
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     
     void OnParticleCollision(GameObject other)
     {
         Debug.Log("Particle collided with " + other.name);
-        if (other.tag == "enemy")
+        if (other.CompareTag("enemy"))
         {
-            Destroy(other);
+            if (other.TryGetComponent<EnemyController>(out var controller))
+            {
+                if (timeAfterDamaged > damageInterval)
+                {
+                    controller.health -= damage;
+                    timeAfterDamaged = 0;
+                }
+                else
+                {
+                    timeAfterDamaged += Time.deltaTime;
+                }
+            }
+            else
+            {
+                RangedEnemyController Rangedcontroller = other.GetComponent<RangedEnemyController>();   // 원거리 적일 경우
+
+
+                if (timeAfterDamaged > damageInterval)
+                {
+                    Rangedcontroller.health -= damage;
+                    timeAfterDamaged = 0;
+                }
+                else
+                {
+                    timeAfterDamaged += Time.deltaTime;
+                }
+            }
+            
         }
     }
     IEnumerator RepeatParticleSystem()

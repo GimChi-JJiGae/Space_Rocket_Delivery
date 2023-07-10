@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3409819905040534073}
   - component: {fileID: 4195485445356560186}
   m_Layer: 0
-  m_Name: Fuel
+  m_Name: FuelBlueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,9 +206,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5922385910156431617}
   - component: {fileID: 5700135875250792672}
+  - component: {fileID: -5668887755171401087}
   m_Layer: 0
   m_Name: Resource
-  m_TagString: Untagged
+  m_TagString: Change
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1920,6 +1921,20 @@ MonoBehaviour:
     - {x: -0.57735026, y: 0.57735026, z: -0.57735026}
     - {x: -0.57735026, y: 0.57735026, z: 0.57735026}
     - {x: 0.21984799, y: 0.8268005, z: 0.5177526}
+--- !u!136 &-5668887755171401087
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4319578427017945033}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.85673094
+  m_Height: 3
+  m_Direction: 1
+  m_Center: {x: 1.0282123, y: -0.20000005, z: -0.028518558}
 --- !u!1 &7362263355478360199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,7 +1948,7 @@ GameObject:
   - component: {fileID: 2047863987777784828}
   - component: {fileID: 7195298189220374049}
   m_Layer: 0
-  m_Name: Ore
+  m_Name: OreBlueprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

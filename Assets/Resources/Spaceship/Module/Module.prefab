@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 2347421500035759136}
   m_Layer: 0
   m_Name: SM_Bld_Wall_Exterior_Window_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 2735179308860966934}
   m_Layer: 0
   m_Name: SM_Bld_Wall_Exterior_Window_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -595,14 +595,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idxX: 0
   idxZ: 0
+  interactionModule: {fileID: 0}
+  players: []
   moduleType: 0
   wallTop: {fileID: 0}
   wallLeft: {fileID: 0}
   wallBottom: {fileID: 0}
   wallRight: {fileID: 0}
   floorModule: {fileID: 0}
-  Broken1: {fileID: 0}
-  Broken2: {fileID: 0}
+  broken1: {fileID: 0}
+  broken2: {fileID: 0}
+  hitArea: {fileID: 0}
+  gameManager: {fileID: 0}
   hp: 0
 --- !u!1 &3178273408534485906
 GameObject:
@@ -813,7 +817,7 @@ GameObject:
   - component: {fileID: 4183849496371801928}
   m_Layer: 0
   m_Name: SM_Bld_Wall_Exterior_Window_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -965,7 +969,7 @@ GameObject:
   - component: {fileID: 6571451015216907501}
   m_Layer: 0
   m_Name: SM_Bld_Wall_Exterior_Window_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

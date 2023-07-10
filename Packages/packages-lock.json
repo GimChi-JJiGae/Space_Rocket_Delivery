@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.nobi.roundedcorners": {
+      "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f80f59f64d1dfce988b838593e5075207f44f1f0"
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.0",
       "depth": 0,
@@ -65,6 +72,15 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.postprocessing": {
+      "version": "3.2.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.physics": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.settings-manager": {

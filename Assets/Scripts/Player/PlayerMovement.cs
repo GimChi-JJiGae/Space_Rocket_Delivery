@@ -7,20 +7,18 @@ public class PlayerMovement : MonoBehaviour {
     public float rotateSpeed = 10f;
 
     private PlayerInput playerInput;
-    private PlayerInteraction playerInteraction;
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
 
-    public GameObject player;
+    private Vector3 initialPosition = new(0, 0, -2);
 
     private void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        playerInteraction = GetComponent<PlayerInteraction>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
 
-        player = GameObject.Find("PlayerCharacter");
+        //player = GameObject.Find("PlayerCharacter");
     }
 
     private void FixedUpdate()
@@ -39,6 +37,25 @@ public class PlayerMovement : MonoBehaviour {
         {
             playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * Time.deltaTime * dir);
             playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
+
+            if (playerInput.Teleport)
+            {
+                playerRigidbody.MovePosition(playerRigidbody.position + moveSpeed * dir);
+                playerRigidbody.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotateSpeed);
+            }
+        }
+    }
+
+    public void Respawn()
+    {
+        transform.position = initialPosition;
+    }
+
+    private void Update()
+    {
+        if (transform.position.y <= -20)
+        {
+            Respawn();
         }
     }
 }
